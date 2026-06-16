@@ -57,7 +57,6 @@ body {
   transition: background .3s, color .3s;
 }
 
-/* ── Topbar ── */
 .topbar {
   position: fixed;
   top: 1rem;
@@ -68,24 +67,16 @@ body {
   background: var(--topbar-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border2);
+  border: 0.5px solid var(--border2);
   border-radius: 9999px;
   padding: 0.45rem 0.6rem;
   box-shadow: 0 4px 24px rgba(0,0,0,0.3);
   transition: background 0.3s, border-color 0.3s;
 }
 
-.topbar-inner {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+.topbar-inner { display: flex; align-items: center; gap: 0.5rem; }
 
-.topbar-links {
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-}
+.topbar-links { display: flex; align-items: center; gap: 0.15rem; }
 
 .topbar-link {
   display: flex;
@@ -107,18 +98,14 @@ body {
   color: var(--text);
 }
 
-.theme-toggle {
-  font-size: 0;
-}
+.theme-toggle { font-size: 0; }
 
-/* ── Container ── */
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
-/* ── Header ── */
 header {
   padding: 48px 0 32px;
   border-bottom: 0.5px solid var(--border);
@@ -147,7 +134,6 @@ h1 {
   color: var(--text3);
 }
 
-/* ── Year tabs ── */
 .year-row {
   display: flex;
   gap: 8px;
@@ -182,7 +168,6 @@ h1 {
 
 .ytab .lock-icon { font-size: 10px; opacity: 0.7; }
 
-/* ── Columns ── */
 .cols {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -219,7 +204,6 @@ h1 {
 .ph2 { color: var(--teal); background: var(--teal-dim); border: 0.5px solid var(--teal-border); }
 .ph3 { color: var(--coral); background: var(--coral-dim); border: 0.5px solid var(--coral-border); }
 
-/* ── Progress ── */
 .progress-wrap {
   height: 1.5px;
   background: var(--border);
@@ -243,7 +227,6 @@ h1 {
   margin: 0 2px 14px;
 }
 
-/* ── Section ── */
 .section-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
@@ -256,7 +239,6 @@ h1 {
   border-left: 1.5px solid var(--border2);
 }
 
-/* ── Nodes ── */
 .node { margin-bottom: 2px; }
 
 .node-box {
@@ -310,7 +292,6 @@ h1 {
   pointer-events: none;
 }
 
-/* ── Legend ── */
 .legend {
   display: flex;
   gap: 20px;
@@ -341,7 +322,6 @@ h1 {
   color: var(--text3);
 }
 
-/* ── Responsive ── */
 @media (max-width: 720px) {
   .cols {
     grid-template-columns: 1fr;
