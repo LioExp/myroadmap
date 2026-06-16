@@ -9,351 +9,249 @@
 <body>
 
   <section class="hero">
-    <div class="hero-glow"></div>
     <h1 class="hero-title">My Roadmap</h1>
-    <p class="hero-sub">AI Engineer — passo a passo</p>
-    <p class="hero-desc">meu jeito de visualizar e organizar</p>
+    <p class="hero-sub">AI Engineer · passo a passo</p>
   </section>
 
-  <div class="timeline">
-    <div class="timeline-line"></div>
+  <div class="roadmap">
 
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Introdução</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">O que é um AI Engineer?</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">What is an AI Engineer?</span>
-              <span class="subtopic-item">AI Engineer vs ML Engineer</span>
-              <span class="subtopic-item">Impact on Product Development</span>
-              <span class="subtopic-item">Roles and Responsibilities</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Common Terminology</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">LLMs</span>
-              <span class="subtopic-item">AI vs AGI</span>
-              <span class="subtopic-item">Inference</span>
-              <span class="subtopic-item">Training</span>
-              <span class="subtopic-item">Embeddings</span>
-              <span class="subtopic-item">Vector Databases</span>
-              <span class="subtopic-item">RAG</span>
-              <span class="subtopic-item">AI Agents</span>
-              <span class="subtopic-item">Prompt Engineering</span>
-            </div>
-          </div>
-        </div>
+    <!-- === INTRODUCTION === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="connector-dash"></span>
+        <span class="node node-label">Common Terminology</span>
+        <span class="node node-sub">LLMs</span>
+        <span class="node node-sub">AI vs AGI</span>
+        <span class="node node-sub">Inference</span>
+        <span class="node node-sub">Training</span>
+        <span class="node node-sub">Embeddings</span>
+        <span class="node node-sub">Vector Databases</span>
+        <span class="node node-sub">RAG</span>
+        <span class="node node-sub">AI Agents</span>
+        <span class="node node-sub">Prompt Engineering</span>
+      </div>
+      <div class="col-center">
+        <span class="node node-title">AI Engineer</span>
+        <span class="node">Introduction</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:200px">What is an AI Engineer?</span>
+        <span class="node node-sub" style="max-width:200px">AI Engineer vs ML Engineer</span>
+        <span class="node node-sub" style="max-width:200px">Impact on Product Development</span>
+        <span class="node node-sub" style="max-width:200px">Roles and Responsibilities</span>
+      </div>
+      <div class="col col-right"></div>
+    </div>
+
+    <!-- === PRE-TRAINED MODELS === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="node node-label">Popular AI Models</span>
+        <span class="node node-sub">OpenAI Models</span>
+        <span class="node node-sub">Capabilities / Context</span>
+        <span class="node node-sub">Cut-off Dates</span>
+        <span class="node node-sub">Anthropic Claude</span>
+        <span class="node node-sub">Google Gemini</span>
+        <span class="node node-sub">Azure AI</span>
+        <span class="node node-sub">AWS Sagemaker</span>
+        <span class="node node-sub">Hugging Face</span>
+        <span class="node node-sub">Mistral AI · Cohere</span>
+        <span class="node node-sub">Replicate</span>
+      </div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">Pre-trained Models</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:220px">Benefits of Pre-trained Models</span>
+        <span class="node node-sub" style="max-width:220px">Limitations and Considerations</span>
+        <span class="node node-sub" style="max-width:220px">OpenAI Models</span>
+      </div>
+      <div class="col col-right"></div>
+    </div>
+
+    <!-- === OPENAI API === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="node node-label">Managing Tokens</span>
+        <span class="node node-sub">Maximum Tokens</span>
+        <span class="node node-sub">Token Counting</span>
+        <span class="node node-sub">Pricing Considerations</span>
+      </div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">OpenAI API</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:220px">Chat Completions API</span>
+        <span class="node node-sub" style="max-width:220px">Writing Prompts</span>
+        <span class="node node-sub" style="max-width:220px">OpenAI Playground</span>
+        <span class="node node-sub" style="max-width:220px">Fine-tuning</span>
+      </div>
+      <div class="col col-right"></div>
+    </div>
+
+    <!-- === AI SAFETY & ETHICS === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="node node-label">Safety Issues</span>
+        <span class="node node-sub">Prompt Injection</span>
+        <span class="node node-sub">Security & Privacy</span>
+        <span class="node node-sub">Bias and Fairness</span>
+      </div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">AI Safety & Ethics</span>
+        <span class="connector-solid"></span>
+      </div>
+      <div class="col col-right">
+        <span class="node node-label">Best Practices</span>
+        <span class="node node-sub">OpenAI Moderation API</span>
+        <span class="node node-sub">End-user IDs in prompts</span>
+        <span class="node node-sub">Adversarial testing</span>
+        <span class="node node-sub">Robust prompt engineering</span>
+        <span class="node node-sub">Know your Customers</span>
+        <span class="node node-sub">Constraining outputs</span>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Pre-trained Models</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Fundamentos</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Benefits of Pre-trained Models</span>
-              <span class="subtopic-item">Limitations and Considerations</span>
-              <span class="subtopic-item">OpenAI Models</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Popular AI Models</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Open AI Models</span>
-              <span class="subtopic-item">Capabilities / Context Length</span>
-              <span class="subtopic-item">Cut-off Dates / Knowledge</span>
-              <span class="subtopic-item">Anthropic's Claude</span>
-              <span class="subtopic-item">Google's Gemini</span>
-              <span class="subtopic-item">Azure AI</span>
-              <span class="subtopic-item">AWS Sagemaker</span>
-              <span class="subtopic-item">Hugging Face Models</span>
-              <span class="subtopic-item">Mistral AI</span>
-              <span class="subtopic-item">Cohere</span>
-              <span class="subtopic-item">Replicate</span>
-            </div>
-          </div>
-        </div>
+    <!-- === OPEN SOURCE AI === -->
+    <div class="roadmap-row">
+      <div class="col col-left"></div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">Open Source AI</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:220px">Open vs Closed Source</span>
+        <span class="node node-sub" style="max-width:220px">Popular Open Source Models</span>
+      </div>
+      <div class="col col-right">
+        <span class="node node-label">Hugging Face</span>
+        <span class="node node-sub">Hugging Face Tasks</span>
+        <span class="node node-sub">Hugging Face Hub</span>
+        <span class="node node-sub">Inference SDK</span>
+        <span class="node node-sub">Transformers.js</span>
+        <span class="node node-empty" style="margin-top:0.5rem">Ollama</span>
+        <span class="node node-sub">Ollama Models</span>
+        <span class="node node-sub">Ollama SDK</span>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">OpenAI API</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">API Usage</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Chat Completions API</span>
-              <span class="subtopic-item">Writing Prompts</span>
-              <span class="subtopic-item">Open AI Playground</span>
-              <span class="subtopic-item">Fine-tuning</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Managing Tokens</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Maximum Tokens</span>
-              <span class="subtopic-item">Token Counting</span>
-              <span class="subtopic-item">Pricing Considerations</span>
-            </div>
-          </div>
-        </div>
+    <!-- === EMBEDDINGS & VECTOR DB === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="node node-label">What are Embeddings</span>
+        <span class="node node-sub">Semantic Search</span>
+        <span class="node node-sub">Data Classification</span>
+        <span class="node node-sub">Recommendation Systems</span>
+        <span class="node node-sub">Anomaly Detection</span>
+        <span class="node node-empty" style="margin-top:0.5rem">OpenAI Embeddings</span>
+        <span class="node node-sub">Embedding Models</span>
+        <span class="node node-sub">Pricing</span>
+        <span class="node node-empty" style="margin-top:0.5rem">Open-Source</span>
+        <span class="node node-sub">Sentence Transformers</span>
+        <span class="node node-sub">Hugging Face Models</span>
+      </div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">Embeddings &<br>Vector DBs</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:240px">Indexing Embeddings</span>
+        <span class="node node-sub" style="max-width:240px">Similarity Search</span>
+      </div>
+      <div class="col col-right">
+        <span class="node node-label">Vector Databases</span>
+        <span class="node node-sub">Chroma</span>
+        <span class="node node-sub">Pinecone</span>
+        <span class="node node-sub">Weaviate</span>
+        <span class="node node-sub">FAISS</span>
+        <span class="node node-sub">LanceDB</span>
+        <span class="node node-sub">Qdrant</span>
+        <span class="node node-sub">Supabase</span>
+        <span class="node node-sub">MongoDB Atlas</span>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">AI Safety & Ethics</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Understanding AI Safety Issues</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Prompt Injection Attacks</span>
-              <span class="subtopic-item">Security and Privacy Concerns</span>
-              <span class="subtopic-item">Bias and Fairness</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Safety Best Practices</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">OpenAI Moderation API</span>
-              <span class="subtopic-item">Adding end-user IDs in prompts</span>
-              <span class="subtopic-item">Conducting adversarial testing</span>
-              <span class="subtopic-item">Robust prompt engineering</span>
-              <span class="subtopic-item">Know your Customers / Usecases</span>
-              <span class="subtopic-item">Constraining outputs and inputs</span>
-            </div>
-          </div>
-        </div>
+    <!-- === RAG === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="node node-label">Implementing RAG</span>
+        <span class="node node-sub">Chunking</span>
+        <span class="node node-sub">Embedding</span>
+        <span class="node node-sub">Vector Database</span>
+        <span class="node node-sub">Retrieval Process</span>
+        <span class="node node-sub">Generation</span>
+        <span class="node node-empty" style="margin-top:0.5rem">Frameworks</span>
+        <span class="node node-sub">Using SDKs Directly</span>
+        <span class="node node-sub">Langchain</span>
+        <span class="node node-sub">Llama Index</span>
+      </div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">RAG</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:220px">RAG Usecases</span>
+        <span class="node node-sub" style="max-width:220px">RAG vs Fine-tuning</span>
+        <span class="node node-empty" style="margin-top:0.5rem">Alternative</span>
+        <span class="node node-sub" style="max-width:220px">OpenAI Assistant API</span>
+      </div>
+      <div class="col col-right"></div>
+    </div>
+
+    <!-- === AI AGENTS === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="node node-label">Building Agents</span>
+        <span class="node node-sub">Manual Implementation</span>
+        <span class="node node-sub">OpenAI Functions / Tools</span>
+        <span class="node node-sub">OpenAI Assistant API</span>
+      </div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">AI Agents</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:220px">Agents Usecases</span>
+        <span class="node node-sub" style="max-width:220px">ReAct Prompting</span>
+      </div>
+      <div class="col col-right"></div>
+    </div>
+
+    <!-- === MULTIMODAL AI === -->
+    <div class="roadmap-row">
+      <div class="col col-left">
+        <span class="node node-label">Multimodal Tasks</span>
+        <span class="node node-sub">Image Understanding</span>
+        <span class="node node-sub">Image Generation</span>
+        <span class="node node-sub">Video Understanding</span>
+        <span class="node node-sub">Audio Processing</span>
+        <span class="node node-sub">Text-to-Speech</span>
+        <span class="node node-sub">Speech-to-Text</span>
+      </div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">Multimodal AI</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub" style="max-width:220px">Multimodal AI Usecases</span>
+      </div>
+      <div class="col col-right">
+        <span class="node node-label">Implementing</span>
+        <span class="node node-sub">OpenAI Vision API</span>
+        <span class="node node-sub">DALL-E API</span>
+        <span class="node node-sub">Whisper API</span>
+        <span class="node node-sub">Hugging Face Models</span>
+        <span class="node node-sub">LangChain for Multimodal</span>
+        <span class="node node-sub">LlamaIndex for Multimodal</span>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Open Source AI</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Open vs Closed Source</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Open vs Closed Source Models</span>
-              <span class="subtopic-item">Popular Open Source Models</span>
-            </div>
-          </div>
-        </div>
+    <!-- === DEV TOOLS === -->
+    <div class="roadmap-row">
+      <div class="col col-left"></div>
+      <div class="col-center">
+        <span class="connector-solid"></span>
+        <span class="node node-category">Development Tools</span>
+        <span class="connector-solid"></span>
+        <span class="node node-sub">AI Code Editors</span>
+        <span class="node node-sub">Code Completion Tools</span>
       </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Hugging Face</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Finding & Using Models</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Hugging Face Tasks</span>
-              <span class="subtopic-item">Hugging Face Hub</span>
-              <span class="subtopic-item">Inference SDK</span>
-              <span class="subtopic-item">Transformers.js</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Ollama</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Local Models</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Ollama Models</span>
-              <span class="subtopic-item">Ollama SDK</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Embeddings & Vector Databases</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">What are Embeddings</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Semantic Search</span>
-              <span class="subtopic-item">Data Classification</span>
-              <span class="subtopic-item">Recommendation Systems</span>
-              <span class="subtopic-item">Anomaly Detection</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">OpenAI Embeddings API</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Open AI Embedding Models</span>
-              <span class="subtopic-item">Pricing Considerations</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Open-Source Embeddings</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Sentence Transformers</span>
-              <span class="subtopic-item">Models on Hugging Face</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Vector Databases</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Purpose and Functionality</span>
-              <span class="subtopic-item">Chroma</span>
-              <span class="subtopic-item">Pinecone</span>
-              <span class="subtopic-item">Weaviate</span>
-              <span class="subtopic-item">FAISS</span>
-              <span class="subtopic-item">LanceDB</span>
-              <span class="subtopic-item">Qdrant</span>
-              <span class="subtopic-item">Supabase</span>
-              <span class="subtopic-item">MongoDB Atlas</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Implementing Vector Search</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Indexing Embeddings</span>
-              <span class="subtopic-item">Performing Similarity Search</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">RAG & Implementation</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Fundamentos</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">RAG Usecases</span>
-              <span class="subtopic-item">RAG vs Fine-tuning</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Implementing RAG</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Chunking</span>
-              <span class="subtopic-item">Embedding</span>
-              <span class="subtopic-item">Vector Database</span>
-              <span class="subtopic-item">Retrieval Process</span>
-              <span class="subtopic-item">Generation</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Ways of Implementing RAG</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Using SDKs Directly</span>
-              <span class="subtopic-item">Langchain</span>
-              <span class="subtopic-item">Llama Index</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">OpenAI Assistant API</h2>
-        <p class="note">RAG Alternative — Assistants API com retrieval embutido</p>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">AI Agents</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Fundamentos</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Agents Usecases</span>
-              <span class="subtopic-item">ReAct Prompting</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Building AI Agents</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Manual Implementation</span>
-              <span class="subtopic-item">OpenAI Functions / Tools</span>
-              <span class="subtopic-item">OpenAI Assistant API</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Multimodal AI</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Multimodal Tasks</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">Image Understanding</span>
-              <span class="subtopic-item">Image Generation</span>
-              <span class="subtopic-item">Video Understanding</span>
-              <span class="subtopic-item">Audio Processing</span>
-              <span class="subtopic-item">Text-to-Speech</span>
-              <span class="subtopic-item">Speech-to-Text</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Implementing Multimodal AI</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">OpenAI Vision API</span>
-              <span class="subtopic-item">DALL-E API</span>
-              <span class="subtopic-item">Whisper API</span>
-              <span class="subtopic-item">Hugging Face Models</span>
-              <span class="subtopic-item">LangChain for Multimodal</span>
-              <span class="subtopic-item">LlamaIndex for Multimodal</span>
-            </div>
-          </div>
-          <div class="topic-item">
-            <div class="topic-name">Multimodal AI Usecases</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-dot"></div>
-      <div class="section-content">
-        <h2 class="section-title">Development Tools</h2>
-        <div class="topic-list">
-          <div class="topic-item">
-            <div class="topic-name">Ferramentas</div>
-            <div class="subtopic-list">
-              <span class="subtopic-item">AI Code Editors</span>
-              <span class="subtopic-item">Code Completion Tools</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="col col-right"></div>
     </div>
 
   </div>
