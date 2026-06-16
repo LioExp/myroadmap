@@ -117,39 +117,6 @@ body {
   font-size: 0;
 }
 
-.progress-wrap {
-  padding: 1rem 1.25rem .5rem;
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-}
-
-.progress-bar {
-  flex: 1;
-  height: 5px;
-  border-radius: 99px;
-  background: var(--border);
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--accent), #a78bfa);
-  border-radius: 99px;
-  transition: width .5s ease;
-}
-
-.progress-text {
-  font-size: .75rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  font-family: var(--mono);
-  white-space: nowrap;
-  min-width: 3rem;
-  text-align: right;
-}
-
 .layout {
   display: flex;
   gap: 1.5rem;

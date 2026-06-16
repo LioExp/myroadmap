@@ -25,14 +25,6 @@ function saveCompleted() {
   localStorage.setItem('asec_roadmap', JSON.stringify([...completed]));
 }
 
-function updateProgress() {
-  let total = 0;
-  DATA.forEach(p => total += p.nodes.length);
-  const pct = Math.round((completed.size / total) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = pct + '%';
-}
-
 function showPanel(data, phaseTitle) {
   const panel = document.getElementById('panel');
   let linksHtml = '';
@@ -97,7 +89,6 @@ function handleNodeClick(id) {
     }
   });
 
-  updateProgress();
   showPanel(nodeData, phaseTitle);
 }
 
@@ -171,8 +162,6 @@ function render() {
 
     container.appendChild(phaseEl);
   });
-
-  updateProgress();
 }
 
 document.addEventListener('DOMContentLoaded', render);
