@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Security Engineer — Roadmap</title>
+<title>AI Security Engineer — Lio Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <nav class="topbar">
   <div class="topbar-inner">
-    
     <div class="topbar-links">
       <a href="https://github.com/LioExp/myroadmap" target="_blank" rel="noopener" class="topbar-link" title="GitHub">
         <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.92.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
       </a>
-      <button class="topbar-link theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">
+      <button class="topbar-link theme-toggle" onclick="toggleTheme()" title="Alternar tema">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17" style="display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       </button>
@@ -26,9 +27,187 @@
   </div>
 </nav>
 
-<div class="layout">
-  <div class="main" id="roadmap"></div>
-  <aside class="panel" id="panel"></aside>
+<div class="container">
+
+  <header>
+    <p class="eyebrow">jorge fernando samongua da costa · cbp · angola</p>
+    <h1>AI Security Engineer</h1>
+    <p class="subtitle">purple team → ai/ml → ai security · roadmap pessoal</p>
+  </header>
+
+  <div class="year-row">
+    <button class="ytab active">2026</button>
+    <button class="ytab locked"><span class="lock-icon">🔒</span> 2027</button>
+    <button class="ytab locked"><span class="lock-icon">🔒</span> 2028</button>
+  </div>
+
+  <div class="cols">
+
+    <div class="col" id="col-1">
+      <div class="phase-header ph1">Fase 1 · Purple Team</div>
+      <div class="progress-wrap"><div class="progress-fill" id="prog1" style="background:var(--purple)"></div></div>
+      <div class="progress-label" id="lbl1"><span>carregando...</span><span></span></div>
+
+      <div class="section-label">fundamentos</div>
+      <div class="node"><div class="node-box done" data-col="1"><span class="dot"></span>Linux & terminal</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box done" data-col="1"><span class="dot"></span>Networking basics</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box current" data-col="1"><span class="dot"></span>OSI model</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Protocolos & portas</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Virtualização & VMs</div></div>
+
+      <div class="section-label">segurança</div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>CIA triad & conceitos</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Threats & attack vectors</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Blue / Red / Purple teams</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Cryptography basics</div></div>
+
+      <div class="section-label">ferramentas</div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Nmap & Wireshark</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Burp Suite basics</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Metasploit intro</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>SIEM & logs</div></div>
+
+      <div class="section-label">prática</div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>TryHackMe / HackTheBox</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>CTF challenges</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>OWASP Top 10</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Pen testing basics</div></div>
+
+      <div class="section-label">linguagens</div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Python para automação</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box" data-col="1"><span class="dot"></span>Bash scripting</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box done" data-col="1"><span class="dot"></span>Rust (em progresso)</div></div>
+    </div>
+
+    <div class="col locked-col">
+      <div class="phase-header ph2">Fase 2 · AI / ML</div>
+      <div class="progress-wrap"><div class="progress-fill" style="width:0%;background:var(--teal)"></div></div>
+      <div class="progress-label"><span>0 / 18</span><span>bloqueado</span></div>
+
+      <div class="section-label">fundamentos</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Python para AI</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Matemática & stats</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>ML supervised / unsup.</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Neural networks</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Deep learning</div></div>
+
+      <div class="section-label">llms & apis</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Como LLMs funcionam</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>APIs: OpenAI, Claude</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Prompt engineering</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Fine-tuning basics</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Hugging Face</div></div>
+
+      <div class="section-label">rag & agentes</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Embeddings</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Vector databases</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>RAG implementation</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>AI agents & tools</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>LangChain / LlamaIndex</div></div>
+
+      <div class="section-label">infraestrutura</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Docker & containers</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Cloud basics (AWS/GCP)</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>MLOps intro</div></div>
+    </div>
+
+    <div class="col locked-col">
+      <div class="phase-header ph3">Fase 3 · AI Security</div>
+      <div class="progress-wrap"><div class="progress-fill" style="width:0%;background:var(--coral)"></div></div>
+      <div class="progress-label"><span>0 / 20</span><span>bloqueado</span></div>
+
+      <div class="section-label">fundamentos ai sec</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>AI security fundamentals</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Threat modeling para AI</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>AI risk management</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>CIA triad em AI</div></div>
+
+      <div class="section-label">ataques</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Prompt injection</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Jailbreak techniques</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Adversarial examples</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Data poisoning</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Model extraction</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Model inversion</div></div>
+
+      <div class="section-label">defesa</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Robust model design</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Adversarial training</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Guardrails & sandboxing</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>API protection & auth</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Continuous monitoring</div></div>
+
+      <div class="section-label">red teaming</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Black / white / grey box</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>LLM security testing</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Agentic AI security</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>RAG security</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Red team simulations</div></div>
+
+      <div class="section-label">profissional</div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Responsible disclosure</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Industry standards</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Certifications (CEH, OSCP)</div></div>
+      <div class="vconn"></div>
+      <div class="node"><div class="node-box"><span class="dot"></span>Portfolio & publicação</div></div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--green-dot)"></div>concluído</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>em progresso</div>
+    <div class="leg"><div class="leg-dot" style="background:#333"></div>pendente</div>
+    <p class="source-label">fontes: roadmap.sh · cybersecurity · ai-engineer · ai-red-teaming</p>
+  </div>
+
 </div>
 
 <script src="script.js"></script>
