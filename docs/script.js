@@ -8,48 +8,6 @@ const DATA = [
       { id: "f3", label: "Shell Scripting", desc: "Automação de tarefas com bash. Scripts para scanning, parsing, monitoramento.", links: ["https://www.shellscript.sh/", "https://devhints.io/bash"] },
       { id: "f4", label: "Python para Sec", desc: "Python aplicado a segurança: requests, sockets, scraping, automação de exploits e ferramentas.", links: ["https://docs.python.org/3/howto/sockets.html", "https://realpython.com/python-requests/"] },
     ]
-  },
-  {
-    id: 2,
-    title: "Security Core",
-    nodes: [
-      { id: "s1", label: "OWASP Top 10", desc: "As 10 vulnerabilidades mais críticas em web apps: SQLi, XSS, CSRF, SSRF, RCE, etc.", links: ["https://owasp.org/www-project-top-ten/", "https://portswigger.net/web-security"] },
-      { id: "s2", label: "Criptografia 101", desc: "Hash, cifras simétricas/assimétricas, TLS, PKI. O que proteger e como.", links: ["https://cryptohack.org/", "https://letsencrypt.org/pt-br/how-it-works/"] },
-      { id: "s3", label: "Autenticação & Autorização", desc: "OAuth2, JWT, SAML, sessões, MFA. Como validar identidade e controlar acesso.", links: ["https://jwt.io/introduction", "https://oauth.net/2/"] },
-      { id: "s4", label: "Network Security", desc: "Firewalls, IDS/IPS, VPNs, segmentação de rede, monitoramento de tráfego.", links: ["https://www.cisco.com/c/en/us/products/security/what-is-network-security.html"] },
-      { id: "s5", label: "Secure SDLC", desc: "DevSecOps, SAST/DAST, threat modeling, security review no ciclo de desenvolvimento.", links: ["https://owasp.org/www-project-secure-sdlc/"] },
-    ]
-  },
-  {
-    id: 3,
-    title: "AI & ML",
-    nodes: [
-      { id: "a1", label: "Fundamentos ML", desc: "Tipos de aprendizado, features, overfitting, métricas. Base para entender riscos em IA.", links: ["https://scikit-learn.org/stable/tutorial/index.html", "https://developers.google.com/machine-learning/crash-course"] },
-      { id: "a2", label: "LLMs & Transformers", desc: "Arquitetura transformer, atenção, GPT, embeddings. Como modelos de linguagem funcionam.", links: ["https://huggingface.co/learn/nlp-course", "https://jalammar.github.io/illustrated-transformer/"] },
-      { id: "a3", label: "Python ML Stack", desc: "PyTorch, scikit-learn, pandas, numpy. O ecossistema prático de ML.", links: ["https://pytorch.org/tutorials/", "https://pandas.pydata.org/docs/"] },
-      { id: "a4", label: "RAG & Agents", desc: "Retrieval-Augmented Generation, cadeias de reasoning, ferramentas para agentes de IA.", links: ["https://python.langchain.com/docs/tutorials/rag/"] },
-    ]
-  },
-  {
-    id: 4,
-    title: "AI Security",
-    nodes: [
-      { id: "as1", label: "Prompt Injection", desc: "Técnicas de injeção em LLMs, jailbreaks, defesas com sanitizacão e guardrails.", links: ["https://owasp.org/www-project-top-10-for-llm-applications/", "https://github.com/agencyenterprise/Prompt-Injection-Defender"] },
-      { id: "as2", label: "Model Poisoning & Supply Chain", desc: "Envenenamento de dados de treino, backdoors em modelos, riscos de supply chain ML.", links: ["https://atlas.mitre.org/"] },
-      { id: "as3", label: "Model Inversion & Extraction", desc: "Ataques que extraem dados de treino ou roubam modelos via queries de API.", links: ["https://arxiv.org/abs/1602.05629"] },
-      { id: "as4", label: "Red Teaming LLMs", desc: "Testes de penetração específicos para LLMs: probing, bias, toxicidade, evasão de filtros.", links: ["https://github.com/leondz/garak", "https://llm-attacks.org/"] },
-      { id: "as5", label: "AI Governance & Compliance", desc: "Regulamentação (EU AI Act), fairness, transparência, logging e auditoria de sistemas de IA.", links: ["https://artificialintelligenceact.eu/"] },
-    ]
-  },
-  {
-    id: 5,
-    title: "Build & Publish",
-    nodes: [
-      { id: "b1", label: "Secure AI Pipeline", desc: "Proteger todo o pipeline de IA: dados, treino, deployment, inferência. MLSecOps.", links: ["https://mlops.org/"] },
-      { id: "b2", label: "Ferramentas de AI Security", desc: "Garak, Vigil, LLM Guard, Guardrails AI, PurpleLlama. Stack prática de defesa.", links: ["https://github.com/NVIDIA/NeMo-Guardrails", "https://github.com/ML-Group/gard"] },
-      { id: "b3", label: "CTF & Labs", desc: "Desafios práticos de AI security em CTFs, laboratórios gratuitos e simulações.", links: ["https://capturetheflag.withgoogle.com/", "https://huggingface.co/spaces/leonardos/garak-arena"] },
-      { id: "b4", label: "Portfolio & Blog", desc: "Documentar projetos, escrever write-ups, publicar ferramentas. Construir presença na área.", links: ["https://dev.to/", "https://medium.com/"] },
-    ]
   }
 ];
 
@@ -217,11 +175,4 @@ function render() {
   updateProgress();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  render();
-
-  const themeBtn = document.getElementById('themeBtn');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', toggleTheme);
-  }
-});
+document.addEventListener('DOMContentLoaded', render);
