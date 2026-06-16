@@ -678,7 +678,7 @@ function openModal(nodeLabel) {
   document.getElementById('copyPrompt').addEventListener('click', function () {
     const text = document.getElementById('promptText').textContent;
     navigator.clipboard.writeText(text).then(() => {
-      this.textContent = 'Copiado ✓';
+      this.textContent = 'Copiado';
       this.classList.add('copied');
       setTimeout(() => {
         this.textContent = 'Copiar prompt';
