@@ -16,7 +16,7 @@
   --radius-sm: 6px;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --mono: 'SF Mono', 'Fira Code', monospace;
-  --topbar: rgba(13,13,13,0.88);
+  --topbar-bg: rgba(13,13,13,0.85);
 }
 
 [data-theme="light"] {
@@ -33,7 +33,7 @@
   --complete: #22c55e;
   --complete-bg: rgba(34,197,94,0.08);
   --complete-border: rgba(34,197,94,0.25);
-  --topbar: rgba(245,245,247,0.88);
+  --topbar-bg: rgba(245,245,247,0.85);
 }
 
 * {
@@ -52,53 +52,69 @@ body {
 }
 
 .topbar {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
   z-index: 100;
-  background: var(--topbar);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(128,128,128,.08);
-  padding: .65rem 1.25rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  background: var(--topbar-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 0.45rem 0.6rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .topbar-brand {
   font-weight: 700;
-  font-size: .95rem;
-  letter-spacing: -.02em;
-  margin-right: auto;
+  font-size: 0.85rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-decoration: none;
+  padding: 0 0.4rem;
 }
 
 .topbar-brand span {
   color: var(--accent);
 }
 
-.topbar-actions {
+.topbar-links {
   display: flex;
   align-items: center;
-  gap: .25rem;
+  gap: 0.15rem;
 }
 
-.topbar-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-sm);
-  border: none;
-  background: transparent;
-  color: var(--text-dim);
-  cursor: pointer;
+.topbar-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all .2s;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
 }
 
-.topbar-btn:hover {
-  background: rgba(128,128,128,.1);
+.topbar-link:hover {
+  background: rgba(128,128,128,0.1);
   color: var(--text);
+}
+
+.theme-toggle {
+  font-size: 0;
 }
 
 .progress-wrap {

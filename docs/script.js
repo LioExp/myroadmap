@@ -118,8 +118,8 @@ function toggleTheme() {
     html.setAttribute('data-theme', 'light');
   }
 
-  const sun = document.querySelector('#themeBtn .sun');
-  const moon = document.querySelector('#themeBtn .moon');
+  const sun = document.querySelector('.icon-sun');
+  const moon = document.querySelector('.icon-moon');
   if (sun && moon) {
     sun.style.display = isLight ? '' : 'none';
     moon.style.display = isLight ? 'none' : '';
