@@ -119,6 +119,7 @@ body {
 
 .layout {
   display: flex;
+  justify-content: center;
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -126,6 +127,7 @@ body {
 }
 
 .main {
+  max-width: 640px;
   flex: 1;
   min-width: 0;
 }
