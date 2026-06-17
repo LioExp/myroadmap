@@ -703,35 +703,98 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') closeModal();
 });
 
-// ── Clique nos nodes ──
-document.querySelectorAll('.node-box:not(.locked-col .node-box)').forEach(el => {
-  el.addEventListener('click', function () {
+// ── Clique nos nodes (inclui early-access) ──
+document.querySelectorAll('.node-box:not(.locked-col .node-box), .locked-col .node-box[data-early]').forEach(el => {
+  el.addEventListener('click', function (e) {
     const label = this.textContent.trim();
-    if (NODE_DATA[label]) {
-      openModal(label);
-    }
+    if (NODE_DATA[label]) openModal(label);
   });
 });
 
-// ── Progresso da coluna 1 ──
-const nodes1 = document.querySelectorAll('[data-col="1"]');
-let done = 0, total = nodes1.length;
+// ── Progresso global e por coluna ──
+function updateGlobalProgress() {
+  const all = document.querySelectorAll('.node-box:not(.locked-col .node-box), .locked-col .node-box[data-early]');
+  const done = document.querySelectorAll('.node-box.done:not(.locked-col .node-box), .locked-col .node-box.done[data-early]');
+  const total = all.length;
+  const n = done.length;
+  const pct = total ? Math.round((n / total) * 100) : 0;
+  document.getElementById('gpFill').style.width = pct + '%';
+  document.getElementById('gpPct').textContent = pct + '%';
+  document.getElementById('gpSub').textContent = n + ' / ' + total + ' concluídos';
+}
 
-nodes1.forEach(n => {
-  if (n.classList.contains('done')) done++;
-  n.addEventListener('click', function (e) {
+document.querySelectorAll('.node-box:not(.locked-col .node-box), .locked-col .node-box[data-early]').forEach(el => {
+  el.addEventListener('click', function () {
     if (this.classList.contains('current')) return;
     const wasDone = this.classList.contains('done');
     this.classList.toggle('done');
-    done += wasDone ? -1 : 1;
-    updateProgress();
+    updateGlobalProgress();
   });
 });
 
-function updateProgress() {
-  const pct = Math.round((done / total) * 100);
-  document.getElementById('prog1').style.width = pct + '%';
-  document.getElementById('lbl1').innerHTML = `<span>${done} / ${total}</span><span>${pct}%</span>`;
-}
+updateGlobalProgress();
 
-updateProgress();
+// ── Prática por secção ──
+const PRACTICE_TOOLS = {
+  tryhackme: {
+    name: 'TryHackMe',
+    url: 'https://tryhackme.com',
+    svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.705 0C7.54 0 4.902 2.285 4.349 5.291a4.525 4.525 0 0 0-4.107 4.5 4.525 4.525 0 0 0 4.52 4.52h6.761a.625.625 0 1 0 0-1.25H4.761a3.273 3.273 0 0 1-3.27-3.27A3.273 3.273 0 0 1 6.59 7.08a.625.625 0 0 0 .7-1.035 4.488 4.488 0 0 0-1.68-.69 5.223 5.223 0 0 1 5.096-4.104 5.221 5.221 0 0 1 5.174 4.57 4.489 4.489 0 0 0-.488.305.625.625 0 1 0 .731 1.013 3.245 3.245 0 0 1 1.912-.616 3.278 3.278 0 0 1 3.203 2.61.625.625 0 0 0 1.225-.251 4.533 4.533 0 0 0-4.428-3.61 4.54 4.54 0 0 0-.958.105C16.556 2.328 13.9 0 10.705 0Z"/></svg>',
+    reason: 'Laboratórios guiados para Linux, redes e fundamentos de segurança.'
+  },
+  portswigger: {
+    name: 'PortSwigger Academy',
+    url: 'https://portswigger.net/web-security',
+    svg: '<svg viewBox="0 0 640 640" fill="currentColor"><path d="M338 0H640V640H338V602.5L559 383H338V209.5H176.5L338 46.5V0Z"/><path d="M0 0H309V39L93.5 244.5H309V418.5H485L309 593V640H0V0Z" opacity="0.55"/></svg>',
+    reason: 'Pratica Burp Suite, análise de tráfego e exploração web.'
+  },
+  hackthebox: {
+    name: 'HackTheBox',
+    url: 'https://www.hackthebox.com',
+    svg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="m22.5106 6.4566.0008-.0123a.888.888 0 0 0-.2717-.6384c-.0084-.0084-.018-.0155-.0267-.0235-.0186-.0166-.0371-.0333-.0572-.0484-.0193-.0147-.04-.0276-.0607-.0406-.0096-.006-.0182-.0131-.0281-.0188L12.4576.1266a.891.891 0 0 0-.9223.0043L1.933 5.6744c-.0107.0062-.0203.014-.0307.0205-.0073.0047-.015.008-.0223.0128-.007.0047-.013.0106-.02.0155a.8769.8769 0 0 0-.147.1333l-.0026.003a.8872.8872 0 0 0-.2218.5847l.0009.014c-.0002.0088-.0015.0176-.0015.0264v11.0708c0 .3277.1802.6288.469.7836l9.5986 5.5417c.0076.0044.0158.0075.0236.0117a.8754.8754 0 0 0 .166.0687c.0134.004.0266.0083.0401.0117a.8793.8793 0 0 0 .072.0142c.0117.0019.0232.0045.0349.006a.835.835 0 0 0 .2157 0c.0117-.0015.0232-.0041.0348-.006a.9.9 0 0 0 .072-.0142c.0135-.0034.0267-.0077.04-.0117a.895.895 0 0 0 .0646-.0217.9134.9134 0 0 0 .1015-.047c.0078-.0042.016-.0072.0236-.0117l9.5986-5.5417a.8888.8888 0 0 0 .469-.7836V6.4779c0-.0071-.0012-.0142-.0014-.0213z"/></svg>',
+    reason: 'Põe à prova as tuas skills ofensivas em máquinas reais e CTFs.'
+  },
+  picoctf: {
+    name: 'PicoCTF',
+    url: 'https://picoctf.com',
+    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 7v5c0 4.5 3 9 9 11 6-2 9-6.5 9-11V7l-9-5Z"/><path d="M9 12h6M12 9v6"/></svg>',
+    reason: 'Desafia o pensamento computacional com CTFs que combinam lógica e ML.'
+  },
+  juiceshop: {
+    name: 'OWASP Juice Shop',
+    url: 'https://owasp.org/www-project-juice-shop/',
+    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14c0 4 2.5 7 6 8.5 3.5-1.5 6-4.5 6-8.5V8L12 4 6 8v6Z"/><path d="M8 10v3l4 2 4-2v-3"/><path d="M10 5V3M14 5V3M9 2h6"/></svg>',
+    reason: 'Ambiente web realista para praticar AI security, prompt injection e LLM testing.'
+  }
+};
+
+document.querySelectorAll('[data-practice]').forEach(el => {
+  const key = el.getAttribute('data-practice');
+  const tool = PRACTICE_TOOLS[key];
+  if (!tool) return;
+
+  const id = 'pc_' + key + '_' + el.textContent.trim().replace(/\s+/g, '_');
+  if (localStorage.getItem('mr_dismiss_' + id)) return;
+
+  const div = document.createElement('div');
+  div.className = 'practice-card';
+  div.id = id;
+  div.innerHTML = `
+    <div class="practice-card-inner">
+      ${tool.svg}
+      <div class="practice-card-body">
+        <div class="practice-card-name">${tool.name}</div>
+        <div class="practice-card-reason">${tool.reason}</div>
+      </div>
+    </div>
+    <a href="${tool.url}" target="_blank" rel="noopener" class="practice-card-link">Abrir →</a>
+    <button class="practice-card-dismiss" title="Dispensar">&times;</button>
+  `;
+
+  el.after(div);
+
+  div.querySelector('.practice-card-dismiss').addEventListener('click', function () {
+    div.style.display = 'none';
+    localStorage.setItem('mr_dismiss_' + id, '1');
+  });
+});
