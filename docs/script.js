@@ -47,7 +47,17 @@ const NODE_DATA = {
       "Configurar um laboratório de redes com VirtualBox + Kali + Metasploitable",
       "Resolver todos os níveis do OverTheWire Bandit até ao 20"
     ],
-    aiPrompt: "Quero aprender Linux para segurança ofensiva. Explica-me os 10 comandos mais importantes que um pentester deve saber no terminal, com exemplos práticos de cada um. Depois, sugere-me uma rotina de 7 dias para ganhar fluência em terminal Linux."
+    aiPrompt: "Quero aprender Linux para segurança ofensiva. Explica-me os 10 comandos mais importantes que um pentester deve saber no terminal, com exemplos práticos de cada um. Depois, sugere-me uma rotina de 7 dias para ganhar fluência em terminal Linux.",
+    keyKnowledge: [
+      "Filesystem hierarchy (/, /home, /var, /etc, /tmp)",
+      "Permissões: chmod, chown, chgrp, sticky bit, SUID",
+      "Gestão de processos: ps, kill, top, htop, systemd",
+      "Redirecionamento: pipes |, >, >>, <, 2>&1",
+      "grep, awk, sed para processamento de texto",
+      "SSH: chaves, config, tunneling",
+      "Crontab e automação de tarefas",
+      "Variáveis de ambiente e .bashrc"
+    ],
   },
 
   "Networking basics": {
@@ -83,7 +93,16 @@ const NODE_DATA = {
       "Capturar tráfego com tcpdump e identificar os 3 principais protocolos",
       "Criar duas VMs em redes diferentes e configurar o roteamento entre elas"
     ],
-    aiPrompt: "Sou iniciante em redes e quero entrar para segurança ofensiva. Explica-me como funciona uma comunicação TCP desde o clique no navegador até o site aparecer. Usa uma analogia simples e depois o modelo técnico."
+    aiPrompt: "Sou iniciante em redes e quero entrar para segurança ofensiva. Explica-me como funciona uma comunicação TCP desde o clique no navegador até o site aparecer. Usa uma analogia simples e depois o modelo técnico.",
+    keyKnowledge: [
+      "Modelo TCP/IP vs OSI",
+      "Endereçamento IPv4 e IPv6, subnets e CIDR",
+      "Portas TCP/UDP e serviços comuns",
+      "DNS: resolução, registos A, CNAME, MX",
+      "NAT, DHCP, gateways e routing",
+      "traceroute, ping, ip a, netstat, ss",
+      "HTTP/HTTPS: métodos, headers, status codes"
+    ],
   },
 
   "OSI model": {
@@ -116,7 +135,15 @@ const NODE_DATA = {
       "Explicar o modelo OSI a um colega sem usar jargão técnico — se conseguires, dominas",
       "Usar o Wireshark para identificar headers de cada camada num pacote HTTP"
     ],
-    aiPrompt: "Explica o modelo OSI como se eu tivesse 12 anos. Depois, para cada camada, dá um exemplo de ataque de segurança que explora essa camada e uma ferramenta que podemos usar para o prevenir ou detetar."
+    aiPrompt: "Explica o modelo OSI como se eu tivesse 12 anos. Depois, para cada camada, dá um exemplo de ataque de segurança que explora essa camada e uma ferramenta que podemos usar para o prevenir ou detetar.",
+    keyKnowledge: [
+      "7 camadas e responsabilidades de cada uma",
+      "Encapsulamento e desencapsulamento de dados",
+      "Protocolos por camada: Ethernet, IP, TCP, HTTP",
+      "Diferenças entre OSI e TCP/IP (na prática)",
+      "Ataques por camada: ARP spoofing (L2), SYN flood (L4), XSS (L7)",
+      "PDU por camada: frame, packet, segment, datagram"
+    ],
   },
 
   "Protocolos & portas": {
@@ -149,7 +176,15 @@ const NODE_DATA = {
       "Criar uma tabela com as 30 portas mais comuns, serviço, e vulnerabilidade típica (ex: 445 → SMB → EternalBlue)",
       "Usar netcat para fazer banner grab a um servidor web na porta 80"
     ],
-    aiPrompt: "Ensina-me as 20 portas de rede mais importantes que um pentester deve saber de cor. Para cada porta: número, serviço, e o que um atacante pode fazer se a encontrar aberta. Cria uma tabela."
+    aiPrompt: "Ensina-me as 20 portas de rede mais importantes que um pentester deve saber de cor. Para cada porta: número, serviço, e o que um atacante pode fazer se a encontrar aberta. Cria uma tabela.",
+    keyKnowledge: [
+      "20 portas mais comuns: 22, 80, 443, 445, 3389, 3306, 5432...",
+      "TCP vs UDP: quando cada um é usado",
+      "Port scanning com nmap: SYN, connect, UDP, FIN",
+      "Banner grabbing com netcat e telnet",
+      "Identificação de serviços por porta",
+      "Port ranges: well-known, registered, dynamic"
+    ],
   },
 
   "Virtualização & VMs": {
@@ -183,7 +218,15 @@ const NODE_DATA = {
       "Configurar uma rede Host-Only e fazer um scan completo da rede interna",
       "Criar um snapshot, correr um exploit que danifica o sistema, e restaurar o snapshot"
     ],
-    aiPrompt: "Quero montar um laboratório de hacking ético em casa. Dá-me o passo a passo completo: que software instalar, que máquinas vulneráveis baixar, como configurar as redes entre VMs. Assume que tenho 16GB de RAM."
+    aiPrompt: "Quero montar um laboratório de hacking ético em casa. Dá-me o passo a passo completo: que software instalar, que máquinas vulneráveis baixar, como configurar as redes entre VMs. Assume que tenho 16GB de RAM.",
+    keyKnowledge: [
+      "VirtualBox vs VMware vs Proxmox",
+      "Criação e configuração de VMs",
+      "Redes: NAT, Bridge, Host-Only, Internal",
+      "Snapshots e restauro de estados",
+      "Metasploitable, DVWA, VulnHub",
+      "Kali Linux como VM de ataque"
+    ],
   },
 
   "CIA triad & conceitos": {
@@ -215,7 +258,15 @@ const NODE_DATA = {
       "Desenhar um sistema de backup que garanta os 3 pilares",
       "Criar uma apresentação de 5 slides a explicar a CIA Triad para não-técnicos"
     ],
-    aiPrompt: "Explica a CIA Triad (Confidencialidade, Integridade, Disponibilidade) usando 3 cenários reais de cibersegurança. Depois, para cada pilar, diz que tipo de ataque o viola e que controlo o protege."
+    aiPrompt: "Explica a CIA Triad (Confidencialidade, Integridade, Disponibilidade) usando 3 cenários reais de cibersegurança. Depois, para cada pilar, diz que tipo de ataque o viola e que controlo o protege.",
+    keyKnowledge: [
+      "Confidencialidade: encriptação, controlo de acesso",
+      "Integridade: hashing, checksums, assinaturas digitais",
+      "Disponibilidade: redundância, backups, DDoS protection",
+      "Modelo AAA: Autenticação, Autorização, Auditoria",
+      "Não-repúdio: logs, certificados digitais",
+      "Ransomware e como viola a CIA Triad"
+    ],
   },
 
   "Threats & attack vectors": {
@@ -247,7 +298,15 @@ const NODE_DATA = {
       "Criar um threat model para uma aplicação web simples (ex: blog)",
       "Listar 5 attack vectors diferentes para um servidor web e como mitigar cada um"
     ],
-    aiPrompt: "Quero aprender threat modeling para iniciantes. Explica o que é um threat actor, quais os tipos principais, e como usar o modelo STRIDE para classificar ameaças. Dá exemplos práticos de cada letra do STRIDE."
+    aiPrompt: "Quero aprender threat modeling para iniciantes. Explica o que é um threat actor, quais os tipos principais, e como usar o modelo STRIDE para classificar ameaças. Dá exemplos práticos de cada letra do STRIDE.",
+    keyKnowledge: [
+      "Tipos de threat actors: script kiddie, APT, insider",
+      "Attack vectors: phishing, engenharia social, exploits, DDoS",
+      "Superfície de ataque e redução de superfície",
+      "Framework MITRE ATT&CK: tácticas e técnicas",
+      "Modelo STRIDE: Spoofing, Tampering, Repudiation, etc.",
+      "Cadeia de ataque: recon, weaponize, deliver, exploit"
+    ],
   },
 
   "Blue / Red / Purple teams": {
@@ -280,7 +339,15 @@ const NODE_DATA = {
       "Criar um playbook de resposta a incidentes para um cenário de ransomware",
       "Participar num CTF e analisar a tua performance como Red e Blue"
     ],
-    aiPrompt: "Explica a diferença entre Red Team, Blue Team e Purple Team em segurança. Se eu sou um iniciante que gosta de quebrar coisas e perceber como funcionam, qual destes perfis se adequa mais? Dá-me um plano de 3 meses para começar."
+    aiPrompt: "Explica a diferença entre Red Team, Blue Team e Purple Team em segurança. Se eu sou um iniciante que gosta de quebrar coisas e perceber como funcionam, qual destes perfis se adequa mais? Dá-me um plano de 3 meses para começar.",
+    keyKnowledge: [
+      "Missão de cada equipa: atacar, defender, integrar",
+      "Ferramentas típicas de Red Team (Cobalt Strike, Metasploit)",
+      "Ferramentas típicas de Blue Team (SIEM, EDR, SOAR)",
+      "Ciclo de um exercício Purple Team",
+      "Certificações: OSCP (Red), CISSP (Blue), CREST (Purple)",
+      "Perfil híbrido: purple como ponte entre equipas"
+    ],
   },
 
   "Cryptography basics": {
@@ -312,7 +379,15 @@ const NODE_DATA = {
       "Criar um script que faz hash de passwords e as compara com rainbow tables",
       "Explicar como o TLS protege uma conexão HTTPS num diagrama de 3 passos"
     ],
-    aiPrompt: "Explica criptografia para um pentester iniciante. Preciso saber: o que é hash, encriptação simétrica e assimétrica, e como o TLS funciona. Usa exemplos práticos que um atacante exploraria."
+    aiPrompt: "Explica criptografia para um pentester iniciante. Preciso saber: o que é hash, encriptação simétrica e assimétrica, e como o TLS funciona. Usa exemplos práticos que um atacante exploraria.",
+    keyKnowledge: [
+      "Hash: MD5, SHA-1, SHA-256, SHA-3",
+      "Cifras simétricas: AES, ChaCha20",
+      "Cifras assimétricas: RSA, ECC",
+      "TLS/HTTPS: handshake, certificados, CA",
+      "PKI: Certificate Authority, chain of trust",
+      "Ataques: hash collision, rainbow tables, MITM"
+    ],
   },
 
   "Nmap & Wireshark": {
@@ -346,7 +421,15 @@ const NODE_DATA = {
       "Capturar tráfego de um nmap scan no Wireshark e identificar cada tipo de pacote",
       "Usar NSE scripts para detetar uma vulnerabilidade conhecida (ex: EternalBlue)"
     ],
-    aiPrompt: "Dá-me um guia prático de nmap para iniciantes em segurança ofensiva. Quero saber: os 10 comandos mais importantes, o que cada flag faz, e como interpretar os resultados. Inclui exemplos de output."
+    aiPrompt: "Dá-me um guia prático de nmap para iniciantes em segurança ofensiva. Quero saber: os 10 comandos mais importantes, o que cada flag faz, e como interpretar os resultados. Inclui exemplos de output.",
+    keyKnowledge: [
+      "Nmap: tipos de scan (SYN, connect, UDP, FIN, NULL)",
+      "Nmap: deteção de versões (-sV), OS detection (-O)",
+      "NSE scripts: categorias e uso prático",
+      "Wireshark: captura e filtros de display",
+      "Wireshark: follow TCP stream, estatísticas",
+      "Deteção de anomalias: ARP spoofing, scan detection"
+    ],
   },
 
   "Burp Suite basics": {
@@ -379,7 +462,15 @@ const NODE_DATA = {
       "Interceptar um login e modificar a resposta para simular bypass de autenticação",
       "Usar o Intruder para fazer fuzzing de parâmetros numa aplicação web vulnerável"
     ],
-    aiPrompt: "Sou iniciante em segurança web. Explica-me como usar o Burp Suite para interceptar e modificar pedidos HTTP. Dá-me um exemplo prático de como testar SQL Injection usando o Burp Repeater."
+    aiPrompt: "Sou iniciante em segurança web. Explica-me como usar o Burp Suite para interceptar e modificar pedidos HTTP. Dá-me um exemplo prático de como testar SQL Injection usando o Burp Repeater.",
+    keyKnowledge: [
+      "Proxy de interceção: configurar navegador e certificado CA",
+      "Repeater: modificar e reenviar pedidos HTTP",
+      "Intruder: ataques de dicionário, fuzzing, brute force",
+      "Decoder: encoding/decoding de dados",
+      "Target scope e filtros de tráfego",
+      "Extensões: BApp Store, autorizações, CSRF"
+    ],
   },
 
   "Metasploit intro": {
@@ -411,7 +502,15 @@ const NODE_DATA = {
       "Usar o nmap + Metasploit para automatizar descoberta e exploração",
       "Configurar um payload reverse_https para bypass de firewall básico"
     ],
-    aiPrompt: "Explica o que é o Metasploit para um iniciante em pentesting. Dá-me o passo a passo de como usar msfconsole para explorar uma máquina vulnerável (Metasploitable 2), desde o scan até à shell."
+    aiPrompt: "Explica o que é o Metasploit para um iniciante em pentesting. Dá-me o passo a passo de como usar msfconsole para explorar uma máquina vulnerável (Metasploitable 2), desde o scan até à shell.",
+    keyKnowledge: [
+      "msfconsole: search, use, set, exploit",
+      "Payloads: reverse shell, bind shell, meterpreter",
+      "Exploitation de vulnerabilidades conhecidas (ex: MS17-010)",
+      "Post-exploitation: hashdump, keylogging, persistence",
+      "Auxiliares: scanners, fuzzers, enumeradores",
+      "Encoders e evasão de AV básica"
+    ],
   },
 
   "SIEM & logs": {
@@ -445,7 +544,15 @@ const NODE_DATA = {
       "Criar uma regra que alerta quando há 5 tentativas de SSH falhadas num minuto",
       "Analisar um log de ataque real (ex: Apache access log) e identificar o atacante"
     ],
-    aiPrompt: "Explica o que é um SIEM e como funciona para um iniciante em segurança. Quero montar um laboratório SIEM em casa — que ferramentas open source recomendas e como configurar para detetar ataques básicos?"
+    aiPrompt: "Explica o que é um SIEM e como funciona para um iniciante em segurança. Quero montar um laboratório SIEM em casa — que ferramentas open source recomendas e como configurar para detetar ataques básicos?",
+    keyKnowledge: [
+      "Logs: syslog, Windows Event Log, firewall logs",
+      "Formato e normalização de logs",
+      "SIEM: collection, parsing, correlação, alerting",
+      "Wazuh (open source) e ELK Stack",
+      "Criação de regras de correlação",
+      "Resposta a incidentes baseada em logs"
+    ],
   },
 
   "TryHackMe / HackTheBox": {
@@ -478,7 +585,15 @@ const NODE_DATA = {
       "Resolver 5 máquinas fáceis do HackTheBox e escrever write-up de cada uma",
       "Participar num CTF mensal (ex: HackTheBox CTF ou TryHackMe CTF)"
     ],
-    aiPrompt: "Sou iniciante em segurança ofensiva. Devo começar com TryHackMe ou HackTheBox? Dá-me um plano de 30 dias para passar de zero a conseguir resolver uma máquina fácil no HackTheBox."
+    aiPrompt: "Sou iniciante em segurança ofensiva. Devo começar com TryHackMe ou HackTheBox? Dá-me um plano de 30 dias para passar de zero a conseguir resolver uma máquina fácil no HackTheBox.",
+    keyKnowledge: [
+      "Navegação no THM: salas, caminhos, badges",
+      "Jr. Pentester Path e salas recomendadas",
+      "HackTheBox: máquinas fáceis, write-ups, pontos",
+      "Metodologia: recon, enum, exploit, privesc, report",
+      "Documentação de write-ups técnicos",
+      "Participação em CTFs"
+    ],
   },
 
   "CTF challenges": {
@@ -511,7 +626,15 @@ const NODE_DATA = {
       "Participar num CTF ao vivo no CTFtime como principiante",
       "Criar um write-up detalhado de 3 desafios resolvidos"
     ],
-    aiPrompt: "Nunca participei num CTF. Explica o que é, como funcionam as categorias de desafios (web, pwn, rev, crypto, forensics), e dá-me dicas para começar. Qual o melhor CTF para um iniciante completo?"
+    aiPrompt: "Nunca participei num CTF. Explica o que é, como funcionam as categorias de desafios (web, pwn, rev, crypto, forensics), e dá-me dicas para começar. Qual o melhor CTF para um iniciante completo?",
+    keyKnowledge: [
+      "Categorias: web, pwn, reversing, crypto, forensics, OSINT",
+      "Plataformas: PicoCTF, CTFtime, OverTheWire",
+      "Ferramentas: Burp, Ghidra, John, hashcat, Wireshark",
+      "Estratégia: research, tentativa, erro, colaboração",
+      "Escrita de write-ups claros e detalhados",
+      "Trabalho em equipa: divisão de tarefas, comunicação"
+    ],
   },
 
   "OWASP Top 10": {
@@ -544,7 +667,15 @@ const NODE_DATA = {
       "Explorar o OWASP Juice Shop e encontrar pelo menos 5 vulnerabilidades",
       "Criar um cheatsheet pessoal com payloads para cada categoria OWASP"
     ],
-    aiPrompt: "Explica as 10 categorias do OWASP Top 10 para um iniciante. Para cada uma: o que é, como testar, e como prevenir. Dá exemplos de payloads para pelo menos 3 categorias (SQLi, XSS, SSRF)."
+    aiPrompt: "Explica as 10 categorias do OWASP Top 10 para um iniciante. Para cada uma: o que é, como testar, e como prevenir. Dá exemplos de payloads para pelo menos 3 categorias (SQLi, XSS, SSRF).",
+    keyKnowledge: [
+      "Broken Access Control",
+      "Cryptographic Failures",
+      "Injection (SQLi, NoSQLi, OS command)",
+      "Insecure Design",
+      "Security Misconfiguration",
+      "SSRF, CSRF, Logging Failures"
+    ],
   },
 
   "Pen testing basics": {
@@ -577,7 +708,15 @@ const NODE_DATA = {
       "Mapear cada passo dum pentest real a uma fase da metodologia PTES",
       "Criar um template de relatório de pentest profissional"
     ],
-    aiPrompt: "Quero aprender pentest do zero. Explica as 5 fases de um teste de penetração com exemplos práticos de cada uma. Que certificação recomendas para começar: eJPT ou OSCP? Qual a diferença de custo e dificuldade?"
+    aiPrompt: "Quero aprender pentest do zero. Explica as 5 fases de um teste de penetração com exemplos práticos de cada uma. Que certificação recomendas para começar: eJPT ou OSCP? Qual a diferença de custo e dificuldade?",
+    keyKnowledge: [
+      "Fases: Recon, Scanning, Exploitation, Post-exploitation, Reporting",
+      "Tipos de pentest: caixa preta, cinzenta, branca",
+      "Metodologias: PTES, OWASP Testing Guide",
+      "Report: descobertas, impacto, recomendação, CVSS",
+      "Limites legais e éticos: autorização por escrito",
+      "Ferramentas essenciais: nmap, Burp, Metasploit, hydra"
+    ],
   },
 
   "Python para automação": {
@@ -610,7 +749,15 @@ const NODE_DATA = {
       "Automatizar um nmap scan e parsear o output para JSON",
       "Criar um script que testa SQL Injection num formulário web automaticamente"
     ],
-    aiPrompt: "Quero aprender Python focado em segurança ofensiva. Dá-me os 10 módulos Python mais importantes para pentest, com exemplos de código para cada um. Começa com sockets e requests."
+    aiPrompt: "Quero aprender Python focado em segurança ofensiva. Dá-me os 10 módulos Python mais importantes para pentest, com exemplos de código para cada um. Começa com sockets e requests.",
+    keyKnowledge: [
+      "Sockets para conexões de rede",
+      "Requests para interações HTTP",
+      "Scapy para manipulação de pacotes",
+      "Subprocess para execução de comandos",
+      "Expressões regulares para parsing de logs",
+      "PyCrypto para operações criptográficas"
+    ],
   },
 
   "Bash scripting": {
@@ -643,7 +790,15 @@ const NODE_DATA = {
       "Script que monitoriza /var/log/auth.log e alerta se houver >3 SSH falhadas",
       "Parser de log Apache que extrai IPs, User-Agents e pedidos suspeitos"
     ],
-    aiPrompt: "Quero aprender Bash scripting para segurança ofensiva. Dá-me 10 exemplos de scripts úteis para um pentester: desde enumeração automática até parsing de logs. Explica os conceitos-chave: pipes, redirecionamento, grep/awk/sed."
+    aiPrompt: "Quero aprender Bash scripting para segurança ofensiva. Dá-me 10 exemplos de scripts úteis para um pentester: desde enumeração automática até parsing de logs. Explica os conceitos-chave: pipes, redirecionamento, grep/awk/sed.",
+    keyKnowledge: [
+      "Variáveis, loops (for, while) e condicionais (if, case)",
+      "Funções e scripts reutilizáveis",
+      "grep, awk, sed: filtra, extrai, transforma",
+      "Redirecionamento e pipes: stdout, stderr, /dev/null",
+      "Agendamento com cron e systemd timers",
+      "Parse de logs e ficheiros de configuração"
+    ],
   },
 
   "Rust (em progresso)": {
@@ -676,7 +831,15 @@ const NODE_DATA = {
       "Reimplementar uma ferramenta de linha de comando em Rust (ex: grep ou cat)",
       "Criar um servidor TCP simples em Rust que responde a conexões"
     ],
-    aiPrompt: "Quero aprender Rust para segurança. Explica ownership e borrowing como se eu fosse um programador Python. Dá-me exemplos de porquê Rust é útil para ferramentas de segurança e um exemplo de um scanner de portas."
+    aiPrompt: "Quero aprender Rust para segurança. Explica ownership e borrowing como se eu fosse um programador Python. Dá-me exemplos de porquê Rust é útil para ferramentas de segurança e um exemplo de um scanner de portas.",
+    keyKnowledge: [
+      "Ownership, borrowing e lifetimes",
+      "Structs, enums e pattern matching",
+      "Error handling: Result, Option, unwrap, ? operator",
+      "Concorrência com Tokio (async/await)",
+      "Ferramentas de rede em Rust",
+      "Compilação cross-platform e binários minimalistas"
+    ],
   },
 
   // ── Fase 2 · AI / ML ──
@@ -695,7 +858,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "NumPy: arrays, operações vetoriais, broadcasting",
+      "Pandas: DataFrames, séries, limpeza de dados",
+      "Matplotlib/Seaborn: visualização de dados",
+      "Scikit-learn: modelos básicos de ML",
+      "PyTorch: tensores, autograd, nn.Module",
+      "Jupyter Notebooks para experimentação"
+    ],
   },
 
   "Matemática & stats": {
@@ -712,7 +883,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Álgebra linear: vetores, matrizes, multiplicação, SVD",
+      "Cálculo: derivadas, gradiente, chain rule",
+      "Probabilidade: distribuições, Bayes, entropia",
+      "Estatística: média, variância, desvio padrão, correlação",
+      "Otimização: gradiente descendente, loss functions",
+      "Matrizes em Python com NumPy"
+    ],
   },
 
   "ML supervised / unsup.": {
@@ -729,7 +908,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Regressão linear e logística",
+      "Decision Trees e Random Forests",
+      "SVM (Support Vector Machines)",
+      "K-Means e clustering hierárquico",
+      "PCA para redução de dimensionalidade",
+      "Avaliação: acurácia, precisão, recall, F1"
+    ],
   },
 
   "Neural networks": {
@@ -746,7 +933,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Perceptron e MLP (Multi-Layer Perceptron)",
+      "Funções de ativação: ReLU, sigmoid, tanh, softmax",
+      "Backpropagation e gradiente descendente",
+      "Batch normalization, dropout, regularização",
+      "CNN para imagens, RNN para sequências",
+      "PyTorch: nn.Module, DataLoader, treino"
+    ],
   },
 
   "Deep learning": {
@@ -763,7 +958,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "CNN: convolução, pooling, feature maps",
+      "RNN/LSTM/GRU para séries temporais",
+      "Transformers: attention, self-attention, multi-head",
+      "Transfer learning e fine-tuning",
+      "GANs: gerador, discriminador, treino adversarial",
+      "Treino em GPU: CUDA, mixed precision, distributed"
+    ],
   },
 
   "Como LLMs funcionam": {
@@ -780,7 +983,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Arquitetura Transformer: encoder, decoder, attention",
+      "Tokenização: BPE, WordPiece, SentencePiece",
+      "Pré-treino vs fine-tuning",
+      "Context window, positional encoding",
+      "Temperature, top-k, top-p sampling",
+      "Limitações: alucinação, viés, contexto finito"
+    ],
   },
 
   "APIs: OpenAI, Claude": {
@@ -797,7 +1008,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "API OpenAI: chat completions, embeddings, streaming",
+      "API Claude: messages API, system prompts",
+      "Parâmetros: temperature, max_tokens, stop sequences",
+      "Autenticação: API keys, rate limits, billing",
+      "Function calling e tool use",
+      "Construção de prompts estruturados"
+    ],
   },
 
   "Prompt engineering": {
@@ -814,7 +1033,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Estrutura de prompt: system, user, assistant, context",
+      "Técnicas: zero-shot, few-shot, chain-of-thought",
+      "Role prompting e persona",
+      "Output formatting: JSON, markdown, XML",
+      "Iteração e refinamento de prompts",
+      "Guardar e versionar prompts"
+    ],
   },
 
   "Fine-tuning basics": {
@@ -831,7 +1058,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Supervised fine-tuning (SFT) com dataset rotulado",
+      "Parameter-efficient: LoRA, QLoRA, adapters",
+      "Preparação de dataset: formato, qualidade, balanced",
+      "Hiperparâmetros: learning rate, batch size, epochs",
+      "Avaliação pós fine-tuning: loss, accuracy, human eval",
+      "Overfitting e regularização em fine-tuning"
+    ],
   },
 
   "Hugging Face": {
@@ -848,7 +1083,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Hugging Face Hub: modelos, datasets, spaces",
+      "Transformers library: pipeline, AutoModel, Trainer",
+      "Datasets library: carregar, processar, split",
+      "Fine-tuning com Hugging Face Trainer",
+      "Push de modelos para o Hub",
+      "Spaces para deploy de demos"
+    ],
   },
 
   "Embeddings": {
@@ -865,7 +1108,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "O que são embeddings: representação vetorial de texto",
+      "Modelos de embedding: text-embedding-ada-002, sentence-transformers",
+      "Similaridade: cosseno, euclidiana, dot product",
+      "Visualização de embeddings com t-SNE ou PCA",
+      "Aplicações: search semântico, clustering, classificação",
+      "Limitações: viés, dimensionalidade, contexto"
+    ],
   },
 
   "Vector databases": {
@@ -882,7 +1133,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Conceito: índices de similaridade vetorial",
+      "Produtos: Pinecone, Weaviate, Qdrant, Chroma",
+      "Índices: HNSW, IVF, brute force",
+      "CRUD de vetores com metadados",
+      "Hybrid search: vetorial + filtros por metadados",
+      "Escalabilidade: sharding, replicação, performance"
+    ],
   },
 
   "RAG implementation": {
@@ -899,7 +1158,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Pipeline RAG: ingest, chunk, embed, store, retrieve, generate",
+      "Chunking estratégias: tamanho, overlap, splitting",
+      "Retrieval: similarity search, MMR, HyDE",
+      "Context augmentation no prompt",
+      "Avaliação: faithfulness, relevance, recall",
+      "Frameworks: LangChain, LlamaIndex, Haystack"
+    ],
   },
 
   "AI agents & tools": {
@@ -916,7 +1183,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Conceito: agent = LLM + tools + memory + planning",
+      "Tool use: function calling, APIs, search, code execution",
+      "Memória: curto prazo (contexto), longo prazo (vector store)",
+      "Planning: ReAct, chain-of-thought, subgoals",
+      "Multi-agent: coordenação, debate, hierarquia",
+      "Frameworks: LangChain Agent, AutoGPT, CrewAI"
+    ],
   },
 
   "LangChain / LlamaIndex": {
@@ -933,7 +1208,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "LangChain: chains, agents, retrievers, memory",
+      "LlamaIndex: índices, queries, engines",
+      "Prompt templates e output parsers",
+      "Integração com modelos e vector stores",
+      "Observabilidade: LangSmith, tracing",
+      "Deploy de aplicações RAG e agentes"
+    ],
   },
 
   "Docker & containers": {
@@ -950,7 +1233,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Imagens vs containers: build, run, pull, push",
+      "Dockerfile: FROM, RUN, COPY, CMD, ENTRYPOINT",
+      "Volumes e bind mounts para persistência",
+      "Redes: bridge, host, overlay, docker-compose",
+      "docker-compose para multi-serviços",
+      "Multi-stage builds e .dockerignore"
+    ],
   },
 
   "Cloud basics (AWS/GCP)": {
@@ -967,7 +1258,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "AWS EC2: instâncias, AMIs, security groups, key pairs",
+      "AWS S3: buckets, objetos, políticas, versioning",
+      "AWS IAM: users, roles, policies, least privilege",
+      "GCP Compute Engine e Cloud Storage equivalentes",
+      "Serverless: AWS Lambda, GCP Cloud Functions",
+      "VPC, subnets, load balancers"
+    ],
   },
 
   "MLOps intro": {
@@ -984,7 +1283,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Pipeline ML: data, train, evaluate, deploy, monitor",
+      "Experiment tracking: MLflow, W&B",
+      "Model registry e versionamento",
+      "Deploy: REST API, batch inference, edge",
+      "Monitorização: data drift, model drift, performance",
+      "CI/CD para ML: GitHub Actions, Kubeflow"
+    ],
   },
 
   // ── Fase 3 · AI Security ──
@@ -1003,7 +1310,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Ameaças específicas de AI vs segurança tradicional",
+      "Ciclo de vida de um modelo: ataque em cada fase",
+      "OWASP Top 10 for LLM Applications",
+      "MITRE ATLAS: framework de ataques a AI",
+      "AI Bill of Materials (AI BOM)",
+      "Governança e compliance em AI"
+    ],
   },
 
   "Threat modeling para AI": {
@@ -1020,7 +1335,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Asset identification: dados, modelo, pipeline, inferência",
+      "Attack surface: dataset, treino, deploy, API",
+      "STRIDE aplicado a AI",
+      "Ferramentas: Threat Dragon, OWASP AI Exchange",
+      "Mitigações por fase do ciclo ML",
+      "Modelo de ameaças adaptado a sistemas de ML"
+    ],
   },
 
   "AI risk management": {
@@ -1037,7 +1360,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Riscos: viés, alucinação, segurança, privacidade, compliance",
+      "NIST AI Risk Management Framework",
+      "EU AI Act: categorias de risco, obrigações",
+      "AI audits: fairness, accountability, transparency",
+      "Risk assessment matrix para AI",
+      "Documentação de riscos e planos de mitigação"
+    ],
   },
 
   "CIA triad em AI": {
@@ -1054,7 +1385,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Confidencialidade: model inversion, membership inference",
+      "Integridade: data poisoning, model tampering",
+      "Disponibilidade: DDoS, compute theft",
+      "Privacidade diferencial em treino",
+      "Watermarking de modelos para integridade",
+      "Auditoria contínua de outputs"
+    ],
   },
 
   "Prompt injection": {
@@ -1071,7 +1410,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Direct vs indirect prompt injection",
+      "Técnicas: role reversal, DAN, payload splitting",
+      "Context leakage: exfiltração de system prompt",
+      "Defesas: input sanitization, output validation, delimiters",
+      "Ferramentas: LangKit, Rebuff, Guardrails",
+      "Testes adversariais automatizados"
+    ],
   },
 
   "Jailbreak techniques": {
@@ -1088,7 +1435,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Técnicas comuns: DAN, roleplay, encoding, hypnosis",
+      "Bypass de content filters: base64, leetspeak, tradução",
+      "Jailbreak via few-shot poisoning",
+      "Ferramentas: GPTFuzzer, EasyJailbreak",
+      "Mitigações: treino adversarial, RLHF",
+      "Disclosure responsável de jailbreaks"
+    ],
   },
 
   "Adversarial examples": {
@@ -1105,7 +1460,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Ataques white-box: FGSM, PGD, C&W",
+      "Ataques black-box: transferabilidade, query-based",
+      "Defesas: adversarial training, input transformation",
+      "Ferramentas: CleverHans, Foolbox, ART",
+      "Avaliação de robustez: certificada vs empírica",
+      "Exemplos visuais (imagens) e textuais"
+    ],
   },
 
   "Data poisoning": {
@@ -1122,7 +1485,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Tipos: label flipping, backdoor triggers, clean-label",
+      "Ataques: BadNets, Poison Frogs",
+      "Backdoor: trigger invisível, ativação específica",
+      "Defesas: data sanitization, outlier detection",
+      "Ferramentas: TrojAI, BackdoorBench",
+      "Deteção: activation clustering, spectral signature"
+    ],
   },
 
   "Model extraction": {
@@ -1139,7 +1510,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Objetivo: roubar o modelo via queries à API",
+      "Técnicas: equilateral, Jacobian, transfer learning",
+      "Métricas: fidelidade, acurácia, dataset size",
+      "Defesas: rate limiting, watermarking, query detection",
+      "Ferramentas: Knockoff Nets, Copycat CNN",
+      "Custo vs benefício da extração"
+    ],
   },
 
   "Model inversion": {
@@ -1156,7 +1535,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Objetivo: reconstruir dados de treino",
+      "Ataques: GAN-based inversion, gradient matching",
+      "Implicações de privacidade",
+      "Defesas: differential privacy, gradient clipping",
+      "Métrica: reconstrução vs dados originais",
+      "Ferramentas: MI-Attack, GradInversion"
+    ],
   },
 
   "Robust model design": {
@@ -1173,7 +1560,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Adversarial training: PGD, TRADES, ensemble",
+      "Certified robustness: Lipschitz, randomized smoothing",
+      "Architecture choices para robustez",
+      "Data augmentation: CutMix, MixUp, AutoAugment",
+      "Regularização: weight decay, dropout",
+      "Benchmarks: RobustBench"
+    ],
   },
 
   "Adversarial training": {
@@ -1190,7 +1585,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "PGD adversarial training padrão",
+      "TRADES: trade-off entre robustez e acurácia",
+      "Ensemble adversarial training",
+      "Free adversarial training",
+      "Limitações: custo computacional",
+      "Overfitting a ataques conhecidos"
+    ],
   },
 
   "Guardrails & sandboxing": {
@@ -1207,7 +1610,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Input validation e output validation",
+      "Sandboxing de LLMs e agentes",
+      "Content filters: toxicidade, PII, código",
+      "Ferramentas: Guardrails AI, NVIDIA NeMo, LangKit",
+      "Policy enforcement configurável",
+      "Auditoria e logging de violações"
+    ],
   },
 
   "API protection & auth": {
@@ -1224,7 +1635,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Autenticação: API keys, OAuth2, JWT",
+      "Rate limiting por user, IP, endpoint",
+      "Input validation: schema, tamanho, sanitização",
+      "Logging e monitorização",
+      "CORS, CSRF, proteção de endpoints",
+      "API gateways: Kong, AWS API Gateway"
+    ],
   },
 
   "Continuous monitoring": {
@@ -1241,7 +1660,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Monitorização de inputs: toxicidade, jailbreak, PII",
+      "Monitorização de outputs: alucinação, viés",
+      "Data drift e concept drift",
+      "Alerting e dashboards",
+      "Ferramentas: WhyLabs, Arize, Evidently",
+      "Runbooks de resposta a incidentes"
+    ],
   },
 
   "Black / white / grey box": {
@@ -1258,7 +1685,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Black-box: acesso só à API",
+      "White-box: acesso total a pesos e gradientes",
+      "Grey-box: conhecimento parcial",
+      "Transferabilidade entre modelos",
+      "Query budgets e restrições",
+      "Escolha conforme contexto real"
+    ],
   },
 
   "LLM security testing": {
@@ -1275,7 +1710,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Metodologia: recon, prompt injection, jailbreak, exfiltração",
+      "Ferramentas: Garak, PyRIT, Giskard",
+      "Testes automatizados de segurança de LLMs",
+      "OWASP LLM Testing Guide",
+      "Report de vulnerabilidades",
+      "Red teaming operacional vs automatizado"
+    ],
   },
 
   "Agentic AI security": {
@@ -1292,7 +1735,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Riscos: tool abuse, privilege escalation",
+      "Attack surface: memória, ferramentas, planner",
+      "Prompt injection em agentes",
+      "Defesas: sandboxing, approval gates",
+      "Monitorização de ações de agentes",
+      "Frameworks: Guardrails Agent, CrewAI security"
+    ],
   },
 
   "RAG security": {
@@ -1309,7 +1760,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Riscos: data poisoning no vector store",
+      "Prompt injection via documentos recuperados",
+      "Privacidade: dados sensíveis no retriever",
+      "Defesas: sanitização, filtros de contexto",
+      "Avaliação: relevância vs segurança",
+      "Auditoria do pipeline RAG"
+    ],
   },
 
   "Red team simulations": {
@@ -1326,7 +1785,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Planeamento: scope, regras, objetivos",
+      "Execução: recon, ataque, pivot, exfiltração",
+      "Ferramentas: Cobalt Strike, Mythic, Sliver",
+      "Reporting: descobertas, impacto, defesas",
+      "Purple team: validação de deteções",
+      "Lições aprendidas e melhoria contínua"
+    ],
   },
 
   "Responsible disclosure": {
@@ -1343,7 +1810,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "Processo: descoberta, relato, confirmação, correção, publicação",
+      "Tipos: full disclosure, responsible, coordinated",
+      "Bug bounty: HackerOne, Bugcrowd",
+      "VDP: Vulnerability Disclosure Policy",
+      "Legal: safe harbor, limites de teste",
+      "Comunicação: relatório claro"
+    ],
   },
 
   "Industry standards": {
@@ -1360,7 +1835,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "ISO 27001: ISMS",
+      "SOC 2: trust services criteria",
+      "NIST Cybersecurity Framework",
+      "PCI DSS",
+      "GDPR: proteção de dados",
+      "OWASP ASVS"
+    ],
   },
 
   "Certifications (CEH, OSCP)": {
@@ -1377,7 +1860,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "CEH: Ethical Hacker, teoria",
+      "OSCP: Offensive Security, prática 24h+exame",
+      "eJPT: INE, entrada, prática guiada",
+      "CISSP: gestão, amplo espectro",
+      "Escolha conforme perfil",
+      "Preparação: laboratórios, simulados"
+    ],
   },
 
   "Portfolio & publicação": {
@@ -1394,7 +1885,15 @@ const NODE_DATA = {
     paid: [],
     whyRecommended: "",
     projects: [],
-    aiPrompt: ""
+    aiPrompt: "",
+    keyKnowledge: [
+      "GitHub: repositórios, README, commits",
+      "Blog técnico: artigos, write-ups",
+      "LinkedIn: perfil, publicações",
+      "Portfolio: projetos destacados",
+      "Storytelling: resultados, aprendizados",
+      "Consistência: publicar regularmente"
+    ],
   }
 };
 
@@ -1418,6 +1917,8 @@ function openModal(nodeLabel) {
   const learnHtml = (data.learn || []).map(l => `<li>${l}</li>`).join('');
 
   const projectsHtml = (data.projects || []).map(p => `<li>${p}</li>`).join('');
+
+  const keyHtml = (data.keyKnowledge || []).map(k => `<li>${k}</li>`).join('');
 
   modalBody.innerHTML = `
     <div class="modal-phase">${data.phase}</div>
@@ -1444,6 +1945,11 @@ function openModal(nodeLabel) {
       <div class="modal-h">O que vais aprender</div>
       <ul class="modal-ul">${learnHtml}</ul>
     </div>
+
+    ${keyHtml ? `<div class="modal-section">
+      <div class="modal-h">Conhecimentos-chave</div>
+      <ul class="modal-ul">${keyHtml}</ul>
+    </div>` : ''}
 
     <div class="modal-section">
       <div class="modal-h">Visão depois de completar</div>
