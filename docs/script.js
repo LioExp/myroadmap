@@ -15,6 +15,10 @@ function toggleTheme() {
 const NODE_DATA = {
   "Linux & terminal": {
     phase: "Fase 1 · Purple Team",
+    duration: "4-8 semanas",
+    prereqs: [],
+    duration: "4-8 semanas",
+    prereqs: [],
     intro: "O Linux é o sistema operativo padrão da segurança ofensiva e defensiva. Dominar o terminal não é opcional — é pré-requisito. A maioria das ferramentas de segurança (nmap, metasploit, burp suite) corre em Linux ou foi desenhada para ele.",
     desc: "Aprender Linux é aprender a comunicar com o computador sem intermediários gráficos. Vais lidar com filesystem hierarchy, permissões (chmod/chown), processos (ps/kill/top), redirecionamento de I/O, pipes, variáveis de ambiente e o poder dos ficheiros de config (.bashrc, .vimrc).",
     learn: [
@@ -48,6 +52,10 @@ const NODE_DATA = {
 
   "Networking basics": {
     phase: "Fase 1 · Purple Team",
+    duration: "4-6 semanas",
+    prereqs: [],
+    duration: "4-6 semanas",
+    prereqs: [],
     intro: "Redes são a fundação de tudo em segurança. Um ataque é, no fundo, uma conversa maliciosa entre dois pontos na rede. Se não percebes como essa conversa funciona, não vais conseguir defendê-la nem atacá-la.",
     desc: "Vais aprender os conceitos essenciais: endereços IP (IPv4 e IPv6), subnets e máscaras, portas (TCP/UDP), NAT, DHCP, DNS, gateways e roteamento. Tudo o que acontece quando um pacote viaja de um computador para outro na internet.",
     learn: [
@@ -80,6 +88,10 @@ const NODE_DATA = {
 
   "OSI model": {
     phase: "Fase 1 · Purple Team",
+    duration: "1-2 semanas",
+    prereqs: ["Networking basics"],
+    duration: "1-2 semanas",
+    prereqs: ["Networking basics"],
     intro: "O modelo OSI é o mapa conceptual que descreve como os dados viajam entre dispositivos. Cada camada tem uma responsabilidade específica. Saber em que camada cada ataque e cada defesa opera é o que separa um profissional de um entusiasta.",
     desc: "Vais estudar as 7 camadas: Física, Ligação de Dados, Rede, Transporte, Sessão, Apresentação e Aplicação. Cada camada adiciona um header ao pacote (encapsulamento). Cada ataque explora vulnerabilidades numa camada específica.",
     learn: [
@@ -109,6 +121,10 @@ const NODE_DATA = {
 
   "Protocolos & portas": {
     phase: "Fase 1 · Purple Team",
+    duration: "2-3 semanas",
+    prereqs: ["Networking basics"],
+    duration: "2-3 semanas",
+    prereqs: ["Networking basics"],
     intro: "Cada serviço na rede escuta numa porta. Saber quais portas correspondem a que serviços é como conhecer o mapa da cidade: sabes onde estão os bancos, as lojas e as casas. Um atacante usa esse mapa para encontrar entradas.",
     desc: "Vais aprender os protocolos mais comuns: HTTP/HTTPS (80/443), SSH (22), FTP (21), DNS (53), SMTP (25), SMB (445), RDP (3389), MySQL (3306). E porque é que saber disto é essencial para enumeração e exploração.",
     learn: [
@@ -138,6 +154,10 @@ const NODE_DATA = {
 
   "Virtualização & VMs": {
     phase: "Fase 1 · Purple Team",
+    duration: "1-2 semanas",
+    prereqs: ["Linux básico"],
+    duration: "1-2 semanas",
+    prereqs: ["Linux básico"],
     intro: "Segurança prática requer laboratório. Não podes testar ferramentas ofensivas no teu sistema principal. Virtualização permite criar ambientes isolados (VMs) para montar alvos, testar exploits e praticar sem riscos.",
     desc: "Vais aprender a usar VirtualBox, VMware e Proxmox. Criar máquinas vulneráveis (Metasploitable, DVWA, VulnHub), configurar redes internas entre VMs, tirar snapshots para restaurar estados e gerir recursos.",
     learn: [
@@ -168,6 +188,10 @@ const NODE_DATA = {
 
   "CIA triad & conceitos": {
     phase: "Fase 1 · Purple Team",
+    duration: "1-2 semanas",
+    prereqs: [],
+    duration: "1-2 semanas",
+    prereqs: [],
     intro: "A CIA Triad (Confidencialidade, Integridade, Disponibilidade) é o modelo fundamental da segurança da informação. Toda e qualquer controlo de segurança existe para proteger um destes três pilares. Sem isto, não fazes segurança — fazes apenas barulho.",
     desc: "Vais explorar cada pilar: Confidencialidade (só quem deve vê), Integridade (dados não foram alterados), Disponibilidade (sistema está acessível quando necessário). Vais também aprender conceitos derivados: autenticação, autorização, não-repúdio, e o modelo AAA.",
     learn: [
@@ -196,6 +220,10 @@ const NODE_DATA = {
 
   "Threats & attack vectors": {
     phase: "Fase 1 · Purple Team",
+    duration: "2-3 semanas",
+    prereqs: ["CIA triad & conceitos"],
+    duration: "2-3 semanas",
+    prereqs: ["CIA triad & conceitos"],
     intro: "Um threat actor pode ser um hacker solitário, um grupo organizado, um estado-nação ou até um insider. Cada um tem motivações diferentes. Compreender quem pode atacar-te e como é o primeiro passo para te defenderes.",
     desc: "Vais aprender a classificar ameaças: script kiddies, hacktivistas, criminosos organizados, APTs (Advanced Persistent Threats), insiders. Vais também mapear attack vectors comuns: phishing, engenharia social, exploits de dia zero, ataques de força bruta, DDoS, supply chain.",
     learn: [
@@ -224,6 +252,10 @@ const NODE_DATA = {
 
   "Blue / Red / Purple teams": {
     phase: "Fase 1 · Purple Team",
+    duration: "1-2 semanas",
+    prereqs: [],
+    duration: "1-2 semanas",
+    prereqs: [],
     intro: "No mundo da segurança, há três equipas com missões diferentes: Red Team ataca, Blue Team defende, Purple Team integra os dois. Saber qual o teu perfil ajuda a focar os estudos e a escolher certificações e carreira.",
     desc: "Vais perceber o ciclo completo: Red Team simula ataques reais para testar defesas. Blue Team monitoriza, deteta e responde a incidentes. Purple Team garante que a comunicação entre os dois acontece e que as lições aprendidas viram melhorias.",
     learn: [
@@ -253,6 +285,10 @@ const NODE_DATA = {
 
   "Cryptography basics": {
     phase: "Fase 1 · Purple Team",
+    duration: "3-4 semanas",
+    prereqs: [],
+    duration: "3-4 semanas",
+    prereqs: [],
     intro: "Criptografia é a arte de esconder informação. É a base da confidencialidade e integridade na segurança digital. Desde a sessão HTTPS do teu banco até ao hash da tua password, tudo depende de algoritmos criptográficos.",
     desc: "Vais aprender: hash (MD5, SHA-256), cifras simétricas (AES), cifras assimétricas (RSA, ECC), assinaturas digitais, certificados TLS, PKI (Public Key Infrastructure). Não precisas de ser matemático, mas precisas de perceber o que cada um faz e onde se aplica.",
     learn: [
@@ -281,6 +317,10 @@ const NODE_DATA = {
 
   "Nmap & Wireshark": {
     phase: "Fase 1 · Purple Team",
+    duration: "4-6 semanas",
+    prereqs: ["Networking basics", "Virtualização & VMs"],
+    duration: "4-6 semanas",
+    prereqs: ["Networking basics", "Virtualização & VMs"],
     intro: "Nmap é o canivete suíço de scanning de redes. Wireshark é o microscópio de pacotes. Juntos, são as duas ferramentas mais importantes para um profissional de segurança. Uma serve para descobrir, a outra para analisar.",
     desc: "Nmap: vais aprender tipos de scan (SYN, connect, UDP, FIN), deteção de versões (service versioning), NSE scripts para vulnerabilidades, output parsing. Wireshark: captura de pacotes, filtros de display e captura, following streams, estatísticas, deteção de anomalias.",
     learn: [
@@ -311,6 +351,10 @@ const NODE_DATA = {
 
   "Burp Suite basics": {
     phase: "Fase 1 · Purple Team",
+    duration: "4-6 semanas",
+    prereqs: ["Networking basics", "Protocolos & portas"],
+    duration: "4-6 semanas",
+    prereqs: ["Networking basics", "Protocolos & portas"],
     intro: "Burp Suite é o proxy de interceção padrão para testar segurança web. Permite ver, modificar e repetir pedidos HTTP/HTTPS entre o teu navegador e o servidor. É a ferramenta #1 para OWASP Top 10.",
     desc: "Vais aprender a configurar o proxy, interceptar pedidos, usar o Repeater para modificar e reenviar pedidos, o Intruder para ataques de força bruta e fuzzing, e o Decoder para manipular dados. A versão Community é gratuita e já cobre muito.",
     learn: [
@@ -340,6 +384,10 @@ const NODE_DATA = {
 
   "Metasploit intro": {
     phase: "Fase 1 · Purple Team",
+    duration: "3-4 semanas",
+    prereqs: ["Nmap & Wireshark", "Virtualização & VMs"],
+    duration: "3-4 semanas",
+    prereqs: ["Nmap & Wireshark", "Virtualização & VMs"],
     intro: "Metasploit é o framework de exploração mais usado no mundo. Não é uma ferramenta mágica — é uma biblioteca de exploits, payloads e auxiliares que automatiza a fase de exploração de um ataque. Saber usá-lo é essencial, saber depender dele não é.",
     desc: "Vais aprender a estrutura do Metasploit: exploits, payloads (reverse shell, bind shell, meterpreter), auxiliares (scanners, fuzzers), encoders e post-exploitation modules. Vais também perceber a diferença entre usar um exploit automático vs manual.",
     learn: [
@@ -368,6 +416,10 @@ const NODE_DATA = {
 
   "SIEM & logs": {
     phase: "Fase 1 · Purple Team",
+    duration: "3-4 semanas",
+    prereqs: ["Linux básico"],
+    duration: "3-4 semanas",
+    prereqs: ["Linux básico"],
     intro: "Logs são o registo de tudo o que acontece num sistema. SIEM (Security Information and Event Management) é a ferramenta que centraliza, correlaciona e analisa esses logs. Um atacante deixa rasto — o SIEM é como encontras esse rasto.",
     desc: "Vais aprender o que são logs (syslog, event logs do Windows, logs de firewall), como são formatados e onde são guardados. Depois vais perceber como um SIEM funciona: collection, normalização, correlação, alerting. Ferramentas: Splunk (gratuito), Wazuh (open source), ELK Stack.",
     learn: [
@@ -398,6 +450,10 @@ const NODE_DATA = {
 
   "TryHackMe / HackTheBox": {
     phase: "Fase 1 · Purple Team",
+    duration: "contínuo",
+    prereqs: ["Linux básico", "Networking basics"],
+    duration: "contínuo",
+    prereqs: ["Linux básico", "Networking basics"],
     intro: "Teoria sem prática não vale nada. TryHackMe e HackTheBox são plataformas que te colocam em cenários reais de segurança, desde salas guiadas para iniciantes até máquinas CTF avançadas. É aqui que ganhas experiência real.",
     desc: "TryHackMe tem salas estruturadas com guias passo a passo — ideal para iniciantes. HackTheBox tem máquinas sem guia — és tu contra a máquina. Ambas têm laboratórios com exploits reais, escalação de privilégios, e cenários do mundo real.",
     learn: [
@@ -427,6 +483,10 @@ const NODE_DATA = {
 
   "CTF challenges": {
     phase: "Fase 1 · Purple Team",
+    duration: "contínuo",
+    prereqs: ["Linux básico", "Networking basics"],
+    duration: "contínuo",
+    prereqs: ["Linux básico", "Networking basics"],
     intro: "CTF (Capture The Flag) são competições de segurança onde resolves desafios para encontrar 'flags' escondidas. É a forma mais divertida e eficaz de aprender — cada desafio é uma mini-lição de segurança aplicada.",
     desc: "Vais encontrar vários tipos de desafios: web exploitation, reversing, pwn (binary exploitation), cryptography, forensics, OSINT. Cada CTF tem um servidor com flags escondidas que deves encontrar usando técnicas específicas.",
     learn: [
@@ -456,6 +516,10 @@ const NODE_DATA = {
 
   "OWASP Top 10": {
     phase: "Fase 1 · Purple Team",
+    duration: "4-6 semanas",
+    prereqs: ["Burp Suite basics", "Networking basics"],
+    duration: "4-6 semanas",
+    prereqs: ["Burp Suite basics", "Networking basics"],
     intro: "OWASP Top 10 é a lista das 10 vulnerabilidades mais críticas em aplicações web, atualizada a cada poucos anos. Se és novo em segurança web, este é o teu ponto de partida. Se és experiente, é a tua lista de verificação.",
     desc: "Vais estudar cada vulnerabilidade: Broken Access Control, Cryptographic Failures, Injection (SQLi, NoSQLi, OS command), Insecure Design, Security Misconfiguration, Vulnerable Components, Auth Failures, SSRF, Logging Failures, CSRF. Cada uma com exemplos práticos.",
     learn: [
@@ -485,6 +549,10 @@ const NODE_DATA = {
 
   "Pen testing basics": {
     phase: "Fase 1 · Purple Team",
+    duration: "6-8 semanas",
+    prereqs: ["OWASP Top 10", "Metasploit intro"],
+    duration: "6-8 semanas",
+    prereqs: ["OWASP Top 10", "Metasploit intro"],
     intro: "Penetration testing (pentest) é o processo autorizado de atacar um sistema para encontrar vulnerabilidades antes dos atacantes reais. É uma profissão regulada, com metodologias definidas e entregas profissionais.",
     desc: "Vais aprender as fases de um pentest: Reconhecimento, Scanning & Enumeração, Exploração, Pós-Exploração e Reporting. Vais também perceber a diferença entre pentest de caixa preta, cinzenta e branca, e os limites legais e éticos.",
     learn: [
@@ -514,6 +582,10 @@ const NODE_DATA = {
 
   "Python para automação": {
     phase: "Fase 1 · Purple Team",
+    duration: "8-12 semanas",
+    prereqs: [],
+    duration: "8-12 semanas",
+    prereqs: [],
     intro: "Python é a linguagem mais usada em segurança ofensiva e defensiva. Da automação de scans ao desenvolvimento de exploits, passando por análise de dados e machine learning — Python está em todo o lado.",
     desc: "Vais aprender Python focado em segurança: sockets para conexões de rede, requests para interações HTTP, subprocess para correr comandos, scapy para manipular pacotes, e pycryptodome para criptografia. Vais criar as tuas próprias ferramentas.",
     learn: [
@@ -543,6 +615,10 @@ const NODE_DATA = {
 
   "Bash scripting": {
     phase: "Fase 1 · Purple Team",
+    duration: "2-4 semanas",
+    prereqs: ["Linux básico"],
+    duration: "2-4 semanas",
+    prereqs: ["Linux básico"],
     intro: "Bash é a linguagem nativa do terminal Linux. Saber Bash é saber dar ordens ao sistema sem intermediários. Para um profissional de segurança, Bash é tão importante quanto respirar — é como falas com a máquina.",
     desc: "Vais aprender variáveis, loops, condicionais, funções, redirecionamento, pipes, substituição de comandos, e ferramentas de texto como grep, awk, sed, cut e sort. Tudo o que precisas para automatizar tarefas repetitivas.",
     learn: [
@@ -572,6 +648,10 @@ const NODE_DATA = {
 
   "Rust (em progresso)": {
     phase: "Fase 1 · Purple Team",
+    duration: "12+ semanas",
+    prereqs: ["Linux básico"],
+    duration: "12+ semanas",
+    prereqs: ["Linux básico"],
     intro: "Rust é uma linguagem de sistemas moderna, segura e rápida. Está a ganhar tração em segurança porque permite escrever ferramentas tão rápidas como C mas sem os bugs de memória que causam a maioria das vulnerabilidades.",
     desc: "Vais aprender os fundamentos de Rust: ownership, borrowing, lifetimes, traits, error handling. Rust é diferente de qualquer linguagem que já viste — a curva de aprendizagem é ingreme mas o resultado são ferramentas extremamente performantes e seguras.",
     learn: [
@@ -597,6 +677,724 @@ const NODE_DATA = {
       "Criar um servidor TCP simples em Rust que responde a conexões"
     ],
     aiPrompt: "Quero aprender Rust para segurança. Explica ownership e borrowing como se eu fosse um programador Python. Dá-me exemplos de porquê Rust é útil para ferramentas de segurança e um exemplo de um scanner de portas."
+  },
+
+  // ── Fase 2 · AI / ML ──
+
+  "Python para AI": {
+    phase: "Fase 2 · AI / ML",
+    duration: "4-8 semanas",
+    prereqs: ["Python básico"],
+    duration: "4-8 semanas",
+    prereqs: ["Python básico"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Matemática & stats": {
+    phase: "Fase 2 · AI / ML",
+    duration: "6-8 semanas",
+    prereqs: [],
+    duration: "6-8 semanas",
+    prereqs: [],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "ML supervised / unsup.": {
+    phase: "Fase 2 · AI / ML",
+    duration: "6-8 semanas",
+    prereqs: ["Python para AI", "Matemática & stats"],
+    duration: "6-8 semanas",
+    prereqs: ["Python para AI", "Matemática & stats"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Neural networks": {
+    phase: "Fase 2 · AI / ML",
+    duration: "4-6 semanas",
+    prereqs: ["ML supervised / unsup.", "Matemática & stats"],
+    duration: "4-6 semanas",
+    prereqs: ["ML supervised / unsup.", "Matemática & stats"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Deep learning": {
+    phase: "Fase 2 · AI / ML",
+    duration: "6-8 semanas",
+    prereqs: ["Neural networks"],
+    duration: "6-8 semanas",
+    prereqs: ["Neural networks"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Como LLMs funcionam": {
+    phase: "Fase 2 · AI / ML",
+    duration: "2-4 semanas",
+    prereqs: ["Neural networks"],
+    duration: "2-4 semanas",
+    prereqs: ["Neural networks"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "APIs: OpenAI, Claude": {
+    phase: "Fase 2 · AI / ML",
+    duration: "1-2 semanas",
+    prereqs: ["Python para AI"],
+    duration: "1-2 semanas",
+    prereqs: ["Python para AI"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Prompt engineering": {
+    phase: "Fase 2 · AI / ML",
+    duration: "2-4 semanas",
+    prereqs: ["Como LLMs funcionam"],
+    duration: "2-4 semanas",
+    prereqs: ["Como LLMs funcionam"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Fine-tuning basics": {
+    phase: "Fase 2 · AI / ML",
+    duration: "4-6 semanas",
+    prereqs: ["Deep learning", "APIs: OpenAI, Claude"],
+    duration: "4-6 semanas",
+    prereqs: ["Deep learning", "APIs: OpenAI, Claude"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Hugging Face": {
+    phase: "Fase 2 · AI / ML",
+    duration: "2-3 semanas",
+    prereqs: ["Python para AI", "APIs: OpenAI, Claude"],
+    duration: "2-3 semanas",
+    prereqs: ["Python para AI", "APIs: OpenAI, Claude"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Embeddings": {
+    phase: "Fase 2 · AI / ML",
+    duration: "2-3 semanas",
+    prereqs: ["Como LLMs funcionam", "Python para AI"],
+    duration: "2-3 semanas",
+    prereqs: ["Como LLMs funcionam", "Python para AI"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Vector databases": {
+    phase: "Fase 2 · AI / ML",
+    duration: "2-3 semanas",
+    prereqs: ["Embeddings"],
+    duration: "2-3 semanas",
+    prereqs: ["Embeddings"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "RAG implementation": {
+    phase: "Fase 2 · AI / ML",
+    duration: "4-6 semanas",
+    prereqs: ["Embeddings", "Vector databases", "APIs: OpenAI, Claude"],
+    duration: "4-6 semanas",
+    prereqs: ["Embeddings", "Vector databases", "APIs: OpenAI, Claude"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "AI agents & tools": {
+    phase: "Fase 2 · AI / ML",
+    duration: "4-6 semanas",
+    prereqs: ["RAG implementation", "APIs: OpenAI, Claude"],
+    duration: "4-6 semanas",
+    prereqs: ["RAG implementation", "APIs: OpenAI, Claude"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "LangChain / LlamaIndex": {
+    phase: "Fase 2 · AI / ML",
+    duration: "3-4 semanas",
+    prereqs: ["RAG implementation", "AI agents & tools"],
+    duration: "3-4 semanas",
+    prereqs: ["RAG implementation", "AI agents & tools"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Docker & containers": {
+    phase: "Fase 2 · AI / ML",
+    duration: "2-4 semanas",
+    prereqs: ["Linux básico"],
+    duration: "2-4 semanas",
+    prereqs: ["Linux básico"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Cloud basics (AWS/GCP)": {
+    phase: "Fase 2 · AI / ML",
+    duration: "4-6 semanas",
+    prereqs: ["Docker & containers"],
+    duration: "4-6 semanas",
+    prereqs: ["Docker & containers"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "MLOps intro": {
+    phase: "Fase 2 · AI / ML",
+    duration: "4-6 semanas",
+    prereqs: ["Docker & containers", "Cloud basics (AWS/GCP)"],
+    duration: "4-6 semanas",
+    prereqs: ["Docker & containers", "Cloud basics (AWS/GCP)"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  // ── Fase 3 · AI Security ──
+
+  "AI security fundamentals": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-4 semanas",
+    prereqs: ["ML básico", "CIA triad & conceitos"],
+    duration: "3-4 semanas",
+    prereqs: ["ML básico", "CIA triad & conceitos"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Threat modeling para AI": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-4 semanas",
+    prereqs: ["AI security fundamentals", "Threats & attack vectors"],
+    duration: "3-4 semanas",
+    prereqs: ["AI security fundamentals", "Threats & attack vectors"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "AI risk management": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["AI security fundamentals"],
+    duration: "2-3 semanas",
+    prereqs: ["AI security fundamentals"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "CIA triad em AI": {
+    phase: "Fase 3 · AI Security",
+    duration: "1-2 semanas",
+    prereqs: ["AI security fundamentals", "CIA triad & conceitos"],
+    duration: "1-2 semanas",
+    prereqs: ["AI security fundamentals", "CIA triad & conceitos"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Prompt injection": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-4 semanas",
+    prereqs: ["Prompt engineering", "Como LLMs funcionam"],
+    duration: "3-4 semanas",
+    prereqs: ["Prompt engineering", "Como LLMs funcionam"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Jailbreak techniques": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["Prompt injection"],
+    duration: "2-3 semanas",
+    prereqs: ["Prompt injection"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Adversarial examples": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-4 semanas",
+    prereqs: ["Deep learning", "Neural networks"],
+    duration: "3-4 semanas",
+    prereqs: ["Deep learning", "Neural networks"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Data poisoning": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["ML supervised / unsup."],
+    duration: "2-3 semanas",
+    prereqs: ["ML supervised / unsup."],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Model extraction": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["APIs: OpenAI, Claude", "ML básico"],
+    duration: "2-3 semanas",
+    prereqs: ["APIs: OpenAI, Claude", "ML básico"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Model inversion": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["Model extraction", "Deep learning"],
+    duration: "2-3 semanas",
+    prereqs: ["Model extraction", "Deep learning"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Robust model design": {
+    phase: "Fase 3 · AI Security",
+    duration: "4-6 semanas",
+    prereqs: ["Adversarial examples", "Deep learning"],
+    duration: "4-6 semanas",
+    prereqs: ["Adversarial examples", "Deep learning"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Adversarial training": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-4 semanas",
+    prereqs: ["Robust model design", "Adversarial examples"],
+    duration: "3-4 semanas",
+    prereqs: ["Robust model design", "Adversarial examples"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Guardrails & sandboxing": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-4 semanas",
+    prereqs: ["Prompt injection", "AI agents & tools"],
+    duration: "3-4 semanas",
+    prereqs: ["Prompt injection", "AI agents & tools"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "API protection & auth": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["APIs: OpenAI, Claude"],
+    duration: "2-3 semanas",
+    prereqs: ["APIs: OpenAI, Claude"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Continuous monitoring": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["Guardrails & sandboxing"],
+    duration: "2-3 semanas",
+    prereqs: ["Guardrails & sandboxing"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Black / white / grey box": {
+    phase: "Fase 3 · AI Security",
+    duration: "2-3 semanas",
+    prereqs: ["Pen testing basics"],
+    duration: "2-3 semanas",
+    prereqs: ["Pen testing basics"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "LLM security testing": {
+    phase: "Fase 3 · AI Security",
+    duration: "4-6 semanas",
+    prereqs: ["Prompt injection", "Guardrails & sandboxing"],
+    duration: "4-6 semanas",
+    prereqs: ["Prompt injection", "Guardrails & sandboxing"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Agentic AI security": {
+    phase: "Fase 3 · AI Security",
+    duration: "4-6 semanas",
+    prereqs: ["AI agents & tools", "LLM security testing"],
+    duration: "4-6 semanas",
+    prereqs: ["AI agents & tools", "LLM security testing"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "RAG security": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-4 semanas",
+    prereqs: ["RAG implementation", "LLM security testing"],
+    duration: "3-4 semanas",
+    prereqs: ["RAG implementation", "LLM security testing"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Red team simulations": {
+    phase: "Fase 3 · AI Security",
+    duration: "6-8 semanas",
+    prereqs: ["LLM security testing", "Agentic AI security", "Pen testing basics"],
+    duration: "6-8 semanas",
+    prereqs: ["LLM security testing", "Agentic AI security", "Pen testing basics"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Responsible disclosure": {
+    phase: "Fase 3 · AI Security",
+    duration: "1-2 semanas",
+    prereqs: [],
+    duration: "1-2 semanas",
+    prereqs: [],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Industry standards": {
+    phase: "Fase 3 · AI Security",
+    duration: "1-2 semanas",
+    prereqs: [],
+    duration: "1-2 semanas",
+    prereqs: [],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Certifications (CEH, OSCP)": {
+    phase: "Fase 3 · AI Security",
+    duration: "3-6 meses",
+    prereqs: ["Pen testing basics"],
+    duration: "3-6 meses",
+    prereqs: ["Pen testing basics"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
+  },
+
+  "Portfolio & publicação": {
+    phase: "Fase 3 · AI Security",
+    duration: "contínuo",
+    prereqs: ["Projetos concluídos"],
+    duration: "contínuo",
+    prereqs: ["Projetos concluídos"],
+    intro: "",
+    desc: "",
+    learn: [],
+    vision: "",
+    free: [],
+    paid: [],
+    whyRecommended: "",
+    projects: [],
+    aiPrompt: ""
   }
 };
 
@@ -624,6 +1422,13 @@ function openModal(nodeLabel) {
   modalBody.innerHTML = `
     <div class="modal-phase">${data.phase}</div>
     <div class="modal-title">${nodeLabel}</div>
+
+    <div class="modal-meta">
+      ${data.duration ? `<span class="modal-badge modal-duration">${data.duration}</span>` : ''}
+      ${data.prereqs && data.prereqs.length
+        ? `<span class="modal-badge-label">pré-requisitos:</span> ${data.prereqs.map(p => `<span class="modal-badge prereq">${p}</span>`).join('')}`
+        : data.prereqs !== undefined ? `<span class="modal-badge-label">pré-requisitos:</span> <span class="modal-badge prereq-none">nenhum</span>` : ''}
+    </div>
 
     <div class="modal-section">
       <div class="modal-h">Introdução</div>

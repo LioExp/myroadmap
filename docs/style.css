@@ -531,8 +531,50 @@ h1 {
   font-size: 20px;
   font-weight: 500;
   color: var(--text);
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   letter-spacing: -0.01em;
+}
+
+.modal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.modal-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: var(--radius);
+  white-space: nowrap;
+}
+
+.modal-duration {
+  background: var(--purple-dim);
+  color: var(--purple);
+  border: 0.5px solid var(--purple-border);
+}
+
+.modal-badge-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prereq {
+  background: var(--bg3);
+  color: var(--text2);
+  border: 0.5px solid var(--border);
+}
+
+.prereq-none {
+  color: var(--text3);
 }
 
 .modal-section {
