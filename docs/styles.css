@@ -377,10 +377,13 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
 .video-emoji { font-size: 0; display: flex; align-items: center; justify-content: center; color: currentColor; opacity: 0.2; position: absolute; }
 .video-emoji svg { width: 48px; height: 48px; }
 
+/* ── Mobile nav (hidden on desktop) ── */
+.mobile-nav { display: none; }
+
 /* ── Mobile ── */
 @media (max-width: 768px) {
   html, body { overflow: auto; }
-  .app { height: auto; min-height: 100vh; overflow: auto; }
+  .app { height: auto; min-height: 100vh; overflow: auto; padding-bottom: 60px; }
 
   /* Navbar */
   .navbar { height: auto; padding: 10px 12px; flex-wrap: wrap; gap: 8px; }
@@ -395,8 +398,13 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   /* Content wrapper — single column */
   .content { flex-direction: column; overflow: visible; min-height: 0; }
 
-  /* Hide timeline */
-  .timeline { display: none; }
+  /* Mobile visibility */
+  .mobile-hide { display: none !important; }
+  .mobile-show { display: flex !important; flex-direction: column; }
+
+  /* Timeline */
+  .timeline { width: 100%; border-right: none; padding: 16px; overflow: visible; }
+  .timeline-list { overflow: visible; }
 
   /* Main */
   .main { flex-direction: column; overflow: visible; min-height: 0; }
@@ -422,7 +430,7 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   .tip-box { padding-left: 12px; }
   .tip-mascote { width: 60px; top: -32px; left: -8px; }
 
-  /* Notes panel — full width below content */
+  /* Notes panel — full width */
   .notes-panel { width: 100% !important; border-left: none; border-top: 1px solid #E5E7EB; min-height: auto; }
   .dark .notes-panel { border-top-color: #374151; }
   .notes-panel.open { width: 100% !important; }
@@ -433,4 +441,22 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   .notes-fields { overflow: visible; }
   .note-textarea { min-height: 60px; }
   .notes-mascote { width: 72px; }
+
+  /* Mobile bottom nav */
+  .mobile-nav {
+    display: flex !important; position: fixed; bottom: 0; left: 0; right: 0;
+    background: #fff; border-top: 1px solid #E5E7EB; padding: 6px 0;
+    justify-content: space-around; z-index: 50;
+  }
+  .dark .mobile-nav { background: #111827; border-top-color: #374151; }
+  .mobile-nav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    background: none; border: none; cursor: pointer; padding: 4px 12px;
+    color: #9CA3AF; font-size: 10px; font-weight: 600; font-family: inherit;
+    transition: color 150ms;
+  }
+  .mobile-nav-btn svg { width: 20px; height: 20px; }
+  .mobile-nav-btn.active { color: #22C55E; }
+  .dark .mobile-nav-btn.active { color: #4ADE80; }
+  .mobile-nav-btn span { font-size: 10px; }
 }

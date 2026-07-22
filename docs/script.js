@@ -3,6 +3,7 @@ let selectedTopicId = null;
 let selectedLessonId = null;
 let notesOpen = true;
 let copied = false;
+let mobileView = 'content';
 
 // ── SVG Icons (Lucide, mesmos do React) ──
 const icons = {
@@ -181,7 +182,7 @@ function render() {
 
     mainHTML = `
       <div class="main">
-        <div class="content-area">
+        <div class="content-area ${mobileView === 'content' ? 'mobile-show' : 'mobile-hide'}">
           <div class="content-header">
             <div class="breadcrumb">${breadcrumbHTML}</div>
             <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${topic.title}</h1>
@@ -228,7 +229,7 @@ function render() {
             </div>
           </div>
         </div>
-        <div class="notes-panel ${notesOpen ? 'open' : 'closed'}">
+        <div class="notes-panel ${notesOpen ? 'open' : 'closed'} ${mobileView === 'notes' ? 'mobile-show' : 'mobile-hide'}">
           <button class="notes-toggle" onclick="toggleNotes()" title="${notesOpen ? 'Fechar notas' : 'Abrir notas'}">
             ${notesOpen ? icons.chevronRight : icons.chevronLeft}
           </button>
@@ -275,7 +276,7 @@ function render() {
   } else {
     mainHTML = `
       <div class="main">
-        <div class="content-area empty-state">
+        <div class="content-area empty-state ${mobileView === 'content' ? 'mobile-show' : 'mobile-hide'}">
           <img src="mascote.png" alt="Mascote" class="empty-mascote">
           <h2 class="empty-title">Escolhe um módulo</h2>
           <p class="empty-desc">Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.</p>
@@ -300,7 +301,7 @@ function render() {
       </div>
     </div>
     <div class="content">
-      <div class="timeline">
+      <div class="timeline ${mobileView === 'timeline' ? 'mobile-show' : 'mobile-hide'}">
         <h2 class="timeline-title">Meu Roadmap <span class="timeline-title-icon">${icons.compass}</span></h2>
         <div class="timeline-list">
           <div class="timeline-line"></div>
@@ -308,6 +309,20 @@ function render() {
         </div>
       </div>
       ${mainHTML}
+    </div>
+    <div class="mobile-nav">
+      <button class="mobile-nav-btn ${mobileView === 'timeline' ? 'active' : ''}" onclick="switchMobileView('timeline')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Roadmap</span>
+      </button>
+      <button class="mobile-nav-btn ${mobileView === 'content' ? 'active' : ''}" onclick="switchMobileView('content')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span>Conteúdo</span>
+      </button>
+      <button class="mobile-nav-btn ${mobileView === 'notes' ? 'active' : ''}" onclick="switchMobileView('notes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+        <span>Notas</span>
+      </button>
     </div>`;
 }
 
@@ -315,6 +330,7 @@ function render() {
 function selectTopic(id) { selectedTopicId = selectedTopicId === id ? null : id; selectedLessonId = null; render(); }
 function selectLesson(id) { selectedLessonId = selectedLessonId === id ? null : id; render(); }
 function toggleNotes() { notesOpen = !notesOpen; render(); }
+function switchMobileView(view) { mobileView = view; render(); }
 function toggleTheme() {
   document.documentElement.classList.toggle('dark');
   localStorage.setItem('theme', isDark() ? 'dark' : 'light');
