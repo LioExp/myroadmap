@@ -183,7 +183,9 @@ function render() {
   document.getElementById('app').innerHTML = `
     <div class="navbar">
       <div class="nav-left">
-        <img src="logo.png" alt="MyRoadmap" class="nav-logo-img">
+        <img src="logo.png" alt="MyRoadmap" class="nav-logo-img logo-light">
+        <img src="logo-dark.png" alt="MyRoadmap" class="nav-logo-img logo-dark">
+        <span class="nav-logo-text">Roadmap Vivo</span>
         <div class="nav-divider"></div>
         <div class="nav-pill"><span>AI Security</span></div>
       </div>
