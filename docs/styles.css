@@ -280,7 +280,8 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 /* ── Deep dive ── */
 .deep-dive-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
 .tip-box-wrapper { position: relative; margin-top: 12px; }
-.tip-mascote { position: absolute; top: -40px; left: -10px; width: 80px; height: auto; z-index: 1; pointer-events: none; }
+.tip-mascote { position: absolute; top: -40px; left: -10px; width: 80px; height: auto; z-index: 1; pointer-events: none; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .tip-box { background: linear-gradient(to bottom right, #111827, #1F2937); border-radius: 12px; padding: 12px 12px 12px 80px; display: flex; align-items: center; gap: 12px; }
 .dark .tip-box { background: linear-gradient(to bottom right, #000, #111827); }
 .tip-box svg { width: 16px; height: 16px; color: #FACC15; flex-shrink: 0; }
