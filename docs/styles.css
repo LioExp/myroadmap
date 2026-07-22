@@ -385,7 +385,7 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
 /* ── Mobile ── */
 @media (max-width: 768px) {
   html, body { overflow: auto; }
-  .app { height: auto; min-height: 100vh; overflow: auto; padding-bottom: 60px; }
+  .app { height: auto; min-height: 100vh; overflow: auto; padding-bottom: 64px; }
 
   /* Navbar */
   .navbar { height: auto; padding: 10px 12px; flex-wrap: wrap; gap: 8px; }
@@ -398,7 +398,7 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   .nav-btn svg { width: 13px; height: 13px; }
 
   /* Content wrapper — single column */
-  .content { flex-direction: column; overflow: visible; min-height: 0; }
+  .content { flex-direction: column; overflow: visible; min-height: 0; padding: 0 10px; }
 
   /* Mobile visibility */
   .mobile-hide { display: none !important; }
@@ -409,21 +409,24 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   .timeline-list { overflow: visible; }
 
   /* Main */
-  .main { flex-direction: column; overflow: visible; min-height: 0; }
-  .content-area { padding: 16px; overflow: visible; }
+  .main { flex-direction: column; overflow: visible; min-height: 0; max-width: 600px; margin: 0 auto; width: 100%; }
+  .content-area { padding: 16px 4px; overflow: visible; }
 
-  /* Content header */
-  .content-title { font-size: 16px; flex-wrap: wrap; }
-  .content-desc { font-size: 12px; }
-  .meta-row { flex-wrap: wrap; gap: 8px; }
+  /* Content header — centered */
+  .content-title { font-size: 18px; flex-wrap: wrap; justify-content: center; text-align: center; }
+  .content-desc { font-size: 13px; text-align: center; }
+  .meta-row { flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .breadcrumb { justify-content: center; }
 
-  /* Video card */
-  .video-thumb { height: 180px; }
+  /* Video card — full width */
+  .video-card { width: 100%; }
+  .video-thumb { height: 190px; }
   .video-info { padding: 10px 12px; flex-direction: column; align-items: flex-start; gap: 6px; }
   .video-duration { margin-left: 0; }
 
-  /* Lessons */
-  .lesson-item { padding: 12px; gap: 10px; min-height: 48px; }
+  /* Lessons — bigger touch targets */
+  .lesson-item { padding: 12px; gap: 10px; min-height: 52px; }
+  .lesson-text { font-size: 12px; }
 
   /* Resources — single column */
   .resources-grid { grid-template-columns: 1fr; }
@@ -431,36 +434,46 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   /* Tip box */
   .tip-box-wrapper { position: static; margin-top: 12px; }
   .tip-mascote { position: static; width: 50px; margin-bottom: -4px; }
-  .tip-box { padding: 10px 12px; border-radius: 10px; padding-left: 12px; display: flex; align-items: flex-end; gap: 8px; }
-  .tip-box p { font-size: 9px; }
+  .tip-box { padding: 10px 12px; border-radius: 10px; display: flex; align-items: flex-end; gap: 8px; }
+  .tip-box p { font-size: 10px; }
 
-  /* Notes panel — full width */
-  .notes-panel { width: 100% !important; border-left: none; border-top: 1px solid #E5E7EB; min-height: auto; }
-  .dark .notes-panel { border-top-color: #374151; }
+  /* Section titles */
+  .section-title { font-size: 11px; }
+
+  /* Notes panel — clean card at bottom */
+  .notes-panel {
+    width: 100% !important; border-left: none; border-top: none;
+    min-height: auto; margin-top: 16px;
+    background: #fff; border-radius: 16px;
+    border: 1px solid #F3F4F6; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06);
+  }
+  .dark .notes-panel { background: #1a1a1a; border-color: #374151; }
   .notes-panel.open { width: 100% !important; }
   .notes-panel.closed { width: 100% !important; }
   .notes-toggle { left: 50%; top: -14px; transform: translateX(-50%); }
-  .notes-closed { flex-direction: row; padding-top: 0; padding: 8px; justify-content: center; gap: 16px; }
-  .notes-open { padding: 16px; overflow: visible; min-height: auto; }
-  .notes-fields { overflow: visible; }
-  .note-textarea { min-height: 60px; }
+  .notes-closed { flex-direction: row; padding-top: 0; padding: 12px; justify-content: center; gap: 16px; }
+  .notes-open { padding: 20px 16px; overflow: visible; min-height: auto; }
+  .notes-fields { overflow: visible; gap: 16px; }
+  .note-textarea { min-height: 80px; font-size: 14px; padding: 12px; }
+  .note-label { font-size: 12px; }
+  .note-hint { font-size: 11px; }
   .notes-mascote { width: 72px; }
 
   /* Mobile bottom nav */
   .mobile-nav {
     display: flex !important; position: fixed; bottom: 0; left: 0; right: 0;
-    background: #fff; border-top: 1px solid #E5E7EB; padding: 6px 0;
+    background: #fff; border-top: 1px solid #E5E7EB; padding: 8px 0 12px;
     justify-content: space-around; z-index: 50;
   }
   .dark .mobile-nav { background: #111827; border-top-color: #374151; }
   .mobile-nav-btn {
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    background: none; border: none; cursor: pointer; padding: 4px 12px;
-    color: #9CA3AF; font-size: 10px; font-weight: 600; font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    background: none; border: none; cursor: pointer; padding: 6px 16px;
+    color: #9CA3AF; font-size: 11px; font-weight: 600; font-family: inherit;
     transition: color 150ms;
   }
-  .mobile-nav-btn svg { width: 20px; height: 20px; }
+  .mobile-nav-btn svg { width: 22px; height: 22px; }
   .mobile-nav-btn.active { color: #22C55E; }
   .dark .mobile-nav-btn.active { color: #4ADE80; }
-  .mobile-nav-btn span { font-size: 10px; }
+  .mobile-nav-btn span { font-size: 11px; }
 }
