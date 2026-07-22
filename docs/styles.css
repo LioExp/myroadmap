@@ -376,3 +376,61 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
 /* ── Video emoji ── */
 .video-emoji { font-size: 0; display: flex; align-items: center; justify-content: center; color: currentColor; opacity: 0.2; position: absolute; }
 .video-emoji svg { width: 48px; height: 48px; }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  html, body { overflow: auto; }
+  .app { height: auto; min-height: 100vh; overflow: auto; }
+
+  /* Navbar */
+  .navbar { height: auto; padding: 10px 12px; flex-wrap: wrap; gap: 8px; }
+  .nav-left { gap: 8px; }
+  .nav-logo-text { font-size: 13px; }
+  .nav-pill { padding: 4px 10px; }
+  .nav-pill span { font-size: 11px; }
+  .nav-right { gap: 6px; }
+  .nav-btn { width: 30px; height: 30px; }
+  .nav-btn svg { width: 13px; height: 13px; }
+
+  /* Content wrapper — single column */
+  .content { flex-direction: column; overflow: visible; min-height: 0; }
+
+  /* Hide timeline */
+  .timeline { display: none; }
+
+  /* Main */
+  .main { flex-direction: column; overflow: visible; min-height: 0; }
+  .content-area { padding: 16px; overflow: visible; }
+
+  /* Content header */
+  .content-title { font-size: 16px; flex-wrap: wrap; }
+  .content-desc { font-size: 12px; }
+  .meta-row { flex-wrap: wrap; gap: 8px; }
+
+  /* Video card */
+  .video-thumb { height: 180px; }
+  .video-info { padding: 10px 12px; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .video-duration { margin-left: 0; }
+
+  /* Lessons */
+  .lesson-item { padding: 12px; gap: 10px; min-height: 48px; }
+
+  /* Resources — single column */
+  .resources-grid { grid-template-columns: 1fr; }
+
+  /* Tip box */
+  .tip-box { padding-left: 12px; }
+  .tip-mascote { width: 60px; top: -32px; left: -8px; }
+
+  /* Notes panel — full width below content */
+  .notes-panel { width: 100% !important; border-left: none; border-top: 1px solid #E5E7EB; min-height: auto; }
+  .dark .notes-panel { border-top-color: #374151; }
+  .notes-panel.open { width: 100% !important; }
+  .notes-panel.closed { width: 100% !important; }
+  .notes-toggle { left: 50%; top: -14px; transform: translateX(-50%); }
+  .notes-closed { flex-direction: row; padding-top: 0; padding: 8px; justify-content: center; gap: 16px; }
+  .notes-open { padding: 16px; overflow: visible; min-height: auto; }
+  .notes-fields { overflow: visible; }
+  .note-textarea { min-height: 60px; }
+  .notes-mascote { width: 72px; }
+}
