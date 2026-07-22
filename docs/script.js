@@ -1,5 +1,5 @@
 // ── State ──
-let selectedTopicId = 2;
+let selectedTopicId = 1;
 let selectedLessonId = null;
 let notesOpen = true;
 let copied = false;
