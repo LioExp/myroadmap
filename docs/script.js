@@ -183,8 +183,7 @@ function render() {
   document.getElementById('app').innerHTML = `
     <div class="navbar">
       <div class="nav-left">
-        <span class="topic-emoji-sm">${icons.compass}</span>
-        <span class="nav-logo">Roadmap Vivo</span>
+        <img src="logo.png" alt="MyRoadmap" class="nav-logo-img">
         <div class="nav-divider"></div>
         <div class="nav-pill"><span>AI Security</span></div>
       </div>

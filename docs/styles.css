@@ -15,8 +15,7 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 }
 .dark .navbar { background: #fff; border-bottom-color: #E5E7EB; }
 .nav-left { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.nav-logo { font-size: 14px; font-weight: 900; color: #fff; letter-spacing: -0.025em; }
-.dark .nav-logo { color: #111827; }
+.nav-logo-img { height: 28px; width: auto; border-radius: 4px; }
 .nav-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.1); }
 .dark .nav-divider { background: #D1D5DB; }
 .nav-pill {
