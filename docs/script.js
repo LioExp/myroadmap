@@ -1,5 +1,5 @@
 // ── State ──
-let selectedTopicId = 1;
+let selectedTopicId = null;
 let selectedLessonId = null;
 let notesOpen = true;
 let copied = false;
@@ -41,7 +41,7 @@ const icons = {
 };
 
 // ── Helpers ──
-function getSelectedTopic() { return topics.find(t => t.id === selectedTopicId) || topics[0]; }
+function getSelectedTopic() { return topics.find(t => t.id === selectedTopicId) || null; }
 function abbreviate(str, maxLen) { return str.length <= maxLen ? str : str.slice(0, maxLen) + "..."; }
 function isDark() { return document.documentElement.classList.contains('dark'); }
 
@@ -73,25 +73,7 @@ const ri = {
 // ── Render ──
 function render() {
   const topic = getSelectedTopic();
-  const notes = loadNotes(topic.id);
-  const isEmpty = !notes.learned.trim() && !notes.difficulty.trim() && !notes.nextStep.trim();
-  const completedLessons = topic.lessons.filter(l => l.completed).length;
-  const progressPct = Math.round((completedLessons / topic.lessons.length) * 100);
   const dark = isDark();
-  const selectedLesson = selectedLessonId ? topic.lessons.find(l => l.id === selectedLessonId) : null;
-
-  // Status colors (React exact values)
-  const sc = {
-    completed:   { label: "Concluído", bg: dark ? "rgba(20,83,45,0.3)" : "#DCFCE7", fg: dark ? "#4ADE80" : "#15803D" },
-    "in-progress": { label: "Em progresso", bg: dark ? "rgba(88,28,135,0.3)" : "#F3E8FF", fg: dark ? "#C084FC" : "#7E22CE" },
-    upcoming:    { label: "A seguir", bg: dark ? "#111827" : "#F3F4F6", fg: dark ? "#6B7280" : "#6B7280" },
-  }[topic.status];
-
-  // Breadcrumb
-  let breadcrumbHTML = `<span class="breadcrumb-module">${topic.module}</span> <span class="breadcrumb-chevron">${icons.chevronRight}</span> `;
-  breadcrumbHTML += selectedLesson
-    ? `<span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 25)}</span>`
-    : `<span class="breadcrumb-status" style="background:${sc.bg};color:${sc.fg}">${sc.label}</span>`;
 
   // Timeline
   let timelineHTML = '';
@@ -123,87 +105,81 @@ function render() {
       </div>`;
   });
 
-  // Lessons
-  let lessonsHTML = '';
-  topic.lessons.forEach((lesson, i) => {
-    const ls = selectedLessonId === lesson.id;
-    const checkIcon = lesson.completed ? `<span class="lesson-check completed">${icons.checkCircle}</span>`
-      : `<span class="lesson-check ${ls ? 'selected' : 'pending'}">${icons.circle}</span>`;
-    const textStyle = lesson.completed ? "completed" : ls ? "selected" : "";
-    lessonsHTML += `
-      <div class="lesson-item ${ls ? 'selected' : lesson.completed ? 'completed' : ''}" onclick="selectLesson(${lesson.id})">
-        ${checkIcon}
-        <div class="lesson-text ${textStyle}">${i + 1}. ${lesson.title}</div>
-        <div class="lesson-duration"><span>${icons.clock}</span> ${lesson.duration}</div>
-        ${!lesson.completed ? `<span class="lesson-play ${ls ? 'selected' : ''}">${icons.play}</span>` : ''}
-      </div>`;
-  });
+  // Main content area
+  let mainHTML = '';
+  if (topic) {
+    const notes = loadNotes(topic.id);
+    const isEmpty = !notes.learned.trim() && !notes.difficulty.trim() && !notes.nextStep.trim();
+    const completedLessons = topic.lessons.filter(l => l.completed).length;
+    const progressPct = Math.round((completedLessons / topic.lessons.length) * 100);
+    const selectedLesson = selectedLessonId ? topic.lessons.find(l => l.id === selectedLessonId) : null;
 
-  // Resources
-  let resourcesHTML = '';
-  topic.resources.forEach(r => {
-    const m = ri[r.type];
-    resourcesHTML += `
-      <div class="resource-card">
-        <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
-        <div class="resource-info">
-          <p class="resource-title">${r.title}</p>
-          ${r.author ? `<p class="resource-author">${r.author}</p>` : ''}
-          <div class="resource-tags">
-            <span class="resource-tag ${m.cls}">${m.label}</span>
-            ${r.free !== undefined ? `<span class="resource-free ${r.free ? 'yes' : 'no'}">${r.free ? 'Grátis' : 'Pago'}</span>` : ''}
+    const sc = {
+      completed:   { label: "Concluído", bg: dark ? "rgba(20,83,45,0.3)" : "#DCFCE7", fg: dark ? "#4ADE80" : "#15803D" },
+      "in-progress": { label: "Em progresso", bg: dark ? "rgba(88,28,135,0.3)" : "#F3E8FF", fg: dark ? "#C084FC" : "#7E22CE" },
+      upcoming:    { label: "A seguir", bg: dark ? "#111827" : "#F3F4F6", fg: dark ? "#6B7280" : "#6B7280" },
+    }[topic.status];
+
+    let breadcrumbHTML = `<span class="breadcrumb-module">${topic.module}</span> <span class="breadcrumb-chevron">${icons.chevronRight}</span> `;
+    breadcrumbHTML += selectedLesson
+      ? `<span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 25)}</span>`
+      : `<span class="breadcrumb-status" style="background:${sc.bg};color:${sc.fg}">${sc.label}</span>`;
+
+    let lessonsHTML = '';
+    topic.lessons.forEach((lesson, i) => {
+      const ls = selectedLessonId === lesson.id;
+      const checkIcon = lesson.completed ? `<span class="lesson-check completed">${icons.checkCircle}</span>`
+        : `<span class="lesson-check ${ls ? 'selected' : 'pending'}">${icons.circle}</span>`;
+      const textStyle = lesson.completed ? "completed" : ls ? "selected" : "";
+      lessonsHTML += `
+        <div class="lesson-item ${ls ? 'selected' : lesson.completed ? 'completed' : ''}" onclick="selectLesson(${lesson.id})">
+          ${checkIcon}
+          <div class="lesson-text ${textStyle}">${i + 1}. ${lesson.title}</div>
+          <div class="lesson-duration"><span>${icons.clock}</span> ${lesson.duration}</div>
+          ${!lesson.completed ? `<span class="lesson-play ${ls ? 'selected' : ''}">${icons.play}</span>` : ''}
+        </div>`;
+    });
+
+    let resourcesHTML = '';
+    topic.resources.forEach(r => {
+      const m = ri[r.type];
+      resourcesHTML += `
+        <div class="resource-card">
+          <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
+          <div class="resource-info">
+            <p class="resource-title">${r.title}</p>
+            ${r.author ? `<p class="resource-author">${r.author}</p>` : ''}
+            <div class="resource-tags">
+              <span class="resource-tag ${m.cls}">${m.label}</span>
+              ${r.free !== undefined ? `<span class="resource-free ${r.free ? 'yes' : 'no'}">${r.free ? 'Grátis' : 'Pago'}</span>` : ''}
+            </div>
           </div>
-        </div>
-        <span class="resource-link">${icons.externalLink}</span>
-      </div>`;
-  });
+          <span class="resource-link">${icons.externalLink}</span>
+        </div>`;
+    });
 
-  // Deep dive
-  let deepDiveHTML = '';
-  topic.deepDive.forEach(r => {
-    const m = ri[r.type];
-    deepDiveHTML += `
-      <div class="resource-card">
-        <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
-        <div class="resource-info">
-          <p class="resource-title">${r.title}</p>
-          <div class="resource-tags">
-            <span class="resource-tag ${m.cls}">${m.label}</span>
-            ${r.free !== undefined ? `<span class="resource-free ${r.free ? 'yes' : 'no'}">${r.free ? 'Grátis' : 'Pago'}</span>` : ''}
+    let deepDiveHTML = '';
+    topic.deepDive.forEach(r => {
+      const m = ri[r.type];
+      deepDiveHTML += `
+        <div class="resource-card">
+          <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
+          <div class="resource-info">
+            <p class="resource-title">${r.title}</p>
+            <div class="resource-tags">
+              <span class="resource-tag ${m.cls}">${m.label}</span>
+              ${r.free !== undefined ? `<span class="resource-free ${r.free ? 'yes' : 'no'}">${r.free ? 'Grátis' : 'Pago'}</span>` : ''}
+            </div>
           </div>
-        </div>
-        <span class="resource-link">${icons.externalLink}</span>
-      </div>`;
-  });
+          <span class="resource-link">${icons.externalLink}</span>
+        </div>`;
+    });
 
-  const copyBtnClass = isEmpty ? "copy-btn empty" : copied ? "copy-btn copied" : "copy-btn ready";
-  const copyBtnIcon = copied ? icons.check : icons.copy;
-  const copyBtnText = copied ? "Copiado!" : "Copiar Markdown";
+    const copyBtnClass = isEmpty ? "copy-btn empty" : copied ? "copy-btn copied" : "copy-btn ready";
+    const copyBtnIcon = copied ? icons.check : icons.copy;
+    const copyBtnText = copied ? "Copiado!" : "Copiar Markdown";
 
-  document.getElementById('app').innerHTML = `
-    <div class="navbar">
-      <div class="nav-left">
-        <img src="logo.png" alt="MyRoadmap" class="nav-logo-img logo-light">
-        <img src="logo-dark.png" alt="MyRoadmap" class="nav-logo-img logo-dark">
-        <span class="nav-logo-text">Roadmap Vivo</span>
-        <div class="nav-divider"></div>
-        <div class="nav-pill"><span>AI Security</span></div>
-      </div>
-      <div class="nav-right">
-        <a href="https://github.com/LioExp/myroadmap" target="_blank" rel="noopener noreferrer" title="GitHub" class="nav-btn">${icons.github}</a>
-        <a href="https://lioexp.github.io/mypage" target="_blank" rel="noopener noreferrer" title="Portfólio" class="nav-btn">${icons.globe}</a>
-        <div class="nav-divider"></div>
-        <button class="nav-btn" onclick="toggleTheme()" title="Trocar tema" id="theme-btn">${dark ? icons.moon : icons.sun}</button>
-      </div>
-    </div>
-    <div class="content">
-      <div class="timeline">
-        <h2 class="timeline-title">Meu Roadmap <span class="timeline-title-icon">${icons.compass}</span></h2>
-        <div class="timeline-list">
-          <div class="timeline-line"></div>
-          ${timelineHTML}
-        </div>
-      </div>
+    mainHTML = `
       <div class="main">
         <div class="content-area">
           <div class="content-header">
@@ -292,12 +268,48 @@ function render() {
             </div>
           </div>`}
         </div>
+      </div>`;
+  } else {
+    mainHTML = `
+      <div class="main">
+        <div class="content-area empty-state">
+          <div class="empty-icon">${icons.compass}</div>
+          <h2 class="empty-title">Escolhe um módulo</h2>
+          <p class="empty-desc">Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.</p>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('app').innerHTML = `
+    <div class="navbar">
+      <div class="nav-left">
+        <img src="logo.png" alt="MyRoadmap" class="nav-logo-img logo-light">
+        <img src="logo-dark.png" alt="MyRoadmap" class="nav-logo-img logo-dark">
+        <span class="nav-logo-text">Roadmap Vivo</span>
+        <div class="nav-divider"></div>
+        <div class="nav-pill"><span>AI Security</span></div>
       </div>
+      <div class="nav-right">
+        <a href="https://github.com/LioExp/myroadmap" target="_blank" rel="noopener noreferrer" title="GitHub" class="nav-btn">${icons.github}</a>
+        <a href="https://lioexp.github.io/mypage" target="_blank" rel="noopener noreferrer" title="Portfólio" class="nav-btn">${icons.globe}</a>
+        <div class="nav-divider"></div>
+        <button class="nav-btn" onclick="toggleTheme()" title="Trocar tema" id="theme-btn">${dark ? icons.moon : icons.sun}</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="timeline">
+        <h2 class="timeline-title">Meu Roadmap <span class="timeline-title-icon">${icons.compass}</span></h2>
+        <div class="timeline-list">
+          <div class="timeline-line"></div>
+          ${timelineHTML}
+        </div>
+      </div>
+      ${mainHTML}
     </div>`;
 }
 
 // ── Actions ──
-function selectTopic(id) { selectedTopicId = id; selectedLessonId = null; render(); }
+function selectTopic(id) { selectedTopicId = selectedTopicId === id ? null : id; selectedLessonId = null; render(); }
 function selectLesson(id) { selectedLessonId = selectedLessonId === id ? null : id; render(); }
 function toggleNotes() { notesOpen = !notesOpen; render(); }
 function toggleTheme() {
