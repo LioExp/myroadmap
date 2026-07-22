@@ -427,8 +427,9 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   .resources-grid { grid-template-columns: 1fr; }
 
   /* Tip box */
-  .tip-box { padding-left: 12px; }
-  .tip-mascote { width: 60px; top: -32px; left: -8px; }
+  .tip-box { padding: 10px 10px 10px 70px; border-radius: 10px; }
+  .tip-box p { font-size: 9px; }
+  .tip-mascote { width: 50px; top: -28px; left: -6px; }
 
   /* Notes panel — full width */
   .notes-panel { width: 100% !important; border-left: none; border-top: 1px solid #E5E7EB; min-height: auto; }
