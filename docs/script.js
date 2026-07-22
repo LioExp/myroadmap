@@ -273,7 +273,7 @@ function render() {
     mainHTML = `
       <div class="main">
         <div class="content-area empty-state">
-          <div class="empty-icon">${icons.compass}</div>
+          <img src="mascote.png" alt="Mascote" class="empty-mascote">
           <h2 class="empty-title">Escolhe um módulo</h2>
           <p class="empty-desc">Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.</p>
         </div>
