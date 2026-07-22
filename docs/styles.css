@@ -358,8 +358,10 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
 /* ── Topic emoji icons ── */
 .topic-emoji { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; color: currentColor; }
 .topic-emoji svg { width: 14px; height: 14px; }
+.topic-emoji img { width: 16px; height: 16px; border-radius: 2px; }
 .topic-emoji-lg { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; color: currentColor; }
 .topic-emoji-lg svg { width: 22px; height: 22px; }
+.topic-emoji-lg img { width: 24px; height: 24px; border-radius: 3px; }
 .topic-emoji-sm { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; color: currentColor; }
 .topic-emoji-sm svg { width: 16px; height: 16px; }
 .timeline-title-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; color: currentColor; }
