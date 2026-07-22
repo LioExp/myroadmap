@@ -282,9 +282,9 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .tip-box-wrapper { position: relative; margin-top: 12px; }
 .tip-mascote { position: absolute; top: -40px; left: -10px; width: 80px; height: auto; z-index: 1; pointer-events: none; animation: float 3s ease-in-out infinite; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-.tip-box { background: linear-gradient(to bottom right, #111827, #1F2937); border-radius: 12px; padding: 12px 12px 12px 80px; display: flex; align-items: center; gap: 12px; }
+.tip-box { background: linear-gradient(to bottom right, #111827, #1F2937); border-radius: 12px; padding: 12px 16px 12px 80px; display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
 .dark .tip-box { background: linear-gradient(to bottom right, #000, #111827); }
-.tip-box p { font-size: 10px; color: #D1D5DB; line-height: 1.625; }
+.tip-box p { font-size: 10px; color: #D1D5DB; line-height: 1.625; text-align: left; }
 .dark .tip-box p { color: #9CA3AF; }
 
 /* ── Notes panel (NotesPanel.tsx) ── */
