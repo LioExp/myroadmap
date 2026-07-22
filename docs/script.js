@@ -220,9 +220,12 @@ function render() {
           <div>
             <h2 class="section-title orange"><span>${icons.flame}</span> Para Aprofundar</h2>
             <div class="deep-dive-list">${deepDiveHTML}</div>
-            <div class="tip-box">
-              <span>${icons.star}</span>
-              <p>Termina as aulas antes de avançar para o aprofundamento. A base sólida acelera tudo que vem a seguir.</p>
+            <div class="tip-box-wrapper">
+              <img src="mascote-tip.png" alt="" class="tip-mascote">
+              <div class="tip-box">
+                <span>${icons.star}</span>
+                <p>Termina as aulas antes de avançar para o aprofundamento. A base sólida acelera tudo que vem a seguir.</p>
+              </div>
             </div>
           </div>
         </div>
