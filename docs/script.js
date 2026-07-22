@@ -189,8 +189,8 @@ function render() {
         <div class="nav-pill"><span>AI Security</span></div>
       </div>
       <div class="nav-right">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer" title="GitHub" class="nav-btn">${icons.github}</a>
-        <a href="https://portfolio.dev" target="_blank" rel="noopener noreferrer" title="Portfólio" class="nav-btn">${icons.globe}</a>
+        <a href="https://github.com/LioExp/myroadmap" target="_blank" rel="noopener noreferrer" title="GitHub" class="nav-btn">${icons.github}</a>
+        <a href="https://lioexp.github.io/mypage" target="_blank" rel="noopener noreferrer" title="Portfólio" class="nav-btn">${icons.globe}</a>
         <div class="nav-divider"></div>
         <button class="nav-btn" onclick="toggleTheme()" title="Trocar tema" id="theme-btn">${dark ? icons.moon : icons.sun}</button>
       </div>
