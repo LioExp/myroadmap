@@ -262,6 +262,7 @@ function render() {
                 <textarea class="note-textarea" rows="3" placeholder="Ex: Fazer o desafio Bandit do OverTheWire..." oninput="updateNote('nextStep', this.value)">${notes.nextStep}</textarea>
               </div>
             </div>
+            <img src="mascote-notes.png" alt="" class="notes-mascote">
             <div class="notes-footer">
               <button class="${copyBtnClass}" onclick="copyMarkdown()" ${isEmpty ? 'disabled' : ''}>
                 <span>${copyBtnIcon}</span> ${copyBtnText}
