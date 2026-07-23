@@ -13,7 +13,7 @@ const topics = [
       title: "Linux Full Course for Beginners",
       channel: "NetworkChuck",
       duration: "6h 45min",
-      url: "https://youtube.com/watch?v=example_linux",
+      url: "https://www.youtube.com/watch?v=ZrCrlvS2-us&t=336s",
     },
     lessons: [
       { id: 1, title: "O que é Linux — Distribuições, kernel e shell", duration: "45min", completed: false, topics: ["O que é um sistema operacional, e onde o Linux se encaixa", "Unix → Linux, GNU/Linux, breve história", "Kernel vs shell vs distribuição", "Principais distros (Debian/Ubuntu, RedHat/Fedora, Arch) e por que Kali importa", "Filosofia Unix: tudo é um arquivo, programas pequenos que fazem uma coisa bem", "Onde Linux aparece de verdade: servidores, containers, IoT, ferramentas de segurança"] },
