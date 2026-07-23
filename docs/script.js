@@ -1,21 +1,10 @@
-// ═══════════════════════════════════════════════
-// Roadmap Vivo — v3.0 Refactor
-// ═══════════════════════════════════════════════
-
 // ── State ──
-let selectedModule = null; // expanded module id
-let selectedLesson = null; // expanded lesson id inside drawer
-let searchQuery = '';
-let activeTrimester = null;
+let selectedTopicId = null;
+let selectedLessonId = null;
+let notesOpen = true;
+let copied = false;
+let mobileView = 'content';
 let materialsIndex = [];
-
-// ── Helpers ──
-function isDark() { return document.documentElement.classList.contains('dark'); }
-function getVideoId(url) {
-  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-  return m ? m[1] : '';
-}
-function abbreviate(s, n) { return s.length <= n ? s : s.slice(0, n) + '…'; }
 
 // ── Materials ──
 async function loadMaterialsIndex() {
@@ -24,76 +13,437 @@ async function loadMaterialsIndex() {
     if (res.ok) materialsIndex = await res.json();
   } catch (e) { /* ignore */ }
 }
-function hasMaterial(slug, lessonId) {
-  return materialsIndex.some(m => m.modulo === slug && m.aula === lessonId && m.conteudo);
-}
+
 function getMaterial(slug, lessonId) {
   return materialsIndex.find(m => m.modulo === slug && m.aula === lessonId);
 }
+
+function hasMaterial(slug, lessonId) {
+  return materialsIndex.some(m => m.modulo === slug && m.aula === lessonId && m.conteudo);
+}
+
 function lessonStatus(slug, lessonId) {
   return hasMaterial(slug, lessonId) ? 'completed' : 'pending';
 }
+
 function topicProgress(topic) {
-  const done = topic.lessons.filter(l => lessonStatus(topic.slug, l.id) === 'completed').length;
-  return { done, total: topic.lessons.length, pct: Math.round((done / topic.lessons.length) * 100) };
+  const completed = topic.lessons.filter(l => lessonStatus(topic.slug, l.id) === 'completed').length;
+  return { completed, total: topic.lessons.length, pct: Math.round((completed / topic.lessons.length) * 100) };
 }
 
-// ── Progress persistence ──
-function loadProgress() {
-  try { return JSON.parse(localStorage.getItem('roadmap-progress') || '{}'); } catch { return {}; }
-}
-function saveProgress(id, done) {
-  const p = loadProgress();
-  p[id] = done;
-  localStorage.setItem('roadmap-progress', JSON.stringify(p));
+// ── SVG Icons (Lucide, mesmos do React) ──
+const icons = {
+  sun: `<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`,
+  moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`,
+  github: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`,
+  globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
+  chevronRight: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
+  chevronLeft: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>`,
+  clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  bookOpen: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+  checkCircle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>`,
+  circle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>`,
+  play: `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>`,
+  wrench: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+  flame: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`,
+  star: `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  externalLink: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>`,
+  fileText: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`,
+  messageSquare: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  copy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,
+  checkBold: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,
+  lock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+  // Professional replacements for emojis
+  compass: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
+  network: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>`,
+  terminal: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>`,
+  python: `<img src="python-logo.png" alt="Python" style="width:100%;height:100%;object-fit:contain;">`,
+  checkSquare: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>`,
+  alertTriangle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`,
+  arrowRight: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
+  video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>`,
+  file: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>`,
+  layers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>`,
+};
+
+// ── Helpers ──
+function getSelectedTopic() { return topics.find(t => t.id === selectedTopicId) || null; }
+function abbreviate(str, maxLen) { return str.length <= maxLen ? str : str.slice(0, maxLen) + "..."; }
+function isDark() { return document.documentElement.classList.contains('dark'); }
+
+function buildMarkdown(topic, fields) {
+  const date = new Date().toLocaleDateString("pt-PT", { day: "2-digit", month: "2-digit", year: "numeric" });
+  const lines = [`## ${topic.module} — ${topic.title}`, `**Data:** ${date}`, ``];
+  if (fields.learned.trim()) lines.push(`### O que aprendi`, fields.learned.trim(), ``);
+  if (fields.difficulty.trim()) lines.push(`### Dificuldades`, fields.difficulty.trim(), ``);
+  if (fields.nextStep.trim()) lines.push(`### Proximo passo`, fields.nextStep.trim(), ``);
+  lines.push(`---`, `> Gerado pelo Roadmap Vivo`);
+  return lines.join("\n");
 }
 
-// ── Diary ──
-function loadDiary() {
-  try { return JSON.parse(localStorage.getItem('roadmap-diary') || '[]'); } catch { return []; }
+function loadNotes(id) {
+  try { return JSON.parse(localStorage.getItem(`roadmap-notes-v2-${id}`)) || { learned: "", difficulty: "", nextStep: "" }; }
+  catch { return { learned: "", difficulty: "", nextStep: "" }; }
 }
-function saveDiary(entries) {
-  localStorage.setItem('roadmap-diary', JSON.stringify(entries));
-}
-function addDiaryEntry(moduleId, learned, difficulty, nextStep) {
-  const entries = loadDiary();
-  const topic = topics.find(t => t.id === moduleId);
-  entries.unshift({
-    id: Date.now(),
-    moduleId,
-    module: topic ? topic.title : '',
-    phase: topic ? topic.module : '',
-    date: new Date().toLocaleDateString('pt-PT'),
-    learned, difficulty, nextStep
+function saveNotes(id, fields) { localStorage.setItem(`roadmap-notes-v2-${id}`, JSON.stringify(fields)); }
+
+// ── Resource icon helpers ──
+const ri = {
+  video:    { icon: "video",    label: "Vídeo",     cls: "video" },
+  article:  { icon: "file",     label: "Artigo",    cls: "article" },
+  book:     { icon: "bookOpen", label: "Livro",     cls: "book" },
+  platform: { icon: "globe",    label: "Plataforma",cls: "platform" },
+  tool:     { icon: "wrench",   label: "Ferramenta",cls: "tool" },
+  cert:     { icon: "fileText",  label: "Certificação", cls: "cert" },
+};
+
+// ── Helpers ──
+function getVideoId(url) { const m = url.match(/[?&]v=([^&]+)/); return m ? m[1] : ''; }
+
+// ── Render ──
+function render() {
+  const topic = getSelectedTopic();
+  const dark = isDark();
+
+  // Timeline
+  let timelineHTML = '';
+  topics.forEach((t, i) => {
+    const sel = t.id === selectedTopicId;
+    const dotHTML = t.status === "completed"
+      ? `<div class="topic-dot-num ${sel ? 'selected' : 'ring'}">${i + 1}</div>`
+      : `<div class="topic-dot-small ${t.status} ${sel ? 'selected' : 'ring'}"></div>`;
+    const statusIcon = t.status === "completed" ? icons.checkBold
+      : t.status === "in-progress" ? `<span style="color:${dark ? '#C084FC' : '#9333EA'};font-size:10px">${icons.play}</span>`
+      : `<span style="color:${dark ? '#6B7280' : '#9CA3AF'}">${icons.lock}</span>`;
+
+    timelineHTML += `
+      <div class="topic-item">
+        <div class="topic-dot">${dotHTML}</div>
+        <button class="topic-card ${t.status} ${sel ? 'selected' : ''}" onclick="selectTopic(${t.id})">
+          <div class="topic-header">
+            <span class="topic-module">${t.module}</span>
+            <span class="topic-badge ${t.status}">${t.status === 'completed' ? 'Concluído' : t.status === 'in-progress' ? 'Em progresso' : 'A seguir'}</span>
+          </div>
+          <h3 class="topic-title ${t.status}"><span class="topic-emoji">${icons[t.emoji]}</span> ${t.title}</h3>
+          <p class="topic-desc ${t.status === 'in-progress' ? 'in-progress' : ''}">${t.desc}</p>
+          <div class="topic-footer">
+            <div class="topic-icon ${t.status}">${statusIcon}</div>
+            <span class="topic-hours ${t.status}">~${t.estimatedHours}h</span>
+            ${sel ? '<span class="topic-open">← Aberto</span>' : ''}
+          </div>
+        </button>
+      </div>`;
   });
-  saveDiary(entries);
-}
-function generateMarkdown(entry) {
-  return `## ${entry.module} — ${entry.date}\n\n### O que aprendi\n${entry.learned}\n\n### Dificuldades\n${entry.difficulty}\n\n### Próximo passo\n${entry.nextStep}\n\n---\n> Gerado pelo Roadmap Vivo`;
+
+  // Main content area
+  let mainHTML = '';
+  if (topic) {
+    const notes = loadNotes(topic.id);
+    const isEmpty = !notes.learned.trim() && !notes.difficulty.trim() && !notes.nextStep.trim();
+    const tp = topicProgress(topic);
+    const completedLessons = tp.completed;
+    const progressPct = tp.pct;
+    const selectedLesson = selectedLessonId ? topic.lessons.find(l => l.id === selectedLessonId) : null;
+
+    const sc = {
+      completed:   { label: "Concluído", bg: dark ? "rgba(20,83,45,0.3)" : "#DCFCE7", fg: dark ? "#4ADE80" : "#15803D" },
+      "in-progress": { label: "Em progresso", bg: dark ? "rgba(88,28,135,0.3)" : "#F3E8FF", fg: dark ? "#C084FC" : "#7E22CE" },
+      upcoming:    { label: "A seguir", bg: dark ? "#111827" : "#F3F4F6", fg: dark ? "#6B7280" : "#6B7280" },
+    }[topic.status];
+
+    let breadcrumbHTML = `<span class="breadcrumb-link" onclick="selectTopic(null)">${topic.module}</span> <span class="breadcrumb-chevron">${icons.chevronRight}</span> `;
+    if (selectedLesson) {
+      breadcrumbHTML += `<span class="breadcrumb-link" onclick="selectLesson(null)">Intro</span> <span class="breadcrumb-chevron">${icons.chevronRight}</span> `;
+      breadcrumbHTML += `<span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 30)}</span>`;
+    } else {
+      breadcrumbHTML += `<span class="breadcrumb-current">Intro</span>`;
+    }
+
+    let lessonsHTML = '';
+    topic.lessons.forEach((lesson, i) => {
+      const ls = selectedLessonId === lesson.id;
+      const status = lessonStatus(topic.slug, lesson.id);
+      const isCompleted = status === 'completed';
+      const checkIcon = isCompleted ? `<span class="lesson-check completed">${icons.checkCircle}</span>`
+        : `<span class="lesson-check ${ls ? 'selected' : 'pending'}">${icons.circle}</span>`;
+      const textStyle = isCompleted ? "completed" : ls ? "selected" : "";
+      lessonsHTML += `
+        <div class="lesson-item ${ls ? 'selected' : isCompleted ? 'completed' : ''}" onclick="selectLesson(${lesson.id})">
+          ${checkIcon}
+          <div class="lesson-text ${textStyle}">${i + 1}. ${lesson.title}</div>
+          <div class="lesson-duration"><span>${icons.clock}</span> ${lesson.duration}</div>
+          ${!isCompleted ? `<span class="lesson-play ${ls ? 'selected' : ''}">${icons.play}</span>` : ''}
+        </div>`;
+    });
+
+    let resourcesHTML = '';
+    topic.resources.forEach(r => {
+      const m = ri[r.type];
+      const tag = r.url ? 'a' : 'div';
+      const href = r.url ? ` href="${r.url}" target="_blank" rel="noopener"` : '';
+      resourcesHTML += `
+        <${tag} class="resource-card"${href}>
+          <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
+          <div class="resource-info">
+            <p class="resource-title">${r.title}</p>
+            ${r.author ? `<p class="resource-author">${r.author}</p>` : ''}
+            <div class="resource-tags">
+              <span class="resource-tag ${m.cls}">${m.label}</span>
+              ${r.free !== undefined ? `<span class="resource-free ${r.free ? 'yes' : 'no'}">${r.free ? 'Grátis' : 'Pago'}</span>` : ''}
+            </div>
+          </div>
+          <span class="resource-link">${icons.externalLink}</span>
+        </${tag}>`;
+    });
+
+    let deepDiveHTML = '';
+    topic.deepDive.forEach(r => {
+      const m = ri[r.type];
+      const tag = r.url ? 'a' : 'div';
+      const href = r.url ? ` href="${r.url}" target="_blank" rel="noopener"` : '';
+      deepDiveHTML += `
+        <${tag} class="resource-card"${href}>
+          <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
+          <div class="resource-info">
+            <p class="resource-title">${r.title}</p>
+            <div class="resource-tags">
+              <span class="resource-tag ${m.cls}">${m.label}</span>
+              ${r.free !== undefined ? `<span class="resource-free ${r.free ? 'yes' : 'no'}">${r.free ? 'Grátis' : 'Pago'}</span>` : ''}
+            </div>
+          </div>
+          <span class="resource-link">${icons.externalLink}</span>
+        </${tag}>`;
+    });
+
+    const copyBtnClass = isEmpty ? "copy-btn empty" : copied ? "copy-btn copied" : "copy-btn ready";
+    const copyBtnIcon = copied ? icons.check : icons.copy;
+    const copyBtnText = copied ? "Copiado!" : "Copiar Markdown";
+
+    mainHTML = `
+      <div class="main">
+        <div class="content-area ${mobileView === 'content' ? 'mobile-show' : 'mobile-hide'}">
+          ${selectedLesson ? `
+          <div class="lesson-content-header">
+            <div class="breadcrumb">${breadcrumbHTML}</div>
+            <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${selectedLesson.title}</h1>
+            <div class="meta-row">
+              <div class="meta-item"><span>${icons.clock}</span> ${selectedLesson.duration}</div>
+            </div>
+          </div>
+          ${selectedLesson.topics && selectedLesson.topics.length ? `
+          <div class="lesson-topics">
+            <h3 class="lesson-topics-title">Índice da Aula</h3>
+            <ul class="lesson-topics-list">
+              ${selectedLesson.topics.map((t, i) => `<li class="lesson-topic-item"><span class="lesson-topic-num">${i + 1}</span> ${t}</li>`).join('')}
+            </ul>
+          </div>
+          ` : ''}
+          ${hasMaterial(topic.slug, selectedLesson.id) ? `
+          <div class="lesson-material" id="lessonMaterial"></div>
+          ` : `
+          <div class="lesson-placeholder">
+            <img src="mascote.png" alt="Mascote">
+            <h3>Vazio por enquanto</h3>
+          </div>
+          `}
+          ` : `
+          <div class="content-header">
+            <div class="breadcrumb">${breadcrumbHTML}</div>
+            <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${topic.title}</h1>
+            <p class="content-desc">${topic.longDesc}</p>
+            <div class="meta-row">
+              <div class="meta-item"><span>${icons.clock}</span> ~${topic.estimatedHours}h estimadas</div>
+              <div class="meta-item"><span>${icons.bookOpen}</span> ${topic.lessons.length} aulas</div>
+              ${completedLessons > 0 ? `<div class="meta-item green"><span>${icons.checkCircle}</span> ${completedLessons}/${topic.lessons.length} concluídas</div>` : ''}
+            </div>
+            ${progressPct > 0 ? `<div class="progress-row"><div class="progress-bar"><div class="progress-fill" style="width:${progressPct}%"></div></div><span class="progress-text">${progressPct}%</span></div>` : ''}
+          </div>
+          <div class="mb-20">
+            <h2 class="section-title"><span>${icons.play}</span> Vídeo Principal</h2>
+            <div class="video-embed">
+              <iframe src="https://www.youtube.com/embed/${getVideoId(topic.mainVideo.url)}" title="${topic.mainVideo.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <p class="video-embed-title">${topic.mainVideo.title}</p>
+            ${topic.mainVideo.description ? `
+            <details class="video-desc-details">
+              <summary>Descrição</summary>
+              <p class="video-desc-text">${topic.mainVideo.description}</p>
+            </details>
+            ` : ''}
+          </div>
+          <div class="mb-20">
+            <h2 class="section-title"><span>${icons.bookOpen}</span> Aulas do Módulo</h2>
+            <div class="lesson-list">${lessonsHTML}</div>
+          </div>
+          <div class="mb-20">
+            <h2 class="section-title"><span>${icons.wrench}</span> Recursos Recomendados</h2>
+            <div class="resources-grid">${resourcesHTML}</div>
+          </div>
+          <div>
+            <h2 class="section-title orange"><span>${icons.flame}</span> Para Aprofundar</h2>
+            <div class="deep-dive-list">${deepDiveHTML}</div>
+            <div class="tip-box-wrapper">
+              <img src="mascote-tip.png" alt="" class="tip-mascote">
+              <div class="tip-box">
+                <p>Termina as matérias antes de avançar para o aprofundamento. A base sólida acelera tudo que vem a seguir.</p>
+              </div>
+            </div>
+          </div>
+          `}
+        </div>
+        <div class="notes-panel ${notesOpen ? 'open' : 'closed'} ${mobileView === 'notes' ? 'mobile-show' : 'mobile-hide'}">
+          <button class="notes-toggle" onclick="toggleNotes()" title="${notesOpen ? 'Fechar notas' : 'Abrir notas'}">
+            ${notesOpen ? icons.chevronRight : icons.chevronLeft}
+          </button>
+          ${!notesOpen ? `
+          <div class="notes-closed">
+            <div class="notes-closed-icon file">${icons.fileText}</div>
+            <div class="notes-closed-icon chat">${icons.messageSquare}</div>
+          </div>` : `
+          <div class="notes-open">
+            <div class="notes-header">
+              <div class="notes-header-row">
+                <span class="notes-header-icon">${icons.fileText}</span>
+                <span class="notes-header-label">Notas</span>
+              </div>
+              <p class="notes-subtitle">Preenche depois de estudar. Salvo automaticamente por módulo.</p>
+            </div>
+            <div class="notes-fields">
+              <div class="note-field">
+                <div class="note-label-row"><span class="note-emoji">${icons.checkSquare}</span><span class="note-label">O que aprendi</span></div>
+                <p class="note-hint">Escreve como se explicasses a um amigo. 2-3 frases é o suficiente.</p>
+                <textarea class="note-textarea" rows="3" placeholder="Ex: Aprendi como as permissões funcionam no Linux..." oninput="updateNote('learned', this.value)">${notes.learned}</textarea>
+              </div>
+              <div class="note-field">
+                <div class="note-label-row"><span class="note-emoji">${icons.alertTriangle}</span><span class="note-label">Dificuldades</span></div>
+                <p class="note-hint">Sem julgamento — identificar o obstáculo é o primeiro passo.</p>
+                <textarea class="note-textarea" rows="3" placeholder="Ex: Ainda não ficou claro como o sudo funciona..." oninput="updateNote('difficulty', this.value)">${notes.difficulty}</textarea>
+              </div>
+              <div class="note-field">
+                <div class="note-label-row"><span class="note-emoji">${icons.arrowRight}</span><span class="note-label">Próximo passo</span></div>
+                <p class="note-hint">Uma ação concreta. Quanto mais específica, melhor.</p>
+                <textarea class="note-textarea" rows="3" placeholder="Ex: Fazer o desafio Bandit do OverTheWire..." oninput="updateNote('nextStep', this.value)">${notes.nextStep}</textarea>
+              </div>
+            </div>
+            <img src="mascote-notes.png" alt="" class="notes-mascote">
+            <div class="notes-footer">
+              <button class="${copyBtnClass}" onclick="copyMarkdown()" ${isEmpty ? 'disabled' : ''}>
+                <span>${copyBtnIcon}</span> ${copyBtnText}
+              </button>
+              <p class="copy-hint">Cola no teu editor → git push</p>
+            </div>
+          </div>`}
+        </div>
+      </div>`;
+  } else {
+    mainHTML = `
+      <div class="main">
+        <div class="content-area empty-state ${mobileView === 'content' ? 'mobile-show' : 'mobile-hide'}">
+          <img src="mascote.png" alt="Mascote" class="empty-mascote">
+          <h2 class="empty-title">Escolhe um módulo</h2>
+          <p class="empty-desc">Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.</p>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('app').innerHTML = `
+    <div class="navbar">
+      <div class="nav-left">
+        <img src="logo.png" alt="MyRoadmap" class="nav-logo-img logo-light">
+        <img src="logo-dark.png" alt="MyRoadmap" class="nav-logo-img logo-dark">
+        <span class="nav-logo-text">Roadmap Vivo</span>
+        <div class="nav-divider"></div>
+        <div class="nav-pill"><span>AI Security</span></div>
+      </div>
+      <div class="nav-right">
+        <a href="https://github.com/LioExp/myroadmap" target="_blank" rel="noopener noreferrer" title="GitHub" class="nav-btn">${icons.github}</a>
+        <a href="https://lioexp.github.io/mypage" target="_blank" rel="noopener noreferrer" title="Portfólio" class="nav-btn">${icons.globe}</a>
+        <div class="nav-divider"></div>
+        <button class="nav-btn" onclick="toggleTheme()" title="Trocar tema" id="theme-btn">${dark ? icons.moon : icons.sun}</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="timeline ${mobileView === 'timeline' ? 'mobile-show' : 'mobile-hide'}">
+        <h2 class="timeline-title">Meu Roadmap <span class="timeline-title-icon">${icons.compass}</span></h2>
+        <div class="timeline-list">
+          <div class="timeline-line"></div>
+          ${timelineHTML}
+        </div>
+      </div>
+      ${mainHTML}
+    </div>
+    <div class="mobile-nav">
+      <button class="mobile-nav-btn ${mobileView === 'timeline' ? 'active' : ''}" onclick="switchMobileView('timeline')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Roadmap</span>
+      </button>
+      <button class="mobile-nav-btn ${mobileView === 'content' ? 'active' : ''}" onclick="switchMobileView('content')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span>Conteúdo</span>
+      </button>
+      <button class="mobile-nav-btn ${mobileView === 'notes' ? 'active' : ''}" onclick="switchMobileView('notes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+        <span>Notas</span>
+      </button>
+    </div>`;
 }
 
-// ── Markdown renderer ──
+// ── Actions ──
+function selectTopic(id) { selectedTopicId = selectedTopicId === id ? null : id; selectedLessonId = null; render(); }
+function selectLesson(id) {
+  selectedLessonId = selectedLessonId === id ? null : id;
+  render();
+  if (selectedLessonId && selectedTopicId) {
+    const topic = getSelectedTopic();
+    if (topic) loadLessonMaterial(topic.slug, selectedLessonId);
+  }
+}
+function toggleNotes() { notesOpen = !notesOpen; render(); }
+function switchMobileView(view) { mobileView = view; render(); }
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', isDark() ? 'dark' : 'light');
+  render();
+}
+function updateNote(key, val) {
+  const topic = getSelectedTopic();
+  const notes = loadNotes(topic.id);
+  notes[key] = val;
+  saveNotes(topic.id, notes);
+  const isEmpty = !notes.learned.trim() && !notes.difficulty.trim() && !notes.nextStep.trim();
+  const btn = document.querySelector('.copy-btn');
+  if (btn) {
+    btn.className = isEmpty ? 'copy-btn empty' : copied ? 'copy-btn copied' : 'copy-btn ready';
+    btn.disabled = isEmpty;
+  }
+}
+function copyMarkdown() {
+  const topic = getSelectedTopic();
+  const notes = loadNotes(topic.id);
+  navigator.clipboard.writeText(buildMarkdown(topic, notes)).then(() => {
+    copied = true; render();
+    setTimeout(() => { copied = false; render(); }, 2500);
+  });
+}
+
+// ── Markdown Renderer (simple + custom tags) ──
 function renderMarkdown(md) {
+  // Custom tags: {{video: URL}}, {{youtube: ID}}, {{image: URL}}, {{alert: texto}}
   let html = md
     .replace(/^---[\s\S]*?---\n*/m, '')
     .replace(/\{\{youtube:?\s*([^}]+)\}\}/g, (_, id) => {
-      const vid = id.trim().match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1] || id.trim();
-      return `<div class="md-video"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen loading="lazy"></iframe></div>`;
+      const videoId = id.trim().match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1] || id.trim();
+      return `<div class="md-video"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
     })
     .replace(/\{\{video:\s*([^}]+)\}\}/g, (_, url) => {
-      const vid = url.trim().match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1] || '';
-      if (vid) return `<div class="md-video"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen loading="lazy"></iframe></div>`;
+      const videoId = url.trim().match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1] || '';
+      if (videoId) return `<div class="md-video"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
       return `<div class="md-video"><video src="${url.trim()}" controls></video></div>`;
     })
     .replace(/\{\{image:\s*([^}]+)\}\}/g, '<div class="md-image"><img src="$1" alt=""></div>')
     .replace(/\{\{alert:\s*([^}]+)\}\}/g, '<div class="md-alert">$1</div>')
     .replace(/\{\{divider\}\}/g, '<hr class="md-divider">')
-    .replace(/\{\{fontes:\s*([\s\S]*?)\}\}/g, (_, block) => {
-      const urls = block.split('\n').map(l => l.replace(/^-\s*/, '').trim()).filter(Boolean);
-      const favs = urls.map(u => { try { return `<img src="https://www.google.com/s2/favicons?domain=${new URL(u).hostname}&sz=32" class="fonte-favicon" />`; } catch { return ''; } }).join('');
-      const links = urls.map(u => { try { return `<li><a href="${u}" target="_blank">${new URL(u).hostname}</a></li>`; } catch { return ''; } }).join('');
-      return `<details class="fontes-bloco"><summary><span class="fontes-favicons">${favs}</span>Fontes (${urls.length})</summary><ul>${links}</ul></details>`;
-    })
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -113,329 +463,18 @@ function renderMarkdown(md) {
   return html;
 }
 
-// ── Search ──
-function filterTopics(query) {
-  if (!query) return topics;
-  const q = query.toLowerCase();
-  return topics.filter(t =>
-    t.title.toLowerCase().includes(q) ||
-    t.desc.toLowerCase().includes(q) ||
-    t.module.toLowerCase().includes(q) ||
-    t.lessons.some(l => l.title.toLowerCase().includes(q)) ||
-    t.resources.some(r => r.title.toLowerCase().includes(q))
-  );
-}
-
-// ── Trimesters ──
-const trimesters = [
-  { id: 'T1', label: 'T1 · Base', modules: [1, 2, 3] },
-  { id: 'T2', label: 'T2 · SOC Analyst', modules: [4, 5, 6] },
-  { id: 'T3', label: 'T3 · Pentester', modules: [7, 8, 9] },
-  { id: 'T4', label: 'T4 · Sec Engineer', modules: [10] },
-  { id: 'T5', label: 'T5 · ML Fundamentals', modules: [11, 12, 13] },
-  { id: 'T6', label: 'T6 · ML Avançado', modules: [14, 15, 16] },
-  { id: 'T7', label: 'T7 · AI Security', modules: [17, 18, 19] },
-  { id: 'T8', label: 'T8 · Destino', modules: [20] },
-];
-
-function getPhaseClass(module) {
-  if (module.id <= 10) return 'fase1';
-  if (module.id <= 16) return 'fase2';
-  return 'fase3';
-}
-
-// ── Render ──
-function render() {
-  const filtered = filterTopics(searchQuery);
-  const dark = isDark();
-
-  // Trimester bar
-  let trimesterHTML = trimesters.map(t =>
-    `<button class="trimester-pill ${activeTrimester === t.id ? 'active' : ''}" onclick="selectTrimester('${t.id}')">${t.label}</button>`
-  ).join('');
-
-  // Modules list
-  let modulesHTML = '';
-  filtered.forEach(t => {
-    const tp = topicProgress(t);
-    const isActive = selectedModule === t.id;
-    const phase = getPhaseClass(t);
-
-    modulesHTML += `
-      <div class="module-card ${isActive ? 'active' : ''}" onclick="toggleModule(${t.id})">
-        <div class="module-header">
-          <span class="module-num">${t.module}</span>
-          <span class="module-badge ${phase}">${t.module}</span>
-        </div>
-        <div class="module-title">${t.title}</div>
-        <div class="module-desc">${t.desc}</div>
-        <div class="module-footer">
-          <div class="module-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ~${t.estimatedHours}h</div>
-          <div class="module-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> ${t.lessons.length} aulas</div>
-          <div class="module-progress"><div class="module-progress-fill" style="width:${tp.pct}%"></div></div>
-          ${tp.done > 0 ? `<span class="module-meta" style="color:var(--green)">${tp.done}/${tp.total}</span>` : ''}
-          ${isActive ? '<div class="module-pulse"></div>' : ''}
-        </div>
-      </div>`;
-
-    // Drawer content
-    if (isActive) {
-      let lessonsHTML = '';
-      t.lessons.forEach((l, i) => {
-        const status = lessonStatus(t.slug, l.id);
-        const isDone = status === 'completed';
-        const isSel = selectedLesson === l.id;
-        lessonsHTML += `
-          <div class="lesson-item ${isSel ? 'active' : ''} ${isDone ? 'completed' : ''}" onclick="toggleLesson(${l.id})">
-            <span class="lesson-check ${isDone ? 'completed' : isSel ? 'active' : 'pending'}">
-              ${isDone ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'}
-            </span>
-            <div class="lesson-text ${isDone ? 'completed' : ''}">${i + 1}. ${l.title}</div>
-            <div class="lesson-duration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${l.duration}</div>
-          </div>`;
-
-        // Lesson expanded content
-        if (isSel) {
-          const mat = getMaterial(t.slug, l.id);
-          lessonsHTML += `
-            <div class="lesson-content open">
-              <div class="lesson-breadcrumb">${t.module} › ${t.title} › ${abbreviate(l.title, 30)}</div>
-              <div class="lesson-content-title">${l.title}</div>
-              ${l.topics && l.topics.length ? `
-              <div class="lesson-topics">
-                <div class="lesson-topics-title">Índice da Aula</div>
-                <ul class="lesson-topics-list">
-                  ${l.topics.map((tp, i) => `<li class="lesson-topic-item"><span class="lesson-topic-num">${i + 1}</span> ${tp}</li>`).join('')}
-                </ul>
-              </div>` : ''}
-              ${mat && mat.conteudo ? `<div class="lesson-material" id="lessonMaterial"></div>` : `
-              <div class="lesson-placeholder">
-                <img src="mascote.png" alt="Mascote">
-                <h3>Vazio por enquanto</h3>
-              </div>`}
-            </div>`;
-        }
-      });
-
-      // Resources
-      let resourcesHTML = '';
-      t.resources.forEach(r => {
-        const tag = r.url ? 'a' : 'div';
-        const href = r.url ? ` href="${r.url}" target="_blank" rel="noopener"` : '';
-        const cls = r.type || 'platform';
-        resourcesHTML += `
-          <${tag} class="resource-card"${href}>
-            <div class="resource-icon ${cls}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg></div>
-            <div class="resource-info">
-              <p class="resource-title">${r.title}</p>
-              ${r.author ? `<p class="resource-author">${r.author}</p>` : ''}
-              <div class="resource-tags">
-                <span class="resource-tag ${cls}">${cls}</span>
-                ${r.free !== undefined ? `<span class="resource-free ${r.free ? 'yes' : 'no'}">${r.free ? 'Grátis' : 'Pago'}</span>` : ''}
-              </div>
-            </div>
-          </${tag}>`;
-      });
-
-      modulesHTML += `
-        <div class="drawer open">
-          <div class="drawer-header">
-            <button class="drawer-back" onclick="toggleModule(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m15 18-6-6 6-6"/></svg></button>
-            <span class="drawer-title">${t.title}</span>
-          </div>
-          <p class="drawer-desc">${t.longDesc}</p>
-          <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/${getVideoId(t.mainVideo.url)}" allowfullscreen loading="lazy"></iframe>
-          </div>
-          <p class="video-embed-title">${t.mainVideo.title}</p>
-          ${t.mainVideo.description ? `<details class="video-desc-details"><summary>Descrição</summary><p class="video-desc-text">${t.mainVideo.description}</p></details>` : ''}
-          <div style="margin-top:20px">
-            <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Aulas</div>
-            <div class="lesson-list">${lessonsHTML}</div>
-          </div>
-          <div style="margin-top:20px">
-            <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/></svg> Recursos</div>
-            <div class="resources-grid">${resourcesHTML}</div>
-          </div>
-          <div class="tip-box-wrapper">
-            <img src="mascote-tip.png" alt="" class="tip-mascote">
-            <div class="tip-box">
-              <p>Termina as matérias antes de avançar para o aprofundamento. A base sólida acelera tudo que vem a seguir.</p>
-            </div>
-          </div>
-        </div>`;
-    }
-  });
-
-  // Diary sidebar
-  const diaryEntries = loadDiary();
-  let diaryHTML = '';
-  if (diaryEntries.length === 0) {
-    diaryHTML = `
-      <div class="diary-empty">
-        <img src="mascote.png" alt="Mascote">
-        <p>Sem entradas no diário ainda.</p>
-        <button class="diary-btn" onclick="showDiaryForm()">+ Nova entrada</button>
-      </div>`;
-  } else {
-    diaryHTML = diaryEntries.slice(0, 20).map(e => {
-      const phaseColor = e.moduleId <= 10 ? 'var(--p-solid)' : e.moduleId <= 16 ? 'var(--t-solid)' : 'var(--c-solid)';
-      return `
-        <div class="diary-entry" style="border-left-color:${phaseColor}" onclick="showDiaryDetail(${e.id})">
-          <div class="diary-entry-date">${e.date} · ${e.phase}</div>
-          <div class="diary-entry-title">${e.module}</div>
-          <div class="diary-entry-preview">${e.learned || e.difficulty || e.nextStep || 'Sem conteúdo'}</div>
-        </div>`;
-    }).join('');
-  }
-
-  // Render app
-  document.getElementById('app').innerHTML = `
-    <div class="navbar">
-      <div class="nav-left">
-        <img src="logo.png" alt="MyRoadmap" class="nav-logo-img logo-light">
-        <img src="logo-dark.png" alt="MyRoadmap" class="nav-logo-img logo-dark">
-        <span class="nav-logo-text">Roadmap Vivo</span>
-        <div class="nav-divider"></div>
-        <div class="nav-pill"><span>AI Security</span></div>
-      </div>
-      <div class="nav-right">
-        <a href="https://github.com/LioExp/myroadmap" target="_blank" rel="noopener noreferrer" title="GitHub" class="nav-btn"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.304 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 2.212 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-        <a href="https://lioexp.github.io/mypage" target="_blank" rel="noopener noreferrer" title="Portfólio" class="nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></a>
-        <div class="nav-divider"></div>
-        <button class="nav-btn" onclick="toggleTheme()" title="Trocar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">${dark ? '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>' : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>'}</svg></button>
-      </div>
-    </div>
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Buscar módulo, recurso ou entrada de diário…" value="${searchQuery}" oninput="onSearch(this.value)">
-    </div>
-    <div class="trimester-bar">
-      <button class="trimester-pill ${!activeTrimester ? 'active' : ''}" onclick="selectTrimester(null)">Todos</button>
-      ${trimesterHTML}
-    </div>
-    <div class="content">
-      <div class="modules-list" id="modulesList">
-        ${modulesHTML.length ? modulesHTML : '<div class="empty-state"><img src="mascote.png" alt="Mascote" class="empty-mascote"><h2 class="empty-title">Nenhum módulo encontrado</h2><p class="empty-desc">Tenta outro termo de busca.</p></div>'}
-      </div>
-      <div class="diary-panel">
-        <div class="diary-header">
-          <div class="diary-title">Diário</div>
-          <div class="diary-subtitle">Registra o que aprendeste</div>
-        </div>
-        <div class="diary-entries">
-          ${diaryHTML}
-        </div>
-        <div style="padding:12px">
-          <button class="diary-btn" onclick="showDiaryForm()">+ Nova entrada</button>
-        </div>
-      </div>
-    </div>`;
-
-  // Load material for selected lesson
-  if (selectedModule && selectedLesson) {
-    const topic = topics.find(t => t.id === selectedModule);
-    if (topic) {
-      const mat = getMaterial(topic.slug, selectedLesson);
-      if (mat && mat.conteudo) {
-        const el = document.getElementById('lessonMaterial');
-        if (el) el.innerHTML = renderMarkdown(mat.conteudo);
-      }
-    }
-  }
-}
-
-// ── Actions ──
-function toggleModule(id) {
-  selectedModule = selectedModule === id ? null : id;
-  selectedLesson = null;
-  render();
-}
-function toggleLesson(id) {
-  selectedLesson = selectedLesson === id ? null : id;
-  render();
-}
-function selectTrimester(id) {
-  activeTrimester = activeTrimester === id ? null : id;
-  if (activeTrimester) {
-    const tri = trimesters.find(t => t.id === activeTrimester);
-    if (tri) {
-      const first = topics.find(t => tri.modules.includes(t.id));
-      if (first) selectedModule = first.id;
-    }
-  }
-  render();
-}
-function onSearch(val) {
-  searchQuery = val;
-  render();
-}
-function toggleTheme() {
-  document.documentElement.classList.toggle('dark');
-  localStorage.setItem('theme', isDark() ? 'dark' : 'light');
-  render();
-}
-
-// ── Diary actions ──
-function showDiaryForm() {
-  const diaryPanel = document.querySelector('.diary-entries');
-  if (!diaryPanel) return;
-  diaryPanel.innerHTML = `
-    <div class="diary-form">
-      <div class="diary-form-title">Nova entrada</div>
-      <div class="diary-form-field">
-        <label>Módulo</label>
-        <select id="diaryModule" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:var(--radius);font-family:var(--font-body);font-size:13px;background:var(--surface);color:var(--ink)">
-          ${topics.map(t => `<option value="${t.id}">${t.module} — ${t.title}</option>`).join('')}
-        </select>
-      </div>
-      <div class="diary-form-field">
-        <label>O que aprendi</label>
-        <textarea id="diaryLearned" placeholder="Escreve como se explicasses a um amigo…"></textarea>
-      </div>
-      <div class="diary-form-field">
-        <label>Dificuldades</label>
-        <textarea id="diaryDifficulty" placeholder="O que te custou mais…"></textarea>
-      </div>
-      <div class="diary-form-field">
-        <label>Próximo passo</label>
-        <textarea id="diaryNext" placeholder="Uma ação concreta…"></textarea>
-      </div>
-      <div class="diary-form-actions">
-        <button class="cancel" onclick="render()">Cancelar</button>
-        <button class="save" onclick="submitDiary()">Salvar</button>
-      </div>
-    </div>`;
-}
-function submitDiary() {
-  const moduleId = parseInt(document.getElementById('diaryModule').value);
-  const learned = document.getElementById('diaryLearned').value;
-  const difficulty = document.getElementById('diaryDifficulty').value;
-  const nextStep = document.getElementById('diaryNext').value;
-  addDiaryEntry(moduleId, learned, difficulty, nextStep);
-  render();
-}
-function showDiaryDetail(id) {
-  const entries = loadDiary();
-  const entry = entries.find(e => e.id === id);
-  if (!entry) return;
-  const diaryPanel = document.querySelector('.diary-entries');
-  diaryPanel.innerHTML = `
-    <div class="diary-form">
-      <button class="diary-btn" onclick="render()" style="margin-bottom:12px">← Voltar</button>
-      <div class="diary-form-title">${entry.module}</div>
-      <div class="diary-entry-date" style="margin-bottom:12px">${entry.date} · ${entry.phase}</div>
-      <div class="diary-form-field"><label>O que aprendi</label><div style="font-size:13px;color:var(--ink);padding:8px;background:var(--surface);border-radius:var(--radius);white-space:pre-wrap">${entry.learned || '—'}</div></div>
-      <div class="diary-form-field"><label>Dificuldades</label><div style="font-size:13px;color:var(--ink);padding:8px;background:var(--surface);border-radius:var(--radius);white-space:pre-wrap">${entry.difficulty || '—'}</div></div>
-      <div class="diary-form-field"><label>Próximo passo</label><div style="font-size:13px;color:var(--ink);padding:8px;background:var(--surface);border-radius:var(--radius);white-space:pre-wrap">${entry.nextStep || '—'}</div></div>
-      <button class="diary-btn" style="margin-top:12px;color:var(--c-solid);border-color:var(--c-solid)" onclick="deleteDiaryEntry(${id})">Apagar entrada</button>
-    </div>`;
-}
-function deleteDiaryEntry(id) {
-  const entries = loadDiary().filter(e => e.id !== id);
-  saveDiary(entries);
-  render();
+function loadLessonMaterial(slug, lessonId) {
+  const mat = getMaterial(slug, lessonId);
+  if (!mat || !mat.conteudo) return;
+  const el = document.getElementById('lessonMaterial');
+  if (el) el.innerHTML = renderMarkdown(mat.conteudo);
 }
 
 // ── Init ──
 if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
-loadMaterialsIndex().then(() => render());
+const urlParams = new URLSearchParams(window.location.search);
+const returnTopic = parseInt(urlParams.get('topic'));
+if (returnTopic) selectedTopicId = returnTopic;
+loadMaterialsIndex().then(() => {
+  render();
+});
