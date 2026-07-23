@@ -462,11 +462,9 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   .meta-row { flex-wrap: wrap; gap: 8px; justify-content: center; }
   .breadcrumb { justify-content: center; }
 
-  /* Video card — full width */
-  .video-card { width: 100%; }
-  .video-thumb { height: 190px; }
-  .video-info { padding: 10px 12px; flex-direction: column; align-items: flex-start; gap: 6px; }
-  .video-duration { margin-left: 0; }
+  /* Video embed — full width */
+  .video-embed { border-radius: 12px; }
+  .video-embed-title { font-size: 13px; }
 
   /* Lessons — bigger touch targets */
   .lesson-item { padding: 12px; gap: 10px; min-height: 52px; }
