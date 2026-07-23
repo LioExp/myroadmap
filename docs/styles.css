@@ -1,8 +1,11 @@
 /* ── Copiado direto do index.css do React, convertido Tailwind → CSS ── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
+html { overscroll-behavior: none; background: #F9FAFB; }
+.dark html { background: #0a0a0a; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; margin: 0; padding: 0; background: #F9FAFB; }
+.dark html, .dark body { background: #0a0a0a; }
 body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .app {
   height: 100vh; width: 100vw; display: flex; flex-direction: column; overflow: hidden;
