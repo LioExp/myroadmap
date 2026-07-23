@@ -122,10 +122,13 @@ function render() {
       upcoming:    { label: "A seguir", bg: dark ? "#111827" : "#F3F4F6", fg: dark ? "#6B7280" : "#6B7280" },
     }[topic.status];
 
-    let breadcrumbHTML = `<span class="breadcrumb-module">${topic.module}</span> <span class="breadcrumb-chevron">${icons.chevronRight}</span> `;
-    breadcrumbHTML += selectedLesson
-      ? `<span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 25)}</span>`
-      : `<span class="breadcrumb-status" style="background:${sc.bg};color:${sc.fg}">${sc.label}</span>`;
+    let breadcrumbHTML = `<span class="breadcrumb-link" onclick="selectTopic(null)">${topic.module}</span> <span class="breadcrumb-chevron">${icons.chevronRight}</span> `;
+    if (selectedLesson) {
+      breadcrumbHTML += `<span class="breadcrumb-link" onclick="selectLesson(null)">Intro</span> <span class="breadcrumb-chevron">${icons.chevronRight}</span> `;
+      breadcrumbHTML += `<span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 30)}</span>`;
+    } else {
+      breadcrumbHTML += `<span class="breadcrumb-current">Intro</span>`;
+    }
 
     let lessonsHTML = '';
     topic.lessons.forEach((lesson, i) => {
@@ -186,26 +189,6 @@ function render() {
         <div class="content-area ${mobileView === 'content' ? 'mobile-show' : 'mobile-hide'}">
           ${selectedLesson ? `
           <div class="lesson-content-header">
-            <button class="lesson-back-btn" onclick="selectLesson(null)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="m15 18-6-6 6-6"/></svg>
-              Voltar às aulas
-            </button>
-            <div class="breadcrumb">
-              <span class="breadcrumb-module">${topic.module}</span>
-              <span class="breadcrumb-chevron">${icons.chevronRight}</span>
-              <span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 30)}</span>
-            </div>
-            <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${selectedLesson.title}</h1>
-            <div class="meta-row">
-              <div class="meta-item"><span>${icons.clock}</span> ${selectedLesson.duration}</div>
-            </div>
-          </div>
-          <div class="lesson-placeholder">
-            <img src="mascote.png" alt="Mascote">
-            <h3>Vazio por enquanto</h3>
-          </div>
-          ` : `
-          <div class="content-header">
             <div class="breadcrumb">${breadcrumbHTML}</div>
             <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${topic.title}</h1>
             <p class="content-desc">${topic.longDesc}</p>
