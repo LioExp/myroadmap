@@ -184,6 +184,27 @@ function render() {
     mainHTML = `
       <div class="main">
         <div class="content-area ${mobileView === 'content' ? 'mobile-show' : 'mobile-hide'}">
+          ${selectedLesson ? `
+          <div class="lesson-content-header">
+            <button class="lesson-back-btn" onclick="selectLesson(null)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="m15 18-6-6 6-6"/></svg>
+              Voltar às aulas
+            </button>
+            <div class="breadcrumb">
+              <span class="breadcrumb-module">${topic.module}</span>
+              <span class="breadcrumb-chevron">${icons.chevronRight}</span>
+              <span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 30)}</span>
+            </div>
+            <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${selectedLesson.title}</h1>
+            <div class="meta-row">
+              <div class="meta-item"><span>${icons.clock}</span> ${selectedLesson.duration}</div>
+            </div>
+          </div>
+          <div class="lesson-placeholder">
+            <img src="mascote.png" alt="Mascote">
+            <h3>Vazio por enquanto</h3>
+          </div>
+          ` : `
           <div class="content-header">
             <div class="breadcrumb">${breadcrumbHTML}</div>
             <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${topic.title}</h1>
@@ -215,25 +236,6 @@ function render() {
             <h2 class="section-title"><span>${icons.bookOpen}</span> Aulas do Módulo</h2>
             <div class="lesson-list">${lessonsHTML}</div>
           </div>
-          ${selectedLesson ? `
-          <div class="mb-20 lesson-content-area">
-            <div class="lesson-content-header">
-              <div class="breadcrumb">
-                <span class="breadcrumb-module">${topic.module}</span>
-                <span class="breadcrumb-chevron">${icons.chevronRight}</span>
-                <span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 30)}</span>
-              </div>
-              <h2 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${selectedLesson.title}</h2>
-              <div class="meta-row">
-                <div class="meta-item"><span>${icons.clock}</span> ${selectedLesson.duration}</div>
-              </div>
-            </div>
-            <div class="lesson-placeholder">
-              <img src="mascote.png" alt="Mascote">
-              <h3>Vazio por enquanto</h3>
-            </div>
-          </div>
-          ` : ''}
           <div class="mb-20">
             <h2 class="section-title"><span>${icons.wrench}</span> Recursos Recomendados</h2>
             <div class="resources-grid">${resourcesHTML}</div>
@@ -248,6 +250,7 @@ function render() {
               </div>
             </div>
           </div>
+          `}
         </div>
         <div class="notes-panel ${notesOpen ? 'open' : 'closed'} ${mobileView === 'notes' ? 'mobile-show' : 'mobile-hide'}">
           <button class="notes-toggle" onclick="toggleNotes()" title="${notesOpen ? 'Fechar notas' : 'Abrir notas'}">

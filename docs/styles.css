@@ -288,9 +288,15 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .dark .tip-box p { color: #9CA3AF; }
 
 /* ── Lesson content area ── */
-.lesson-content-area { background: #F9FAFB; border-radius: 16px; padding: 20px; border: 1px solid #E5E7EB; }
-.dark .lesson-content-area { background: #111827; border-color: #374151; }
 .lesson-content-header { margin-bottom: 16px; }
+.lesson-back-btn {
+  display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600;
+  color: #6B7280; background: none; border: none; cursor: pointer; padding: 6px 0;
+  margin-bottom: 8px; font-family: inherit; transition: color 150ms;
+}
+.dark .lesson-back-btn { color: #9CA3AF; }
+.lesson-back-btn:hover { color: #111827; }
+.dark .lesson-back-btn:hover { color: #F3F4F6; }
 .lesson-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 40px 20px; }
 .lesson-placeholder img { width: 120px; height: auto; opacity: 0.8; }
 .lesson-placeholder h3 { font-size: 16px; font-weight: 700; color: #6B7280; }
