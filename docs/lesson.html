@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <title>Aula — Roadmap Vivo</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <style>
+    .lesson-page { min-height: 100vh; padding: 20px; max-width: 800px; margin: 0 auto; }
+    .lesson-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #6B7280; text-decoration: none; margin-bottom: 20px; padding: 8px 14px; border-radius: 10px; background: #F3F4F6; transition: all 150ms; }
+    .dark .lesson-back { background: #1F2937; color: #9CA3AF; }
+    .lesson-back:hover { background: #E5E7EB; }
+    .dark .lesson-back:hover { background: #374151; }
+    .lesson-back svg { width: 14px; height: 14px; }
+    .lesson-phase { font-size: 11px; font-weight: 900; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .dark .lesson-phase { color: #6B7280; }
+    .lesson-module { font-size: 13px; font-weight: 700; color: #7E22CE; margin-bottom: 4px; }
+    .dark .lesson-module { color: #C084FC; }
+    .lesson-title { font-size: 22px; font-weight: 900; color: #111827; line-height: 1.3; margin-bottom: 8px; }
+    .dark .lesson-title { color: #F3F4F6; }
+    .lesson-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .lesson-meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #6B7280; font-weight: 600; }
+    .dark .lesson-meta-item { color: #9CA3AF; }
+    .lesson-meta-item svg { width: 14px; height: 14px; }
+    .lesson-divider { width: 100%; height: 1px; background: #E5E7EB; margin-bottom: 24px; }
+    .dark .lesson-divider { background: #374151; }
+    .lesson-content { font-size: 15px; line-height: 1.8; color: #374151; }
+    .dark .lesson-content { color: #D1D5DB; }
+    .lesson-content h2 { font-size: 18px; font-weight: 800; color: #111827; margin: 24px 0 12px; }
+    .dark .lesson-content h2 { color: #F3F4F6; }
+    .lesson-content h3 { font-size: 15px; font-weight: 700; color: #374151; margin: 20px 0 8px; }
+    .dark .lesson-content h3 { color: #E5E7EB; }
+    .lesson-content p { margin-bottom: 16px; }
+    .lesson-content ul, .lesson-content ol { margin: 12px 0; padding-left: 24px; }
+    .lesson-content li { margin-bottom: 8px; }
+    .lesson-content code { background: #F3F4F6; padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', monospace; }
+    .dark .lesson-content code { background: #1F2937; color: #C084FC; }
+    .lesson-content pre { background: #111827; color: #E5E7EB; padding: 16px; border-radius: 12px; overflow-x: auto; margin: 16px 0; font-size: 13px; line-height: 1.6; }
+    .lesson-content pre code { background: none; padding: 0; color: inherit; }
+    .lesson-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; padding: 60px 20px; }
+    .lesson-placeholder img { width: 120px; height: auto; opacity: 0.8; }
+    .lesson-placeholder h3 { font-size: 18px; font-weight: 700; color: #374151; }
+    .dark .lesson-placeholder h3 { color: #F3F4F6; }
+    .lesson-placeholder p { font-size: 14px; color: #6B7280; max-width: 400px; }
+    .dark .lesson-placeholder p { color: #9CA3AF; }
+  </style>
+</head>
+<body>
+  <div class="lesson-page" id="lessonPage"></div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const topicId = parseInt(params.get('topic'));
+    const lessonId = parseInt(params.get('lesson'));
+
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+
+    const topic = topics.find(t => t.id === topicId);
+    const lesson = topic ? topic.lessons.find(l => l.id === lessonId) : null;
+
+    if (!topic || !lesson) {
+      document.getElementById('lessonPage').innerHTML = '<div class="lesson-placeholder"><h3>Aula não encontrada</h3><p>Voltámos ao roadmap.</p></div>';
+    } else {
+      document.title = lesson.title + ' — Roadmap Vivo';
+      const lessonNum = topic.lessons.indexOf(lesson) + 1;
+      const totalLessons = topic.lessons.length;
+
+      document.getElementById('lessonPage').innerHTML = `
+        <a href="index.html?topic=${topicId}" class="lesson-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Voltar ao módulo
+        </a>
+        <div class="lesson-phase">${topic.module}</div>
+        <div class="lesson-module">${topic.title}</div>
+        <h1 class="lesson-title">${lesson.title}</h1>
+        <div class="lesson-meta">
+          <div class="lesson-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${lesson.duration}
+          </div>
+          <div class="lesson-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Aula ${lessonNum} de ${totalLessons}
+          </div>
+        </div>
+        <div class="lesson-divider"></div>
+        <div class="lesson-content" id="lessonContent"></div>
+        <div class="lesson-placeholder" id="lessonPlaceholder">
+          <img src="mascote.png" alt="Mascote">
+          <h3>Vazio por enquanto</h3>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

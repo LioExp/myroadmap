@@ -329,7 +329,7 @@ function render() {
 
 // ── Actions ──
 function selectTopic(id) { selectedTopicId = selectedTopicId === id ? null : id; selectedLessonId = null; render(); }
-function selectLesson(id) { selectedLessonId = selectedLessonId === id ? null : id; render(); }
+function selectLesson(id) { window.location.href = `lesson.html?topic=${selectedTopicId}&lesson=${id}`; }
 function toggleNotes() { notesOpen = !notesOpen; render(); }
 function switchMobileView(view) { mobileView = view; render(); }
 function toggleTheme() {
@@ -354,4 +354,7 @@ function copyMarkdown() {
 
 // ── Init ──
 if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+const urlParams = new URLSearchParams(window.location.search);
+const returnTopic = parseInt(urlParams.get('topic'));
+if (returnTopic) selectedTopicId = returnTopic;
 render();
