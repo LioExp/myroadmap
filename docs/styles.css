@@ -514,12 +514,12 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
   }
   .mobile-nav-btn svg { width: 20px; height: 20px; stroke-width: 1.75; }
   .mobile-nav-btn.active {
-    color: #fff; background: linear-gradient(135deg, #22C55E, #16A34A);
-    box-shadow: 0 2px 12px rgba(34, 197, 94, 0.4), 0 0 0 1px rgba(34, 197, 94, 0.2);
+    color: #fff; background: linear-gradient(135deg, #9333EA, #7E22CE);
+    box-shadow: 0 2px 12px rgba(147, 51, 234, 0.4), 0 0 0 1px rgba(147, 51, 234, 0.2);
   }
   .dark .mobile-nav-btn.active {
-    color: #fff; background: linear-gradient(135deg, #22C55E, #15803D);
-    box-shadow: 0 2px 12px rgba(34, 197, 94, 0.3), 0 0 0 1px rgba(34, 197, 94, 0.15);
+    color: #fff; background: linear-gradient(135deg, #A855F7, #7E22CE);
+    box-shadow: 0 2px 12px rgba(168, 85, 247, 0.3), 0 0 0 1px rgba(168, 85, 247, 0.15);
   }
   .mobile-nav-btn:not(.active):hover { color: #6B7280; }
   .dark .mobile-nav-btn:not(.active):hover { color: #D1D5DB; }
