@@ -322,6 +322,20 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .lesson-placeholder img { width: 120px; height: auto; opacity: 0.8; }
 .lesson-placeholder h3 { font-size: 16px; font-weight: 700; color: #6B7280; }
 .dark .lesson-placeholder h3 { color: #9CA3AF; }
+.lesson-material { font-size: 14px; line-height: 1.8; color: #374151; }
+.dark .lesson-material { color: #D1D5DB; }
+.lesson-material h2 { font-size: 18px; font-weight: 800; color: #111827; margin: 24px 0 12px; }
+.dark .lesson-material h2 { color: #F3F4F6; }
+.lesson-material h3 { font-size: 15px; font-weight: 700; color: #374151; margin: 20px 0 8px; }
+.dark .lesson-material h3 { color: #E5E7EB; }
+.lesson-material p { margin-bottom: 16px; }
+.lesson-material ul { margin: 12px 0; padding-left: 24px; }
+.lesson-material li { margin-bottom: 8px; }
+.lesson-material table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+.lesson-material td { padding: 8px 12px; border: 1px solid #E5E7EB; }
+.dark .lesson-material td { border-color: #374151; }
+.lesson-material code { background: #F3F4F6; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+.dark .lesson-material code { background: #1F2937; color: #C084FC; }
 
 /* ── Notes panel (NotesPanel.tsx) ── */
 .notes-panel {

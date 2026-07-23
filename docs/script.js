@@ -4,6 +4,32 @@ let selectedLessonId = null;
 let notesOpen = true;
 let copied = false;
 let mobileView = 'content';
+let materialsIndex = [];
+
+// ── Materials ──
+async function loadMaterialsIndex() {
+  try {
+    const res = await fetch('materiais-index.json');
+    if (res.ok) materialsIndex = await res.json();
+  } catch (e) { /* ignore */ }
+}
+
+function hasMaterial(slug, lessonId) {
+  return materialsIndex.some(m => m.modulo === slug && m.aula === lessonId);
+}
+
+function getMaterial(slug, lessonId) {
+  return materialsIndex.find(m => m.modulo === slug && m.aula === lessonId);
+}
+
+function lessonStatus(slug, lessonId) {
+  return hasMaterial(slug, lessonId) ? 'completed' : 'pending';
+}
+
+function topicProgress(topic) {
+  const completed = topic.lessons.filter(l => lessonStatus(topic.slug, l.id) === 'completed').length;
+  return { completed, total: topic.lessons.length, pct: Math.round((completed / topic.lessons.length) * 100) };
+}
 
 // ── SVG Icons (Lucide, mesmos do React) ──
 const icons = {
@@ -115,8 +141,9 @@ function render() {
   if (topic) {
     const notes = loadNotes(topic.id);
     const isEmpty = !notes.learned.trim() && !notes.difficulty.trim() && !notes.nextStep.trim();
-    const completedLessons = topic.lessons.filter(l => l.completed).length;
-    const progressPct = Math.round((completedLessons / topic.lessons.length) * 100);
+    const tp = topicProgress(topic);
+    const completedLessons = tp.completed;
+    const progressPct = tp.pct;
     const selectedLesson = selectedLessonId ? topic.lessons.find(l => l.id === selectedLessonId) : null;
 
     const sc = {
@@ -136,15 +163,17 @@ function render() {
     let lessonsHTML = '';
     topic.lessons.forEach((lesson, i) => {
       const ls = selectedLessonId === lesson.id;
-      const checkIcon = lesson.completed ? `<span class="lesson-check completed">${icons.checkCircle}</span>`
+      const status = lessonStatus(topic.slug, lesson.id);
+      const isCompleted = status === 'completed';
+      const checkIcon = isCompleted ? `<span class="lesson-check completed">${icons.checkCircle}</span>`
         : `<span class="lesson-check ${ls ? 'selected' : 'pending'}">${icons.circle}</span>`;
-      const textStyle = lesson.completed ? "completed" : ls ? "selected" : "";
+      const textStyle = isCompleted ? "completed" : ls ? "selected" : "";
       lessonsHTML += `
-        <div class="lesson-item ${ls ? 'selected' : lesson.completed ? 'completed' : ''}" onclick="selectLesson(${lesson.id})">
+        <div class="lesson-item ${ls ? 'selected' : isCompleted ? 'completed' : ''}" onclick="selectLesson(${lesson.id})">
           ${checkIcon}
           <div class="lesson-text ${textStyle}">${i + 1}. ${lesson.title}</div>
           <div class="lesson-duration"><span>${icons.clock}</span> ${lesson.duration}</div>
-          ${!lesson.completed ? `<span class="lesson-play ${ls ? 'selected' : ''}">${icons.play}</span>` : ''}
+          ${!isCompleted ? `<span class="lesson-play ${ls ? 'selected' : ''}">${icons.play}</span>` : ''}
         </div>`;
     });
 
@@ -210,10 +239,14 @@ function render() {
             </ul>
           </div>
           ` : ''}
+          ${hasMaterial(topic.slug, selectedLesson.id) ? `
+          <div class="lesson-material" id="lessonMaterial"></div>
+          ` : `
           <div class="lesson-placeholder">
             <img src="mascote.png" alt="Mascote">
             <h3>Vazio por enquanto</h3>
           </div>
+          `}
           ` : `
           <div class="content-header">
             <div class="breadcrumb">${breadcrumbHTML}</div>
@@ -387,9 +420,50 @@ function copyMarkdown() {
   });
 }
 
+// ── Markdown Renderer (simple) ──
+function renderMarkdown(md) {
+  return md
+    .replace(/^---[\s\S]*?---\n*/m, '')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/^\| (.+)$/gm, (m, row) => {
+      const cells = row.split(' | ');
+      return '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+    })
+    .replace(/(<tr>.*<\/tr>\n?)+/gs, m => `<table>${m}</table>`)
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/gs, m => `<ul>${m}</ul>`)
+    .replace(/\n{2,}/g, '</p><p>')
+    .replace(/^(?!<[hult])(.+)$/gm, '<p>$1</p>')
+    .replace(/<p><\/p>/g, '')
+    .trim();
+}
+
+async function loadLessonMaterial(slug, lessonId) {
+  const mat = getMaterial(slug, lessonId);
+  if (!mat) return;
+  try {
+    const res = await fetch(`../materiais/${mat.arquivo}`);
+    if (res.ok) {
+      const md = await res.text();
+      const el = document.getElementById('lessonMaterial');
+      if (el) el.innerHTML = renderMarkdown(md);
+    }
+  } catch (e) { /* ignore */ }
+}
+
 // ── Init ──
 if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
 const urlParams = new URLSearchParams(window.location.search);
 const returnTopic = parseInt(urlParams.get('topic'));
 if (returnTopic) selectedTopicId = returnTopic;
-render();
+loadMaterialsIndex().then(() => {
+  render();
+  if (selectedTopicId && selectedLessonId) {
+    const topic = getSelectedTopic();
+    if (topic) loadLessonMaterial(topic.slug, selectedLessonId);
+  }
+});
