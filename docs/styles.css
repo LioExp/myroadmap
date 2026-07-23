@@ -287,6 +287,15 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .tip-box p { font-size: 10px; color: #D1D5DB; line-height: 1.625; text-align: left; }
 .dark .tip-box p { color: #9CA3AF; }
 
+/* ── Lesson content area ── */
+.lesson-content-area { background: #F9FAFB; border-radius: 16px; padding: 20px; border: 1px solid #E5E7EB; }
+.dark .lesson-content-area { background: #111827; border-color: #374151; }
+.lesson-content-header { margin-bottom: 16px; }
+.lesson-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 40px 20px; }
+.lesson-placeholder img { width: 120px; height: auto; opacity: 0.8; }
+.lesson-placeholder h3 { font-size: 16px; font-weight: 700; color: #6B7280; }
+.dark .lesson-placeholder h3 { color: #9CA3AF; }
+
 /* ── Notes panel (NotesPanel.tsx) ── */
 .notes-panel {
   position: relative; flex-shrink: 0; min-height: 0; display: flex; flex-direction: column;

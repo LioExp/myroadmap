@@ -215,6 +215,25 @@ function render() {
             <h2 class="section-title"><span>${icons.bookOpen}</span> Aulas do Módulo</h2>
             <div class="lesson-list">${lessonsHTML}</div>
           </div>
+          ${selectedLesson ? `
+          <div class="mb-20 lesson-content-area">
+            <div class="lesson-content-header">
+              <div class="breadcrumb">
+                <span class="breadcrumb-module">${topic.module}</span>
+                <span class="breadcrumb-chevron">${icons.chevronRight}</span>
+                <span class="breadcrumb-lesson">${abbreviate(selectedLesson.title, 30)}</span>
+              </div>
+              <h2 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${selectedLesson.title}</h2>
+              <div class="meta-row">
+                <div class="meta-item"><span>${icons.clock}</span> ${selectedLesson.duration}</div>
+              </div>
+            </div>
+            <div class="lesson-placeholder">
+              <img src="mascote.png" alt="Mascote">
+              <h3>Vazio por enquanto</h3>
+            </div>
+          </div>
+          ` : ''}
           <div class="mb-20">
             <h2 class="section-title"><span>${icons.wrench}</span> Recursos Recomendados</h2>
             <div class="resources-grid">${resourcesHTML}</div>
@@ -329,7 +348,7 @@ function render() {
 
 // ── Actions ──
 function selectTopic(id) { selectedTopicId = selectedTopicId === id ? null : id; selectedLessonId = null; render(); }
-function selectLesson(id) { window.location.href = `lesson.html?topic=${selectedTopicId}&lesson=${id}`; }
+function selectLesson(id) { selectedLessonId = selectedLessonId === id ? null : id; render(); }
 function toggleNotes() { notesOpen = !notesOpen; render(); }
 function switchMobileView(view) { mobileView = view; render(); }
 function toggleTheme() {
