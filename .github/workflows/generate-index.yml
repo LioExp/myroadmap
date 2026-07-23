@@ -1,0 +1,68 @@
+name: Generate Materials Index
+
+on:
+  push:
+    paths:
+      - 'docs/materiais/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate materiais-index.json
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const materiasDir = 'docs/materiais';
+          const index = [];
+
+          function parseFrontmatter(content) {
+            const match = content.match(/^---\n([\s\S]*?)\n---/);
+            if (!match) return null;
+            const fm = {};
+            match[1].split('\n').forEach(line => {
+              const [key, ...rest] = line.split(':');
+              if (key && rest.length) {
+                fm[key.trim()] = rest.join(':').trim().replace(/^['\"]|['\"]$/g, '');
+              }
+            });
+            return fm;
+          }
+
+          if (fs.existsSync(materiasDir)) {
+            fs.readdirSync(materiasDir).forEach(modDir => {
+              const modPath = path.join(materiasDir, modDir);
+              if (!fs.statSync(modPath).isDirectory()) return;
+              fs.readdirSync(modPath).forEach(file => {
+                if (!file.endsWith('.md')) return;
+                const content = fs.readFileSync(path.join(modPath, file), 'utf8');
+                const fm = parseFrontmatter(content);
+                if (fm && fm.modulo && fm.aula) {
+                  index.push({
+                    modulo: fm.modulo,
+                    aula: parseInt(fm.aula),
+                    titulo: fm.titulo || file.replace('.md', ''),
+                    arquivo: modDir + '/' + file
+                  });
+                }
+              });
+            });
+          }
+
+          fs.writeFileSync('docs/materiais-index.json', JSON.stringify(index, null, 2));
+          console.log('Index generated with ' + index.length + ' materials.');
+          "
+
+      - name: Commit index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/materiais-index.json
+          git diff --cached --quiet || git commit -m "chore: update materiais-index.json [skip ci]"
+          git push
