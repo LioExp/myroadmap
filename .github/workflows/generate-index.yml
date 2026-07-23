@@ -35,20 +35,25 @@ jobs:
             return fm;
           }
 
+          function extractContent(content) {
+            return content.replace(/^---[\s\S]*?---\n*/m, '').trim();
+          }
+
           if (fs.existsSync(materiasDir)) {
             fs.readdirSync(materiasDir).forEach(modDir => {
               const modPath = path.join(materiasDir, modDir);
               if (!fs.statSync(modPath).isDirectory()) return;
               fs.readdirSync(modPath).forEach(file => {
                 if (!file.endsWith('.md')) return;
-                const content = fs.readFileSync(path.join(modPath, file), 'utf8');
-                const fm = parseFrontmatter(content);
-                if (fm && fm.modulo && fm.aula) {
+                const raw = fs.readFileSync(path.join(modPath, file), 'utf8');
+                const fm = parseFrontmatter(raw);
+                const conteudo = extractContent(raw);
+                if (fm && fm.modulo && fm.aula && conteudo) {
                   index.push({
                     modulo: fm.modulo,
                     aula: parseInt(fm.aula),
                     titulo: fm.titulo || file.replace('.md', ''),
-                    arquivo: modDir + '/' + file
+                    conteudo: conteudo
                   });
                 }
               });
