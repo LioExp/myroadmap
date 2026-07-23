@@ -190,6 +190,18 @@ function render() {
           ${selectedLesson ? `
           <div class="lesson-content-header">
             <div class="breadcrumb">${breadcrumbHTML}</div>
+            <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${selectedLesson.title}</h1>
+            <div class="meta-row">
+              <div class="meta-item"><span>${icons.clock}</span> ${selectedLesson.duration}</div>
+            </div>
+          </div>
+          <div class="lesson-placeholder">
+            <img src="mascote.png" alt="Mascote">
+            <h3>Vazio por enquanto</h3>
+          </div>
+          ` : `
+          <div class="content-header">
+            <div class="breadcrumb">${breadcrumbHTML}</div>
             <h1 class="content-title"><span class="topic-emoji-lg">${icons[topic.emoji]}</span> ${topic.title}</h1>
             <p class="content-desc">${topic.longDesc}</p>
             <div class="meta-row">
