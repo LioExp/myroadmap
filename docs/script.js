@@ -151,8 +151,10 @@ function render() {
     let resourcesHTML = '';
     topic.resources.forEach(r => {
       const m = ri[r.type];
+      const tag = r.url ? 'a' : 'div';
+      const href = r.url ? ` href="${r.url}" target="_blank" rel="noopener"` : '';
       resourcesHTML += `
-        <div class="resource-card">
+        <${tag} class="resource-card"${href}>
           <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
           <div class="resource-info">
             <p class="resource-title">${r.title}</p>
@@ -163,14 +165,16 @@ function render() {
             </div>
           </div>
           <span class="resource-link">${icons.externalLink}</span>
-        </div>`;
+        </${tag}>`;
     });
 
     let deepDiveHTML = '';
     topic.deepDive.forEach(r => {
       const m = ri[r.type];
+      const tag = r.url ? 'a' : 'div';
+      const href = r.url ? ` href="${r.url}" target="_blank" rel="noopener"` : '';
       deepDiveHTML += `
-        <div class="resource-card">
+        <${tag} class="resource-card"${href}>
           <div class="resource-icon ${m.cls}">${icons[m.icon]}</div>
           <div class="resource-info">
             <p class="resource-title">${r.title}</p>
@@ -180,7 +184,7 @@ function render() {
             </div>
           </div>
           <span class="resource-link">${icons.externalLink}</span>
-        </div>`;
+        </${tag}>`;
     });
 
     const copyBtnClass = isEmpty ? "copy-btn empty" : copied ? "copy-btn copied" : "copy-btn ready";
