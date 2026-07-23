@@ -14,12 +14,12 @@ async function loadMaterialsIndex() {
   } catch (e) { /* ignore */ }
 }
 
-function hasMaterial(slug, lessonId) {
-  return materialsIndex.some(m => m.modulo === slug && m.aula === lessonId);
-}
-
 function getMaterial(slug, lessonId) {
   return materialsIndex.find(m => m.modulo === slug && m.aula === lessonId);
+}
+
+function hasMaterial(slug, lessonId) {
+  return materialsIndex.some(m => m.modulo === slug && m.aula === lessonId && m.conteudo);
 }
 
 function lessonStatus(slug, lessonId) {
@@ -449,17 +449,11 @@ function renderMarkdown(md) {
     .trim();
 }
 
-async function loadLessonMaterial(slug, lessonId) {
+function loadLessonMaterial(slug, lessonId) {
   const mat = getMaterial(slug, lessonId);
-  if (!mat) return;
-  try {
-    const res = await fetch(`materiais/${mat.arquivo}`);
-    if (res.ok) {
-      const md = await res.text();
-      const el = document.getElementById('lessonMaterial');
-      if (el) el.innerHTML = renderMarkdown(md);
-    }
-  } catch (e) { /* ignore */ }
+  if (!mat || !mat.conteudo) return;
+  const el = document.getElementById('lessonMaterial');
+  if (el) el.innerHTML = renderMarkdown(mat.conteudo);
 }
 
 // ── Init ──
@@ -469,8 +463,4 @@ const returnTopic = parseInt(urlParams.get('topic'));
 if (returnTopic) selectedTopicId = returnTopic;
 loadMaterialsIndex().then(() => {
   render();
-  if (selectedTopicId && selectedLessonId) {
-    const topic = getSelectedTopic();
-    if (topic) loadLessonMaterial(topic.slug, selectedLessonId);
-  }
 });
