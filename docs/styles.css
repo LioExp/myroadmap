@@ -446,7 +446,7 @@ svg { display: inline-block; vertical-align: middle; color: inherit; }
 
   /* Main */
   .main { flex-direction: column; overflow: visible; min-height: auto; max-width: 600px; margin: 0 auto; width: 100%; }
-  .content-area { padding: 16px 4px; overflow: visible; min-height: auto; flex: none; }
+  .content-area { padding: 16px 4px; overflow: visible; }
 
   /* Content header — centered */
   .content-title { font-size: 18px; flex-wrap: wrap; justify-content: center; text-align: center; }
