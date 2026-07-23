@@ -72,6 +72,9 @@ const ri = {
   cert:     { icon: "fileText",  label: "Certificação", cls: "cert" },
 };
 
+// ── Helpers ──
+function getVideoId(url) { const m = url.match(/[?&]v=([^&]+)/); return m ? m[1] : ''; }
+
 // ── Render ──
 function render() {
   const topic = getSelectedTopic();
@@ -222,7 +225,7 @@ function render() {
           <div class="mb-20">
             <h2 class="section-title"><span>${icons.play}</span> Vídeo Principal</h2>
             <div class="video-embed">
-              <iframe src="https://www.youtube.com/embed/${topic.mainVideo.url.match(/[?&]v=([^&]+)/)?.[1] || ''}" title="${topic.mainVideo.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe src="https://www.youtube.com/embed/${getVideoId(topic.mainVideo.url)}" title="${topic.mainVideo.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <p class="video-embed-title">${topic.mainVideo.title}</p>
             ${topic.mainVideo.description ? `
