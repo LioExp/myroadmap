@@ -427,10 +427,23 @@ function copyMarkdown() {
   });
 }
 
-// ── Markdown Renderer (simple) ──
+// ── Markdown Renderer (simple + custom tags) ──
 function renderMarkdown(md) {
-  return md
+  // Custom tags: {{video: URL}}, {{youtube: ID}}, {{image: URL}}, {{alert: texto}}
+  let html = md
     .replace(/^---[\s\S]*?---\n*/m, '')
+    .replace(/\{\{youtube:?\s*([^}]+)\}\}/g, (_, id) => {
+      const videoId = id.trim().match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1] || id.trim();
+      return `<div class="md-video"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+    })
+    .replace(/\{\{video:\s*([^}]+)\}\}/g, (_, url) => {
+      const videoId = url.trim().match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1] || '';
+      if (videoId) return `<div class="md-video"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+      return `<div class="md-video"><video src="${url.trim()}" controls></video></div>`;
+    })
+    .replace(/\{\{image:\s*([^}]+)\}\}/g, '<div class="md-image"><img src="$1" alt=""></div>')
+    .replace(/\{\{alert:\s*([^}]+)\}\}/g, '<div class="md-alert">$1</div>')
+    .replace(/\{\{divider\}\}/g, '<hr class="md-divider">')
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -447,6 +460,7 @@ function renderMarkdown(md) {
     .replace(/^(?!<[hult])(.+)$/gm, '<p>$1</p>')
     .replace(/<p><\/p>/g, '')
     .trim();
+  return html;
 }
 
 function loadLessonMaterial(slug, lessonId) {
