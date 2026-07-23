@@ -10,7 +10,7 @@ const topics = [
     longDesc: "Linux é a base de qualquer profissional de segurança e devops. Neste módulo aprendes a instalar, configurar e operar um sistema Linux desde zero, dominando o terminal, permissões, processos e shell scripting para automação — sempre com um olhar de segurança, não só de uso genérico.",
     estimatedHours: 30,
     mainVideo: {
-      title: "Linux Full Course for Beginners",
+      title: "Introdução ao Linux (Conceitos e Questões)",
       channel: "NetworkChuck",
       duration: "6h 45min",
       url: "https://www.youtube.com/watch?v=ZrCrlvS2-us&t=336s",
