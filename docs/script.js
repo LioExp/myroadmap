@@ -391,7 +391,14 @@ function render() {
 
 // ── Actions ──
 function selectTopic(id) { selectedTopicId = selectedTopicId === id ? null : id; selectedLessonId = null; render(); }
-function selectLesson(id) { selectedLessonId = selectedLessonId === id ? null : id; render(); }
+function selectLesson(id) {
+  selectedLessonId = selectedLessonId === id ? null : id;
+  render();
+  if (selectedLessonId && selectedTopicId) {
+    const topic = getSelectedTopic();
+    if (topic) loadLessonMaterial(topic.slug, selectedLessonId);
+  }
+}
 function toggleNotes() { notesOpen = !notesOpen; render(); }
 function switchMobileView(view) { mobileView = view; render(); }
 function toggleTheme() {
@@ -446,7 +453,7 @@ async function loadLessonMaterial(slug, lessonId) {
   const mat = getMaterial(slug, lessonId);
   if (!mat) return;
   try {
-    const res = await fetch(`../materiais/${mat.arquivo}`);
+    const res = await fetch(`materiais/${mat.arquivo}`);
     if (res.ok) {
       const md = await res.text();
       const el = document.getElementById('lessonMaterial');
