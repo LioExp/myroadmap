@@ -195,6 +195,14 @@ function render() {
               <div class="meta-item"><span>${icons.clock}</span> ${selectedLesson.duration}</div>
             </div>
           </div>
+          ${selectedLesson.topics && selectedLesson.topics.length ? `
+          <div class="lesson-topics">
+            <h3 class="lesson-topics-title">Índice da Aula</h3>
+            <ul class="lesson-topics-list">
+              ${selectedLesson.topics.map((t, i) => `<li class="lesson-topic-item"><span class="lesson-topic-num">${i + 1}</span> ${t}</li>`).join('')}
+            </ul>
+          </div>
+          ` : ''}
           <div class="lesson-placeholder">
             <img src="mascote.png" alt="Mascote">
             <h3>Vazio por enquanto</h3>
