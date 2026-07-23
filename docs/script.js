@@ -367,6 +367,12 @@ function updateNote(key, val) {
   const notes = loadNotes(topic.id);
   notes[key] = val;
   saveNotes(topic.id, notes);
+  const isEmpty = !notes.learned.trim() && !notes.difficulty.trim() && !notes.nextStep.trim();
+  const btn = document.querySelector('.copy-btn');
+  if (btn) {
+    btn.className = isEmpty ? 'copy-btn empty' : copied ? 'copy-btn copied' : 'copy-btn ready';
+    btn.disabled = isEmpty;
+  }
 }
 function copyMarkdown() {
   const topic = getSelectedTopic();
