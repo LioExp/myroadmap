@@ -201,7 +201,13 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .section-title.orange svg { color: #FB923C; }
 .mb-20 { margin-bottom: 20px; }
 
-/* ── Video card ── */
+/* ── Video embed ── */
+.video-embed { position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 16px; overflow: hidden; background: #000; margin-bottom: 8px; }
+.video-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.video-embed-title { font-size: 12px; font-weight: 700; color: #111827; line-height: 1.4; }
+.dark .video-embed-title { color: #F3F4F6; }
+
+/* ── Video card (legacy) ── */
 .video-card { background: #111827; border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 150ms; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
 .dark .video-card { background: #000; }
 .video-card:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 0 2px rgb(34 197 94 / 0.5); }

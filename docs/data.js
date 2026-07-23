@@ -11,7 +11,6 @@ const topics = [
     estimatedHours: 30,
     mainVideo: {
       title: "Introdução ao Linux (Conceitos e Questões)",
-      channel: "NetworkChuck",
       duration: "6h 45min",
       url: "https://www.youtube.com/watch?v=ZrCrlvS2-us&t=336s",
     },
@@ -49,7 +48,6 @@ const topics = [
     estimatedHours: 28,
     mainVideo: {
       title: "CompTIA Network+ Full Course",
-      channel: "Professor Messer",
       duration: "7h 20min",
       url: "https://youtube.com/watch?v=example_network",
     },
@@ -85,7 +83,6 @@ const topics = [
     estimatedHours: 20,
     mainVideo: {
       title: "Python para Hackers e Pentesters",
-      channel: "TCM Security",
       duration: "5h 45min",
       url: "https://youtube.com/watch?v=example_python",
     },
@@ -121,7 +118,6 @@ const topics = [
     estimatedHours: 18,
     mainVideo: {
       title: "Splunk Fundamentals — From Zero to SOC Analyst",
-      channel: "SimplyCyber",
       duration: "4h 30min",
       url: "https://youtube.com/watch?v=example_siem",
     },
@@ -156,7 +152,6 @@ const topics = [
     estimatedHours: 16,
     mainVideo: {
       title: "Network Intrusion Detection with Snort and Suricata",
-      channel: "HackerSploit",
       duration: "3h 50min",
       url: "https://youtube.com/watch?v=example_ids",
     },
@@ -191,7 +186,6 @@ const topics = [
     estimatedHours: 14,
     mainVideo: {
       title: "System Hardening Fundamentals — CIS Benchmarks",
-      channel: "Professor Messer",
       duration: "3h 20min",
       url: "https://youtube.com/watch?v=example_hardening",
     },
@@ -225,7 +219,6 @@ const topics = [
     estimatedHours: 20,
     mainVideo: {
       title: "Reconnaissance and Enumeration — Full Course",
-      channel: "TCM Security",
       duration: "5h 15min",
       url: "https://youtube.com/watch?v=example_recon",
     },
@@ -260,7 +253,6 @@ const topics = [
     estimatedHours: 30,
     mainVideo: {
       title: "Ethical Hacking — Exploitation Full Course",
-      channel: "NetworkChuck",
       duration: "6h 30min",
       url: "https://youtube.com/watch?v=example_exploitation",
     },
@@ -296,7 +288,6 @@ const topics = [
     estimatedHours: 18,
     mainVideo: {
       title: "Post-Exploitation and Reporting — Full Guide",
-      channel: "HackerSploit",
       duration: "4h 40min",
       url: "https://youtube.com/watch?v=example_postexploit",
     },
@@ -331,7 +322,6 @@ const topics = [
     estimatedHours: 20,
     mainVideo: {
       title: "Security Engineer — Building Defenses That Work",
-      channel: "TCM Security",
       duration: "5h 00min",
       url: "https://youtube.com/watch?v=example_secengineer",
     },
@@ -366,7 +356,6 @@ const topics = [
     estimatedHours: 30,
     mainVideo: {
       title: "Mathematics for Machine Learning — Full Course",
-      channel: "3Blue1Brown",
       duration: "8h 15min",
       url: "https://youtube.com/watch?v=example_math_ml",
     },
@@ -401,7 +390,6 @@ const topics = [
     estimatedHours: 20,
     mainVideo: {
       title: "Python for Data Science — NumPy, Pandas, Matplotlib",
-      channel: "Keith Galli",
       duration: "5h 30min",
       url: "https://youtube.com/watch?v=example_python_data",
     },
@@ -436,7 +424,6 @@ const topics = [
     estimatedHours: 25,
     mainVideo: {
       title: "Machine Learning — Supervised Learning Full Course",
-      channel: "freeCodeCamp",
       duration: "7h 45min",
       url: "https://youtube.com/watch?v=example_ml_supervised",
     },
@@ -471,7 +458,6 @@ const topics = [
     estimatedHours: 18,
     mainVideo: {
       title: "Unsupervised Learning — Clustering and Dimensionality Reduction",
-      channel: "freeCodeCamp",
       duration: "4h 20min",
       url: "https://youtube.com/watch?v=example_ml_unsupervised",
     },
@@ -505,7 +491,6 @@ const topics = [
     estimatedHours: 30,
     mainVideo: {
       title: "Deep Learning Full Course — Neural Networks to Transformers",
-      channel: "freeCodeCamp",
       duration: "9h 10min",
       url: "https://youtube.com/watch?v=example_deep_learning",
     },
@@ -541,7 +526,6 @@ const topics = [
     estimatedHours: 18,
     mainVideo: {
       title: "Deploy Machine Learning Models — Full Guide",
-      channel: "Ken Jee",
       duration: "4h 00min",
       url: "https://youtube.com/watch?v=example_deploy_models",
     },
@@ -575,7 +559,6 @@ const topics = [
     estimatedHours: 25,
     mainVideo: {
       title: "Adversarial Machine Learning — Security Attacks on AI",
-      channel: "AI Security Lab",
       duration: "5h 30min",
       url: "https://youtube.com/watch?v=example_model_security",
     },
@@ -610,7 +593,6 @@ const topics = [
     estimatedHours: 20,
     mainVideo: {
       title: "LLM Security — Prompt Injection and Jailbreaking",
-      channel: "AI Security Lab",
       duration: "4h 15min",
       url: "https://youtube.com/watch?v=example_llm_security",
     },
@@ -644,7 +626,6 @@ const topics = [
     estimatedHours: 18,
     mainVideo: {
       title: "Secure MLOps — CI/CD for Machine Learning",
-      channel: "MLOps Community",
       duration: "3h 50min",
       url: "https://youtube.com/watch?v=example_mlops",
     },
@@ -678,7 +659,6 @@ const topics = [
     estimatedHours: 25,
     mainVideo: {
       title: "AI Security Engineer — From Theory to Practice",
-      channel: "AI Security Lab",
       duration: "6h 00min",
       url: "https://youtube.com/watch?v=example_ai_security",
     },
