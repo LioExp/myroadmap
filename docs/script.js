@@ -69,7 +69,7 @@ const ri = {
   book:     { icon: "bookOpen", label: "Livro",     cls: "book" },
   platform: { icon: "globe",    label: "Plataforma",cls: "platform" },
   tool:     { icon: "wrench",   label: "Ferramenta",cls: "tool" },
-  cert:     { icon: "checkCircle", label: "Certificação", cls: "platform" },
+  cert:     { icon: "fileText",  label: "Certificação", cls: "cert" },
 };
 
 // ── Render ──
