@@ -214,21 +214,6 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .video-desc-text { font-size: 11px; color: #6B7280; line-height: 1.6; margin-top: 6px; padding: 10px 12px; background: #F9FAFB; border-radius: 8px; border: 1px solid #F3F4F6; }
 .dark .video-desc-text { color: #9CA3AF; background: #1a1a1a; border-color: #374151; }
 
-/* ── Video card (legacy) ── */
-.video-card { background: #111827; border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 150ms; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
-.dark .video-card { background: #000; }
-.video-card:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 0 2px rgb(34 197 94 / 0.5); }
-.video-thumb { position: relative; height: 130px; background: linear-gradient(to bottom right, #1F2937, #111827); display: flex; align-items: center; justify-content: center; }
-.dark .video-thumb { background: linear-gradient(to bottom right, #111827, #000); }
-.video-play { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.1); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; transition: all 200ms; }
-.video-card:hover .video-play { transform: scale(1.1); background: rgba(255,255,255,0.2); }
-.video-play svg { width: 20px; height: 20px; color: #fff; margin-left: 2px; }
-.video-info { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
-.video-title { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.3; }
-.video-channel { font-size: 10px; color: #9CA3AF; margin-top: 2px; }
-.video-duration { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #9CA3AF; flex-shrink: 0; margin-left: 12px; }
-.video-duration svg { width: 12px; height: 12px; }
-
 /* ── Lesson list ── */
 .lesson-list { display: flex; flex-direction: column; gap: 6px; }
 .lesson-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; border: 1px solid #F3F4F6; background: #fff; cursor: pointer; transition: all 150ms; }
