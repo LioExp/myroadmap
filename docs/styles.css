@@ -243,7 +243,7 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
 /* ── Resource cards ── */
 .resources-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.resource-card { display: flex; align-items: flex-start; gap: 10px; background: #fff; border-radius: 12px; padding: 12px; border: 1px solid #F3F4F6; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); cursor: pointer; transition: all 150ms; }
+.resource-card { display: flex; align-items: flex-start; gap: 10px; background: #fff; border-radius: 12px; padding: 12px; border: 1px solid #F3F4F6; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); cursor: pointer; transition: all 150ms; text-decoration: none; color: inherit; }
 .dark .resource-card { background: #1a1a1a; border-color: #374151; }
 .resource-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); border-color: #E5E7EB; }
 .dark .resource-card:hover { border-color: #4B5563; }
