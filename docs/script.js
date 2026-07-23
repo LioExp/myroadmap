@@ -225,6 +225,12 @@ function render() {
               <iframe src="https://www.youtube.com/embed/${topic.mainVideo.url.match(/[?&]v=([^&]+)/)?.[1] || ''}" title="${topic.mainVideo.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <p class="video-embed-title">${topic.mainVideo.title}</p>
+            ${topic.mainVideo.description ? `
+            <details class="video-desc-details">
+              <summary>Descrição</summary>
+              <p class="video-desc-text">${topic.mainVideo.description}</p>
+            </details>
+            ` : ''}
           </div>
           <div class="mb-20">
             <h2 class="section-title"><span>${icons.bookOpen}</span> Aulas do Módulo</h2>

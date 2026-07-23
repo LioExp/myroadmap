@@ -206,6 +206,13 @@ body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 .video-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .video-embed-title { font-size: 12px; font-weight: 700; color: #111827; line-height: 1.4; }
 .dark .video-embed-title { color: #F3F4F6; }
+.video-desc-details { margin-top: 8px; }
+.video-desc-details summary { font-size: 11px; font-weight: 700; color: #9333EA; cursor: pointer; user-select: none; }
+.dark .video-desc-details summary { color: #C084FC; }
+.video-desc-details summary:hover { color: #7E22CE; }
+.dark .video-desc-details summary:hover { color: #D8B4FE; }
+.video-desc-text { font-size: 11px; color: #6B7280; line-height: 1.6; margin-top: 6px; padding: 10px 12px; background: #F9FAFB; border-radius: 8px; border: 1px solid #F3F4F6; }
+.dark .video-desc-text { color: #9CA3AF; background: #1a1a1a; border-color: #374151; }
 
 /* ── Video card (legacy) ── */
 .video-card { background: #111827; border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 150ms; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }

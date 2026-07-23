@@ -13,6 +13,7 @@ const topics = [
       title: "Introdução ao Linux (Conceitos e Questões)",
       duration: "6h 45min",
       url: "https://www.youtube.com/watch?v=ZrCrlvS2-us&t=336s",
+      description: "Este vídeo começa nos 5:31 minutos — o conteúdo antes disso não é relevante para o nosso roadmap.",
     },
     lessons: [
       { id: 1, title: "O que é Linux — Distribuições, kernel e shell", duration: "45min", completed: false, topics: ["O que é um sistema operacional, e onde o Linux se encaixa", "Unix → Linux, GNU/Linux, breve história", "Kernel vs shell vs distribuição", "Principais distros (Debian/Ubuntu, RedHat/Fedora, Arch) e por que Kali importa", "Filosofia Unix: tudo é um arquivo, programas pequenos que fazem uma coisa bem", "Onde Linux aparece de verdade: servidores, containers, IoT, ferramentas de segurança"] },
