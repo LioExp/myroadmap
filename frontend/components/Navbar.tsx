@@ -11,7 +11,7 @@ function DiscordIcon({ className }: { className?: string }) {
   );
 }
 
-const DISCORD_URL = "https://discord.gg/SEU_CODIGO_AQUI";
+const DISCORD_URL = "https://discord.gg/5S5cXd7q4M";
 
 export default function Navbar() {
   const { dark, toggleTheme } = useRoadmapStore();
