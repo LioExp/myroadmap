@@ -58,10 +58,8 @@ export default function NotesPanel() {
   return (
     <aside
       className={cn(
-        "relative flex-shrink-0 flex flex-col border-l border-[#E5E7EB] dark:border-[#374151]/80 transition-all duration-300 ease-in-out",
-        isMobileNotes ? "w-full min-h-0 border-l-0 border-t border-[#F3F4F6] dark:border-[#374151] mt-4 max-md:rounded-2xl max-md:bg-white dark:max-md:bg-[#1a1a1a] max-md:border max-md:shadow-sm" : "min-h-0", 
-        !isMobileNotes && notesOpen ? "w-[300px]" : "",
-        !isMobileNotes && !notesOpen ? "w-11" : ""
+        "relative flex-shrink-0 min-h-0 flex flex-col border-l border-[#E5E7EB] dark:border-[#374151]/80 transition-all duration-300 ease-in-out",
+        isMobileNotes ? "w-full border-l-0 border-t border-[#F3F4F6] dark:border-[#374151] mt-4 max-md:rounded-2xl max-md:bg-white dark:max-md:bg-[#1a1a1a] max-md:border max-md:shadow-sm" : notesOpen ? "w-[300px]" : "w-11"
       )}
     >
       {/* Toggle button (hidden on mobile notes view) */}
@@ -90,18 +88,18 @@ export default function NotesPanel() {
       {/* Open state */}
       {(notesOpen || isMobileNotes) && (
         <div className={cn(
-          "flex-1 flex flex-col px-3 py-4 gap-3",
-          isMobileNotes ? "overflow-y-auto min-h-0 max-md:px-2.5 max-md:py-3 max-md:gap-2" : "overflow-hidden min-h-0"
+          "flex-1 min-h-0 flex flex-col px-3 py-4 gap-3",
+          isMobileNotes ? "overflow-y-auto" : "overflow-hidden"
         )}>
           {/* Header */}
-          <div className="flex-shrink-0 max-md:mb-0">
+          <div className="flex-shrink-0">
             <div className="flex items-center gap-1.5">
               <FileText className="w-4 h-4 text-[#9CA3AF]" />
               <span className="text-xs font-black text-[#9CA3AF] uppercase tracking-widest">
                 Notas
               </span>
             </div>
-            <p className="text-[10px] text-[#9CA3AF] mt-1 leading-relaxed max-md:hidden">
+            <p className="text-[10px] text-[#9CA3AF] mt-1 leading-relaxed">
               Preenche depois de estudar. Salvo automaticamente por módulo.
             </p>
           </div>
@@ -109,7 +107,7 @@ export default function NotesPanel() {
           {/* Note fields */}
           <div className={cn(
             "flex-1 flex flex-col gap-3 pr-0.5",
-            isMobileNotes ? "overflow-visible max-md:gap-2" : "min-h-0 overflow-y-auto"
+            isMobileNotes ? "overflow-visible" : "min-h-0 overflow-y-auto"
           )}>
             <NoteField
               icon={<CheckSquare className="w-3 h-3" />}
@@ -143,16 +141,16 @@ export default function NotesPanel() {
             alt=""
             width={60}
             height={60}
-            className="block mx-auto flex-shrink-0 mt-1 max-md:w-10 max-md:h-10"
+            className="block mx-auto flex-shrink-0 mt-1"
           />
 
           {/* Footer */}
-          <div className="flex-shrink-0 flex flex-col gap-1.5 max-md:gap-1">
+          <div className="flex-shrink-0 flex flex-col gap-1.5">
             <button
               onClick={handleCopy}
               disabled={empty}
               className={cn(
-                "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans max-md:py-2 max-md:text-[11px]",
+                "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans",
                 empty
                   ? "bg-[#F3F4F6] dark:bg-[#1F2937] text-[#9CA3AF] dark:text-[#4B5563] cursor-not-allowed"
                   : copied
@@ -163,7 +161,7 @@ export default function NotesPanel() {
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               {copied ? "Copiado!" : "Copiar Markdown"}
             </button>
-            <p className="text-[10px] text-[#9CA3AF] text-center leading-relaxed max-md:hidden">
+            <p className="text-[10px] text-[#9CA3AF] text-center leading-relaxed">
               Cola no teu editor → git push
             </p>
           </div>
