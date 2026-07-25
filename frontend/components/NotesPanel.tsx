@@ -58,8 +58,10 @@ export default function NotesPanel() {
   return (
     <aside
       className={cn(
-        "relative flex-shrink-0 min-h-0 flex flex-col border-l border-[#E5E7EB] dark:border-[#374151]/80 transition-all duration-300 ease-in-out",
-        isMobileNotes ? "w-full border-l-0 border-t border-[#F3F4F6] dark:border-[#374151] mt-4 max-md:rounded-2xl max-md:bg-white dark:max-md:bg-[#1a1a1a] max-md:border max-md:shadow-sm" : notesOpen ? "w-[300px]" : "w-11"
+        "relative flex-shrink-0 flex flex-col border-l border-[#E5E7EB] dark:border-[#374151]/80 transition-all duration-300 ease-in-out",
+        isMobileNotes ? "w-full min-h-0 border-l-0 border-t border-[#F3F4F6] dark:border-[#374151] mt-4 max-md:rounded-2xl max-md:bg-white dark:max-md:bg-[#1a1a1a] max-md:border max-md:shadow-sm" : "min-h-0", 
+        !isMobileNotes && notesOpen ? "w-[300px]" : "",
+        !isMobileNotes && !notesOpen ? "w-11" : ""
       )}
     >
       {/* Toggle button (hidden on mobile notes view) */}
@@ -87,7 +89,10 @@ export default function NotesPanel() {
 
       {/* Open state */}
       {(notesOpen || isMobileNotes) && (
-        <div className="flex-1 min-h-0 flex flex-col px-3 py-4 gap-3 overflow-hidden">
+        <div className={cn(
+          "flex-1 flex flex-col px-3 py-4 gap-3",
+          isMobileNotes ? "overflow-y-auto min-h-0" : "overflow-hidden min-h-0"
+        )}>
           {/* Header */}
           <div className="flex-shrink-0">
             <div className="flex items-center gap-1.5">
@@ -102,7 +107,10 @@ export default function NotesPanel() {
           </div>
 
           {/* Note fields */}
-          <div className="flex-1 min-h-0 flex flex-col gap-3 overflow-y-auto pr-0.5">
+          <div className={cn(
+            "flex-1 flex flex-col gap-3 pr-0.5",
+            isMobileNotes ? "overflow-visible" : "min-h-0 overflow-y-auto"
+          )}>
             <NoteField
               icon={<CheckSquare className="w-3 h-3" />}
               label="O que aprendi"
