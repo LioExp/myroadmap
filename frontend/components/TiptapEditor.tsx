@@ -45,6 +45,15 @@ function ToolbarBtn({
 
 function useMobileZoom(wrapperRef: React.RefObject<HTMLDivElement | null>) {
   const zoomedRef = useRef(false);
+  const switchingRef = useRef(false);
+
+  const zoomOut = useCallback(() => {
+    if (!zoomedRef.current) return;
+    const el = wrapperRef.current;
+    if (!el) return;
+    zoomedRef.current = false;
+    el.classList.remove("tiptap-focused");
+  }, [wrapperRef]);
 
   const zoomIn = useCallback(() => {
     if (zoomedRef.current) return;
@@ -57,14 +66,6 @@ function useMobileZoom(wrapperRef: React.RefObject<HTMLDivElement | null>) {
     }, 100);
   }, [wrapperRef]);
 
-  const zoomOut = useCallback(() => {
-    if (!zoomedRef.current) return;
-    const el = wrapperRef.current;
-    if (!el) return;
-    zoomedRef.current = false;
-    el.classList.remove("tiptap-focused");
-  }, [wrapperRef]);
-
   useEffect(() => {
     if (!wrapperRef.current) return;
     const el = wrapperRef.current;
@@ -72,15 +73,29 @@ function useMobileZoom(wrapperRef: React.RefObject<HTMLDivElement | null>) {
     const contentEditable = el.querySelector("[contenteditable]");
     if (!contentEditable) return;
 
-    const handleFocusIn = () => zoomIn();
-    const handleFocusOut = (e: Event) => {
-      const related = (e as FocusEvent).relatedTarget as HTMLElement | null;
-      if (related && el.contains(related)) return;
-      zoomOut();
+    const handleFocusIn = () => {
+      switchingRef.current = true;
+      zoomIn();
+      setTimeout(() => { switchingRef.current = false; }, 200);
+    };
+
+    const handleBlur = () => {
+      if (switchingRef.current) return;
+      setTimeout(() => {
+        if (el.contains(document.activeElement)) return;
+        zoomOut();
+      }, 150);
     };
 
     contentEditable.addEventListener("focusin", handleFocusIn);
-    contentEditable.addEventListener("focusout", handleFocusOut);
+    contentEditable.addEventListener("blur", handleBlur);
+
+    const handlePointerDown = (e: PointerEvent) => {
+      if (!el.contains(e.target as Node)) {
+        zoomOut();
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
 
     let prevHeight = 0;
     const handleViewportResize = () => {
@@ -94,7 +109,8 @@ function useMobileZoom(wrapperRef: React.RefObject<HTMLDivElement | null>) {
 
     return () => {
       contentEditable.removeEventListener("focusin", handleFocusIn);
-      contentEditable.removeEventListener("focusout", handleFocusOut);
+      contentEditable.removeEventListener("blur", handleBlur);
+      document.removeEventListener("pointerdown", handlePointerDown);
       window.visualViewport?.removeEventListener("resize", handleViewportResize);
     };
   }, [wrapperRef, zoomIn, zoomOut]);
