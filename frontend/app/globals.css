@@ -66,19 +66,6 @@
 .tiptap-wrapper .ProseMirror blockquote { border-left: 3px solid #E5E7EB; padding-left: 10px; color: #6B7280; margin: 8px 0; }
 .dark .tiptap-wrapper .ProseMirror blockquote { border-left-color: #374151; }
 
-/* Mobile zoom on focus */
-@media (max-width: 768px) {
-  .tiptap-wrapper {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    transform-origin: center center;
-  }
-  .tiptap-wrapper.tiptap-focused {
-    transform: scale(1.3);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-  }
-}
-
 /* ── Timeline pulse animation ── */
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
