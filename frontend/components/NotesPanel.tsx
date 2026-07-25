@@ -30,7 +30,7 @@ function NoteField({
         </span>
         <span className="text-[10px] font-black text-[#1F2937] dark:text-[#E5E7EB]">{label}</span>
       </div>
-      <p className="text-[8px] text-[#9CA3AF] leading-relaxed">{hint}</p>
+      <p className="text-[8px] text-[#9CA3AF] leading-relaxed max-md:hidden">{hint}</p>
       <TiptapEditor value={value} onChange={onChange} placeholder={placeholder} />
     </div>
   );
@@ -91,17 +91,17 @@ export default function NotesPanel() {
       {(notesOpen || isMobileNotes) && (
         <div className={cn(
           "flex-1 flex flex-col px-3 py-4 gap-3",
-          isMobileNotes ? "overflow-y-auto min-h-0" : "overflow-hidden min-h-0"
+          isMobileNotes ? "overflow-y-auto min-h-0 max-md:px-2.5 max-md:py-3 max-md:gap-2" : "overflow-hidden min-h-0"
         )}>
           {/* Header */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 max-md:mb-0">
             <div className="flex items-center gap-1.5">
               <FileText className="w-4 h-4 text-[#9CA3AF]" />
               <span className="text-xs font-black text-[#9CA3AF] uppercase tracking-widest">
                 Notas
               </span>
             </div>
-            <p className="text-[10px] text-[#9CA3AF] mt-1 leading-relaxed">
+            <p className="text-[10px] text-[#9CA3AF] mt-1 leading-relaxed max-md:hidden">
               Preenche depois de estudar. Salvo automaticamente por módulo.
             </p>
           </div>
@@ -109,7 +109,7 @@ export default function NotesPanel() {
           {/* Note fields */}
           <div className={cn(
             "flex-1 flex flex-col gap-3 pr-0.5",
-            isMobileNotes ? "overflow-visible" : "min-h-0 overflow-y-auto"
+            isMobileNotes ? "overflow-visible max-md:gap-2" : "min-h-0 overflow-y-auto"
           )}>
             <NoteField
               icon={<CheckSquare className="w-3 h-3" />}
@@ -143,16 +143,16 @@ export default function NotesPanel() {
             alt=""
             width={60}
             height={60}
-            className="block mx-auto flex-shrink-0 mt-1"
+            className="block mx-auto flex-shrink-0 mt-1 max-md:w-10 max-md:h-10"
           />
 
           {/* Footer */}
-          <div className="flex-shrink-0 flex flex-col gap-1.5">
+          <div className="flex-shrink-0 flex flex-col gap-1.5 max-md:gap-1">
             <button
               onClick={handleCopy}
               disabled={empty}
               className={cn(
-                "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans",
+                "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans max-md:py-2 max-md:text-[11px]",
                 empty
                   ? "bg-[#F3F4F6] dark:bg-[#1F2937] text-[#9CA3AF] dark:text-[#4B5563] cursor-not-allowed"
                   : copied
@@ -163,7 +163,7 @@ export default function NotesPanel() {
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               {copied ? "Copiado!" : "Copiar Markdown"}
             </button>
-            <p className="text-[10px] text-[#9CA3AF] text-center leading-relaxed">
+            <p className="text-[10px] text-[#9CA3AF] text-center leading-relaxed max-md:hidden">
               Cola no teu editor → git push
             </p>
           </div>

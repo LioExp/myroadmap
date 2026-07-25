@@ -63,7 +63,7 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
     },
     editorProps: {
       attributes: {
-        class: "outline-none min-h-[60px] text-[10px] leading-relaxed",
+        class: "outline-none min-h-[60px] max-md:min-h-[44px] text-[10px] leading-relaxed",
       },
     },
     immediatelyRender: false,
