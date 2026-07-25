@@ -35,11 +35,18 @@ export default function MainContent() {
 
   return (
     <>
-      {/* Content area */}
+      {/* Desktop: flex row. Mobile: only one visible at a time */}
       <div
-        className={`flex-1 min-h-0 flex ${practiceOpen ? "flex-row" : "flex-col"} min-w-0 overflow-hidden max-md:flex-col ${showContent ? "max-md:flex" : "max-md:hidden"}`}
+        className={`flex-1 min-h-0 flex min-w-0 overflow-hidden ${practiceOpen ? "flex-row" : "flex-col"}`}
       >
-        <div className={`min-h-0 overflow-y-auto py-5 px-6 pr-1 max-md:px-1 max-md:py-4 ${practiceOpen ? "flex-[3] min-w-0" : "flex-1"}`}>
+        {/* Content */}
+        <div
+          className={`min-h-0 overflow-y-auto py-5 px-6 pr-1 max-md:px-1 max-md:py-4 ${
+            practiceOpen
+              ? "flex-[3] min-w-0 max-md:hidden"
+              : "flex-1"
+          }`}
+        >
           {!topic ? (
             <div className="flex flex-col items-center justify-center text-center gap-3 p-10 h-full">
               <Image src="/mascote.png" alt="Mascote" width={160} height={160} priority style={{ width: 160, height: "auto" }} />
@@ -59,14 +66,15 @@ export default function MainContent() {
           )}
         </div>
 
+        {/* Practice panel — full screen on mobile, split on desktop */}
         {practiceOpen && (
-          <div className="flex-[2] min-w-0 border-l border-[#30363d]">
+          <div className="flex-[2] min-w-0 border-l border-[#30363d] max-md:border-l-0 max-md:flex-1 max-md:min-h-0">
             <PracticePanel />
           </div>
         )}
       </div>
 
-      <div className={showNotes ? "max-md:block" : "max-md:hidden"}>
+      <div className={showNotes && !practiceOpen ? "max-md:block" : "max-md:hidden"}>
         {topic && <NotesPanel />}
       </div>
     </>
