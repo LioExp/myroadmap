@@ -123,7 +123,7 @@ AI Security Engineer
 | Dados          | JSON                            |
 | Hospedagem     | Vercel / Netlify / GitHub Pages |
 | CMS (Opcional) | Decap CMS                       |
-| Backend Futuro | Supabase / Node.js              |
+| Backend Futuro | python / Next.js                |
 
 ---
 
