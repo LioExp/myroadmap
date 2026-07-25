@@ -51,7 +51,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       practiceOpen: false,
       copied: false,
       mobileView: "content",
-      dark: false,
+      dark: true,
       materials: [],
       notes: {},
 
