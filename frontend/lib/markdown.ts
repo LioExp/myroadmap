@@ -1,3 +1,18 @@
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<iframe(?![^>]*youtube\.com)[^>]*>/gi, "")
+    .replace(/<object[\s\S]*?<\/object>/gi, "")
+    .replace(/<embed[^>]*>/gi, "")
+    .replace(/<form[\s\S]*?<\/form>/gi, "")
+    .replace(/\son\w+\s*=\s*["'][^"']*["']/gi, "")
+    .replace(/\son\w+\s*=\s*[^\s>]*/gi, "")
+    .replace(/javascript\s*:/gi, "")
+    .replace(/data\s*:/gi, "")
+    .replace(/vbscript\s*:/gi, "");
+}
+
 /**
  * Simple markdown renderer matching the original script.js implementation.
  * Supports custom tags: {{youtube: ID}}, {{video: URL}}, {{image: URL}},
@@ -42,5 +57,5 @@ export function renderMarkdown(md: string): string {
     .replace(/^(?!<[hult])(.+)$/gm, "<p>$1</p>")
     .replace(/<p><\/p>/g, "")
     .trim();
-  return html;
+  return sanitizeHtml(html);
 }

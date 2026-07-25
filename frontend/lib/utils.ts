@@ -15,21 +15,6 @@ export function getVideoId(url: string): string {
   return m ? m[1] : "";
 }
 
-export function loadNotes(id: number): NoteFields {
-  if (typeof window === "undefined") return { learned: "", difficulty: "", nextStep: "" };
-  try {
-    const raw = localStorage.getItem(`roadmap-notes-v2-${id}`);
-    return raw ? JSON.parse(raw) : { learned: "", difficulty: "", nextStep: "" };
-  } catch {
-    return { learned: "", difficulty: "", nextStep: "" };
-  }
-}
-
-export function saveNotes(id: number, fields: NoteFields): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(`roadmap-notes-v2-${id}`, JSON.stringify(fields));
-}
-
 export function buildMarkdown(topic: Topic, fields: NoteFields): string {
   const date = new Date().toLocaleDateString("pt-PT", {
     day: "2-digit",

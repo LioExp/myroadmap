@@ -37,7 +37,7 @@ export default function MainContent() {
     <>
       {/* Content area */}
       <div
-        className={`flex-1 min-h-0 flex ${practiceOpen ? "flex-row" : "flex-col"} min-w-0 overflow-hidden max-md:flex-col max-md:${showContent ? "flex" : "hidden"}`}
+        className={`flex-1 min-h-0 flex ${practiceOpen ? "flex-row" : "flex-col"} min-w-0 overflow-hidden max-md:flex-col ${showContent ? "max-md:flex" : "max-md:hidden"}`}
       >
         <div className={`min-h-0 overflow-y-auto py-5 px-6 pr-1 max-md:px-1 max-md:py-4 ${practiceOpen ? "flex-[3] min-w-0" : "flex-1"}`}>
           {!topic ? (
@@ -66,7 +66,7 @@ export default function MainContent() {
         )}
       </div>
 
-      <div className={`max-md:${showNotes ? "block" : "hidden"}`}>
+      <div className={showNotes ? "max-md:block" : "max-md:hidden"}>
         {topic && <NotesPanel />}
       </div>
     </>
