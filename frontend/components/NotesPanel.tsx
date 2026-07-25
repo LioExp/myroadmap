@@ -107,7 +107,7 @@ export default function NotesPanel() {
           {/* Note fields */}
           <div className={cn(
             "flex-1 flex flex-col gap-3 pr-0.5",
-            isMobileNotes ? "overflow-visible" : "min-h-0 overflow-y-auto"
+            isMobileNotes ? "overflow-visible max-md:gap-2" : "min-h-0 overflow-y-auto"
           )}>
             <NoteField
               icon={<CheckSquare className="w-3 h-3" />}
