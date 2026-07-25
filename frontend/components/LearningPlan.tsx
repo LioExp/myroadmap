@@ -6,6 +6,7 @@ import { topics } from "@/lib/data";
 import { hasMaterial } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icons";
+import { SidebarSkeleton } from "@/components/Skeleton";
 import type { Topic, Material } from "@/types";
 
 const COLLAPSED_WIDTH = 44;
@@ -19,7 +20,7 @@ function topicProgress(topic: Topic, materials: Material[]) {
 }
 
 export default function LearningPlan() {
-  const { selectedTopicId, selectTopic, materials, sidebarWidth, setSidebarWidth } = useRoadmapStore();
+  const { selectedTopicId, selectTopic, materials, loaded, sidebarWidth, setSidebarWidth } = useRoadmapStore();
   const [dragging, setDragging] = useState(false);
   const startX = useRef(0);
   const startWidth = useRef(300);
@@ -67,6 +68,10 @@ export default function LearningPlan() {
       )}
       style={isMobile ? undefined : { width: sidebarWidth }}
     >
+      {!loaded ? (
+        <SidebarSkeleton />
+      ) : (
+      <>
       {/* Collapsed state */}
       <div className={cn(
         "flex-1 min-h-0 flex flex-col items-center pt-4 gap-3 overflow-y-auto max-md:overflow-visible transition-opacity duration-300 ease-in-out",
@@ -303,6 +308,8 @@ export default function LearningPlan() {
           <div className="w-0.5 h-3 rounded-full bg-[#9CA3AF]" />
         </div>
       </div>
+      </>
+      )}
     </aside>
   );
 }

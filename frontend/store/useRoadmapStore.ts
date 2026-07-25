@@ -18,6 +18,7 @@ interface RoadmapState {
   dark: boolean;
   // Materials (loaded from API/local JSON)
   materials: Material[];
+  loaded: boolean;
   // Notes per topic (key = topicId)
   notes: Record<number, NoteFields>;
 
@@ -53,6 +54,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       mobileView: "content",
       dark: true,
       materials: [],
+      loaded: false,
       notes: {},
 
       getSelectedTopic: () => {
@@ -92,7 +94,7 @@ export const useRoadmapStore = create<RoadmapState>()(
           }
           return { dark: next };
         }),
-      setMaterials: (m) => set({ materials: m }),
+      setMaterials: (m) => set({ materials: m, loaded: true }),
 
       updateNote: (topicId, key, val) =>
         set((s) => ({
