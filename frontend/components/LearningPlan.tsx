@@ -6,14 +6,14 @@ import { topics } from "@/lib/data";
 import { hasMaterial } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icons";
-import type { Topic } from "@/types";
+import type { Topic, Material } from "@/types";
 
 const COLLAPSED_WIDTH = 44;
 const SNAP_THRESHOLD = 80;
 const MIN_WIDTH = 44;
 const MAX_WIDTH = 500;
 
-function topicProgress(topic: Topic, materials: ReturnType<typeof useRoadmapStore>["materials"]) {
+function topicProgress(topic: Topic, materials: Material[]) {
   const completed = topic.lessons.filter((l) => hasMaterial(materials, topic.slug, l.id)).length;
   return { completed, total: topic.lessons.length, pct: Math.round((completed / topic.lessons.length) * 100) };
 }

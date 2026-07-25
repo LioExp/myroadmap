@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 type PanelView = "terminal" | "editor";
 
-const TERMINAL_HISTORY = [
+const TERMINAL_HISTORY: { type: string; text?: string }[] = [
   { type: "fastfetch" },
 ];
 
@@ -76,11 +76,11 @@ function TerminalView() {
               <span className="text-[#565f89]">:</span>
               <span className="text-[#9ece6a]">~</span>
               <span className="text-[#565f89]">$ </span>
-              <span className="text-[#c0caf5]">{line.text.replace("user@roadmap:~$ ", "")}</span>
+              <span className="text-[#c0caf5]">{line.text?.replace("user@roadmap:~$ ", "")}</span>
             </div>
           ) : (
             <div key={i} className="text-[12px] leading-[1.6] font-mono whitespace-pre">
-              <span className="text-[#a9b1d6]">{line.text}</span>
+              <span className="text-[#a9b1d6]">{line.text ?? ""}</span>
             </div>
           )
         ))}
