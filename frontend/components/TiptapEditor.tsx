@@ -7,7 +7,7 @@ import Highlight from "@tiptap/extension-highlight";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Link from "@tiptap/extension-link";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { Bold, Italic, Underline as UnderlineIcon, List, ListOrdered, Code, Highlighter, CheckSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +44,9 @@ function ToolbarBtn({
 }
 
 export default function TiptapEditor({ value, onChange, placeholder }: TiptapEditorProps) {
+  const [focused, setFocused] = useState(false);
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ codeBlock: false }),
@@ -74,10 +77,30 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
     }
   }, [value, editor]);
 
+  const handleFocus = useCallback(() => {
+    setFocused(true);
+    if (isMobile) {
+      setTimeout(() => {
+        const el = document.querySelector(".tiptap-focused");
+        el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    }
+  }, [isMobile]);
+
+  const handleBlur = useCallback(() => {
+    setFocused(false);
+  }, []);
+
   if (!editor) return null;
 
   return (
-    <div className="tiptap-wrapper border border-[#E5E7EB] dark:border-[#374151] rounded-xl bg-white dark:bg-[#1a1a1a] overflow-hidden focus-within:border-green-300 focus-within:ring-2 focus-within:ring-green-400/30 transition-all" style={{ cursor: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E\") 2 18, auto" }}>
+    <div
+      className={cn(
+        "tiptap-wrapper border border-[#E5E7EB] dark:border-[#374151] rounded-xl bg-white dark:bg-[#1a1a1a] overflow-hidden focus-within:border-green-300 focus-within:ring-2 focus-within:ring-green-400/30 transition-all duration-300",
+        focused && isMobile && "tiptap-focused scale-[1.15] origin-top-left z-10 shadow-lg"
+      )}
+      style={{ cursor: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E\") 2 18, auto" }}
+    >
       <BubbleMenu
         editor={editor}
         tippyOptions={{ duration: 100, placement: "top" }}
@@ -110,7 +133,7 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
         </ToolbarBtn>
       </BubbleMenu>
       <div className="px-2.5 py-2">
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} onFocus={handleFocus} onBlur={handleBlur} />
       </div>
     </div>
   );
