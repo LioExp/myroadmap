@@ -88,7 +88,7 @@ export default function LearningPlan() {
           {topics.map((topic, i) => {
             const sel = topic.id === selectedTopicId;
             const { pct } = topicProgress(topic, materials);
-            const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : topic.status;
+            const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : "upcoming";
 
             return (
               <button
@@ -148,7 +148,7 @@ export default function LearningPlan() {
           {topics.map((topic, i) => {
             const sel = topic.id === selectedTopicId;
             const { pct } = topicProgress(topic, materials);
-            const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : topic.status;
+            const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : "upcoming";
 
             return (
               <div key={topic.id} className="relative z-10 flex gap-3">

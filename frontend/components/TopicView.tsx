@@ -27,12 +27,13 @@ export default function TopicView() {
 
   const completedLessons = topic.lessons.filter((l) => hasMaterial(materials, topic.slug, l.id)).length;
   const progressPct = Math.round((completedLessons / topic.lessons.length) * 100);
+  const topicStatus = progressPct === 100 ? "completed" : progressPct > 0 ? "in-progress" : "upcoming";
 
   const statusColors = {
     completed: { bg: "bg-[#DCFCE7] dark:bg-green-900/30", fg: "text-green-700 dark:text-green-400", label: "Concluído" },
     "in-progress": { bg: "bg-[#F3E8FF] dark:bg-purple-900/30", fg: "text-purple-700 dark:text-purple-400", label: "Em progresso" },
     upcoming: { bg: "bg-[#F3F4F6] dark:bg-[#111827]", fg: "text-[#6B7280]", label: "A seguir" },
-  }[topic.status];
+  }[topicStatus];
 
   return (
     <div className="flex flex-col gap-5">

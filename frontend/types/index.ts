@@ -5,7 +5,6 @@ export interface Lesson {
   id: number;
   title: string;
   duration: string;
-  completed: boolean;
   topics: string[];
   practice?: boolean;
 }
@@ -31,7 +30,6 @@ export interface Topic {
   module: string;
   title: string;
   emoji: string;
-  status: TopicStatus;
   desc: string;
   longDesc: string;
   estimatedHours: number;
