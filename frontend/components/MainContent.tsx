@@ -31,7 +31,7 @@ export default function MainContent() {
   }, [topic?.id, selectedLessonId]);
 
   const showNotes = mobileView === "notes";
-  const showContent = mobileView === "content" || mobileView === "notes";
+  const showContent = mobileView === "content";
 
   return (
     <>
@@ -39,12 +39,14 @@ export default function MainContent() {
       <div
         className={`flex-1 min-h-0 flex min-w-0 overflow-hidden max-md:overflow-visible ${practiceOpen ? "flex-row" : "flex-col"}`}
       >
-        {/* Content */}
+        {/* Content — hidden on mobile when notes tab is active */}
         <div
           className={`min-h-0 overflow-y-auto py-5 px-6 pr-1 max-md:px-1 max-md:py-4 ${
             practiceOpen
               ? "flex-[3] min-w-0 max-md:hidden"
-              : "flex-1"
+              : showContent || !showNotes
+                ? "flex-1"
+                : "max-md:hidden"
           }`}
         >
           {!topic ? (
@@ -74,7 +76,8 @@ export default function MainContent() {
         )}
       </div>
 
-      <div className={showNotes && !practiceOpen ? "max-md:block" : "max-md:hidden"}>
+      {/* Notes — full screen on mobile, side panel on desktop */}
+      <div className={showNotes ? "max-md:flex-1 max-md:min-h-0" : "max-md:hidden"}>
         {topic && <NotesPanel />}
       </div>
     </>
