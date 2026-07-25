@@ -23,8 +23,8 @@ export default function LearningPlan() {
   const [dragging, setDragging] = useState(false);
   const startX = useRef(0);
   const startWidth = useRef(300);
-
-  const collapsed = sidebarWidth <= COLLAPSED_WIDTH;
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const collapsed = !isMobile && sidebarWidth <= COLLAPSED_WIDTH;
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -65,7 +65,7 @@ export default function LearningPlan() {
         "h-full flex-shrink-0 min-h-0 flex flex-col border-r border-[#E5E7EB] dark:border-[#1F2937] max-md:w-full max-md:border-r-0 max-md:overflow-visible",
         !dragging && "transition-[width] duration-300 ease-in-out"
       )}
-      style={{ width: sidebarWidth }}
+      style={isMobile ? undefined : { width: sidebarWidth }}
     >
       {/* Collapsed state */}
       <div className={cn(

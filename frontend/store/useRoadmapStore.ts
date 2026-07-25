@@ -70,7 +70,8 @@ export const useRoadmapStore = create<RoadmapState>()(
         const state = get();
         const topic = state.getSelectedTopic();
         const lesson = topic?.lessons.find((l) => l.id === id);
-        const shouldCollapse = id !== null && lesson?.practice && state.sidebarWidth > 80;
+        const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+        const shouldCollapse = !isMobile && id !== null && lesson?.practice && state.sidebarWidth > 80;
         set((s) => ({
           selectedLessonId: s.selectedLessonId === id ? null : id,
           ...(shouldCollapse ? { sidebarWidth: 44 } : {}),
