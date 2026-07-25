@@ -35,9 +35,9 @@ export function renderMarkdown(md: string): string {
       const cells = row.split(" | ");
       return "<tr>" + cells.map((c) => `<td>${c}</td>`).join("") + "</tr>";
     })
-    .replace(/(<tr>.*<\/tr>\n?)+/gs, (m: string) => `<table>${m}</table>`)
+    .replace(/(<tr>[\s\S]*?<\/tr>\n?)+/g, (m: string) => `<table>${m}</table>`)
     .replace(/^- (.+)$/gm, "<li>$1</li>")
-    .replace(/(<li>.*<\/li>\n?)+/gs, (m: string) => `<ul>${m}</ul>`)
+    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g, (m: string) => `<ul>${m}</ul>`)
     .replace(/\n{2,}/g, "</p><p>")
     .replace(/^(?!<[hult])(.+)$/gm, "<p>$1</p>")
     .replace(/<p><\/p>/g, "")
