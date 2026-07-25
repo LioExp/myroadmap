@@ -7,7 +7,7 @@ import Highlight from "@tiptap/extension-highlight";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Link from "@tiptap/extension-link";
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Bold, Italic, Underline as UnderlineIcon, List, ListOrdered, Code, Highlighter, CheckSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -43,83 +43,10 @@ function ToolbarBtn({
   );
 }
 
-function useMobileZoom(wrapperRef: React.RefObject<HTMLDivElement | null>) {
-  const zoomedRef = useRef(false);
-  const switchingRef = useRef(false);
-
-  const zoomOut = useCallback(() => {
-    if (!zoomedRef.current) return;
-    const el = wrapperRef.current;
-    if (!el) return;
-    zoomedRef.current = false;
-    el.classList.remove("tiptap-focused");
-  }, [wrapperRef]);
-
-  const zoomIn = useCallback(() => {
-    if (zoomedRef.current) return;
-    const el = wrapperRef.current;
-    if (!el) return;
-    zoomedRef.current = true;
-    el.classList.add("tiptap-focused");
-    setTimeout(() => {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  }, [wrapperRef]);
-
-  useEffect(() => {
-    if (!wrapperRef.current) return;
-    const el = wrapperRef.current;
-
-    const contentEditable = el.querySelector("[contenteditable]");
-    if (!contentEditable) return;
-
-    const handleFocusIn = () => {
-      switchingRef.current = true;
-      zoomIn();
-      setTimeout(() => { switchingRef.current = false; }, 200);
-    };
-
-    const handleBlur = () => {
-      if (switchingRef.current) return;
-      setTimeout(() => {
-        if (el.contains(document.activeElement)) return;
-        zoomOut();
-      }, 150);
-    };
-
-    contentEditable.addEventListener("focusin", handleFocusIn);
-    contentEditable.addEventListener("blur", handleBlur);
-
-    const handlePointerDown = (e: PointerEvent) => {
-      if (!el.contains(e.target as Node)) {
-        zoomOut();
-      }
-    };
-    document.addEventListener("pointerdown", handlePointerDown);
-
-    let prevHeight = 0;
-    const handleViewportResize = () => {
-      const vh = window.visualViewport?.height ?? window.innerHeight;
-      if (prevHeight > 0 && vh > prevHeight + 50) {
-        zoomOut();
-      }
-      prevHeight = vh;
-    };
-    window.visualViewport?.addEventListener("resize", handleViewportResize);
-
-    return () => {
-      contentEditable.removeEventListener("focusin", handleFocusIn);
-      contentEditable.removeEventListener("blur", handleBlur);
-      document.removeEventListener("pointerdown", handlePointerDown);
-      window.visualViewport?.removeEventListener("resize", handleViewportResize);
-    };
-  }, [wrapperRef, zoomIn, zoomOut]);
-}
-
 export default function TiptapEditor({ value, onChange, placeholder }: TiptapEditorProps) {
+  const [focused, setFocused] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  useMobileZoom(isMobile ? wrapperRef : { current: null });
 
   const editor = useEditor({
     extensions: [
@@ -134,6 +61,17 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
     content: value || "",
     onUpdate: ({ editor }) => {
       onChange(editor.getText());
+    },
+    onFocus: () => {
+      setFocused(true);
+      if (isMobile) {
+        setTimeout(() => {
+          wrapperRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 300);
+      }
+    },
+    onBlur: () => {
+      setFocused(false);
     },
     editorProps: {
       attributes: {
@@ -156,7 +94,10 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
   return (
     <div
       ref={wrapperRef}
-      className="tiptap-wrapper border border-[#E5E7EB] dark:border-[#374151] rounded-xl bg-white dark:bg-[#1a1a1a] overflow-hidden focus-within:border-green-300 focus-within:ring-2 focus-within:ring-green-400/30 transition-all duration-300"
+      className={cn(
+        "tiptap-wrapper border border-[#E5E7EB] dark:border-[#374151] rounded-xl bg-white dark:bg-[#1a1a1a] overflow-hidden focus-within:border-green-300 focus-within:ring-2 focus-within:ring-green-400/30 transition-all duration-300",
+        focused && isMobile && "tiptap-focused"
+      )}
       style={{ cursor: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E\") 2 18, auto" }}
     >
       <BubbleMenu
