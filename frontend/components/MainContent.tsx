@@ -37,7 +37,7 @@ export default function MainContent() {
     <>
       {/* Desktop: flex row. Mobile: only one visible at a time */}
       <div
-        className={`flex-1 min-h-0 flex min-w-0 overflow-hidden ${practiceOpen ? "flex-row" : "flex-col"}`}
+        className={`flex-1 min-h-0 flex min-w-0 overflow-hidden max-md:overflow-visible ${practiceOpen ? "flex-row" : "flex-col"}`}
       >
         {/* Content */}
         <div

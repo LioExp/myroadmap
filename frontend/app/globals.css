@@ -87,7 +87,7 @@
 
 /* ── Mobile scrolling ── */
 @media (max-width: 768px) {
-  html, body { overflow: auto; }
+  html, body { overflow: visible; height: auto; }
 }
 
 /* ── Skeleton shimmer ── */

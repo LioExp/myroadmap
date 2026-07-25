@@ -21,16 +21,16 @@ export default function Home() {
   }, [setMaterials]);
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#F9FAFB] dark:bg-[#0a0a0a] text-[#111827] dark:text-[#F3F4F6]">
+    <div className="h-screen w-screen flex flex-col overflow-hidden max-md:h-auto max-md:min-h-screen max-md:overflow-visible bg-[#F9FAFB] dark:bg-[#0a0a0a] text-[#111827] dark:text-[#F3F4F6]">
       <Navbar />
       {/* Desktop: flex row. Mobile: tabs control visibility */}
-      <div className="flex-1 min-h-0 flex overflow-hidden max-md:flex-col max-md:overflow-auto max-md:pb-16 max-md:px-2.5">
+      <div className="flex-1 min-h-0 flex overflow-hidden max-md:flex-col max-md:min-h-0 max-md:overflow-visible max-md:pb-16 max-md:px-2.5">
         {/* Timeline sidebar */}
         <div className={`h-full min-h-0 ${mobileView === "timeline" ? "max-md:block" : "max-md:hidden"}`}>
           <LearningPlan />
         </div>
         {/* Main + notes */}
-        <div className={`flex-1 min-h-0 flex overflow-hidden max-md:flex-col max-md:min-h-0 ${mobileView !== "timeline" ? "max-md:flex" : "max-md:hidden"}`}>
+        <div className={`flex-1 min-h-0 flex overflow-hidden max-md:flex-col max-md:min-h-0 max-md:overflow-visible ${mobileView !== "timeline" ? "max-md:flex" : "max-md:hidden"}`}>
           <MainContent />
         </div>
       </div>
