@@ -10,7 +10,7 @@ import TaskItem from "@tiptap/extension-task-item";
 import Link from "@tiptap/extension-link";
 import { useEffect, useState } from "react";
 import Toolbar from "./Toolbar";
-import { TerminalBlock, VulnerabilityCard, MermaidBlock, AlertBlock } from "./extensions";
+import { TerminalBlock, VulnerabilityCard, MermaidBlock, AlertBlock, LinkGroupBlock } from "./extensions";
 import { ImageModal as ImageModalDialog, LinkGroupModal } from "./modals";
 
 interface EditorProps {
@@ -46,6 +46,7 @@ export default function Editor({
       VulnerabilityCard,
       MermaidBlock,
       AlertBlock,
+      LinkGroupBlock,
     ],
     content: value || "",
     editable: !readOnly,
@@ -107,10 +108,7 @@ export default function Editor({
         open={modal === "linkGroup"}
         onClose={() => setModal(null)}
         onInsert={(links) => {
-          const html = links
-            .map((l) => `<a href="${l.url}" target="_blank" rel="noopener noreferrer">${l.title}</a>`)
-            .join(" · ");
-          editor.chain().focus().insertContent(html).run();
+          editor.chain().focus().insertLinkGroup(links).run();
         }}
       />
     </div>

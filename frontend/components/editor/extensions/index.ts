@@ -9,3 +9,5 @@ export type { MermaidBlockOptions } from "./MermaidBlock";
 
 export { AlertBlock } from "./AlertBlock";
 export type { AlertBlockOptions } from "./AlertBlock";
+
+export { LinkGroupBlock } from "./LinkGroupBlock";
