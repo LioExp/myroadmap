@@ -70,12 +70,13 @@ export function renderMarkdown(md: string): string {
         .join("\n");
       return `<div class="md-table-wrapper"><table>${tableRows}</table></div>`;
     })
-    // Smart links: bare domains → clickable links
+    // Smart links: bare domains + full URLs → clickable links
     .replace(
-      /(^|[\s(,])\.?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.(org|com|io|net|dev|pt|br|app|gov|edu|me|co)(\/[^\s<)]*)?)/g,
-      (_: string, before: string, domain: string) => {
-        const href = domain.startsWith("http") ? domain : `https://${domain}`;
-        return `${before}<a href="${href}" class="smart-link" target="_blank" rel="noopener noreferrer">${domain}</a>`;
+      /(^|[\s(,])\.?(https?:\/\/)?(www\.)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.(org|com|io|net|dev|pt|br|app|gov|edu|me|co)(\/[^\s<)]*)?)/gi,
+      (_: string, before: string, proto: string, www: string, domain: string) => {
+        const full = `${proto || "https://"}${www || ""}${domain}`;
+        const label = domain.startsWith("www.") ? domain.slice(4) : domain;
+        return `${before}<a href="${full}" class="smart-link" target="_blank" rel="noopener noreferrer">${label}</a>`;
       }
     )
     // Unordered lists
