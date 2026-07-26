@@ -213,6 +213,11 @@ function TipBox() {
   const [showTip, setShowTip] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -223,7 +228,9 @@ function TipBox() {
         if (entry.isIntersecting) {
           setShowTip(true);
           setHasTriggered(true);
-          setTimeout(() => setShowTip(false), 6000);
+          if (!isMobile) {
+            setTimeout(() => setShowTip(false), 6000);
+          }
           observer.disconnect();
         }
       },
@@ -232,7 +239,7 @@ function TipBox() {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [hasTriggered]);
+  }, [hasTriggered, isMobile]);
 
   return (
     <div ref={ref} className="mt-14 mb-4 flex items-center justify-center min-h-[80px] transition-all duration-500 ease-in-out">
