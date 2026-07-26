@@ -137,7 +137,7 @@ function LessonNav({ topic, currentLessonId, onNavigate }: { topic: Topic; curre
           className="flex items-center gap-1.5 text-[11px] font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors cursor-pointer bg-transparent border-none group"
         >
           <span className="truncate max-w-[140px]">{next.title}</span>
-          <Image src="/lio_mascote_run_up.PNG" alt="Próxima" width={40} height={40} className="group-hover:translate-x-0.5 transition-transform" />
+          <Image src="/lio_mascote_run_up.PNG" alt="Próxima" width={40} height={40} className="animate-shake group-hover:scale-110 transition-transform" />
         </button>
       ) : (
         <div />

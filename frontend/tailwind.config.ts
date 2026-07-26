@@ -26,6 +26,7 @@ const config: Config = {
         pulse: "pulse 2s infinite",
         float: "float 3s ease-in-out infinite",
         "fade-in": "fadeIn 0.3s ease-out",
+        shake: "shake 0.5s ease-in-out infinite",
       },
       keyframes: {
         float: {
@@ -35,6 +36,12 @@ const config: Config = {
         fadeIn: {
           "0%": { opacity: "0", transform: "translateY(-4px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        shake: {
+          "0%, 100%": { transform: "rotate(0deg)" },
+          "25%": { transform: "rotate(-8deg)" },
+          "50%": { transform: "rotate(0deg)" },
+          "75%": { transform: "rotate(8deg)" },
         },
       },
     },
