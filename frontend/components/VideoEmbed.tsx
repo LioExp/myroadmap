@@ -1,4 +1,18 @@
+import { Fragment } from "react";
 import { getVideoId } from "@/lib/utils";
+
+function HighlightTimestamps({ text }: { text: string }) {
+  const parts = text.split(/(\d{1,2}:\d{2}(?::\d{2})?)/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        /^\d{1,2}:\d{2}(?::\d{2})?$/.test(part)
+          ? <span key={i} className="text-purple-600 dark:text-purple-400 font-bold">{part}</span>
+          : <Fragment key={i}>{part}</Fragment>
+      )}
+    </>
+  );
+}
 
 interface VideoEmbedProps {
   url: string;
@@ -32,7 +46,7 @@ export default function VideoEmbed({ url, title, description }: VideoEmbedProps)
             Descrição
           </summary>
           <p className="text-[11px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed mt-1.5 p-2.5 bg-[#F9FAFB] dark:bg-[#1a1a1a] rounded-lg border border-[#F3F4F6] dark:border-[#374151]">
-            {description}
+            <HighlightTimestamps text={description} />
           </p>
         </details>
       )}
