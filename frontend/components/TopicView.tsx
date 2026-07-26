@@ -246,8 +246,8 @@ function TipBox() {
         onMouseLeave={() => setShowTip(false)}
       />
 
-      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${showTip ? "max-w-[260px] opacity-100 ml-3" : "max-w-0 opacity-0 ml-0"}`}>
-        <div className="bg-gradient-to-br from-[#111827] to-[#1F2937] dark:from-black dark:to-[#111827] rounded-xl px-4 py-3 shadow-lg w-[260px] relative">
+      <div className={`relative transition-all duration-500 ease-in-out ${showTip ? "opacity-100 ml-3" : "opacity-0 ml-0 pointer-events-none"}`}>
+        <div className="bg-gradient-to-br from-[#111827] to-[#1F2937] dark:from-black dark:to-[#111827] rounded-xl px-4 py-3 shadow-lg max-w-[260px] relative">
           <div
             className="flex items-start gap-2"
             onMouseEnter={() => setShowTip(true)}
