@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+:root { --bg: #ffffff; --text: #111827; --border: #E5E7EB; --muted: #6B7280; --active-bg: #F3E8FF; --active-border: #9333EA; --active-text: #7E22CE; }
+@media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --active-bg: #2a1f3e; --active-border: #A78BFA; --active-text: #C084FC; } }
+.wrapper { width: 100%; max-width: 500px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.tabs { display: flex; border-bottom: 1px solid var(--border); }
+.tab { flex: 1; padding: 12px; text-align: center; font-size: 12px; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: all 0.2s; border-bottom: 2px solid transparent; }
+.tab:hover { color: var(--text); background: rgba(147,51,234,0.04); }
+.tab.active { color: var(--active-text); border-bottom-color: var(--active-border); background: var(--active-bg); }
+.content { padding: 20px; display: none; }
+.content.active { display: block; }
+.content h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.content p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.content code { display: block; background: var(--active-bg); color: var(--active-text); padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; border: 1px solid var(--active-border); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="tabs">
+    <button class="tab active" data-tab="debian">Ubuntu/Debian</button>
+    <button class="tab" data-tab="fedora">Fedora</button>
+    <button class="tab" data-tab="arch">Arch</button>
+  </div>
+  <div class="content active" id="tab-debian">
+    <h3>Ubuntu / Debian</h3>
+    <p>Foco em estabilidade e facilidade de uso. Ideal para iniciantes e servidores.</p>
+    <code>sudo apt install &lt;pacote&gt;</code>
+  </div>
+  <div class="content" id="tab-fedora">
+    <h3>Fedora / RedHat</h3>
+    <p>Comum no mundo corporativo. Usa <strong>dnf</strong> como gestor de pacotes.</p>
+    <code>sudo dnf install &lt;pacote&gt;</code>
+  </div>
+  <div class="content" id="tab-arch">
+    <h3>Arch Linux</h3>
+    <p>Rolling release, sempre atualizado. Customizável, constróis o sistema do zero.</p>
+    <code>sudo pacman -S &lt;pacote&gt;</code>
+  </div>
+</div>
+<script>
+const tab = document.querySelectorAll('.tab');
+tab.forEach(t => { t.addEventListener('click', () => {
+  tab.forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+  try { localStorage.setItem('distro', t.dataset.tab); } catch(e) {}
+}); });
+try { const saved = localStorage.getItem('distro'); if(saved) { const el = document.querySelector(`.tab[data-tab="${saved}"]`); if(el) el.click(); } } catch(e) {}
+</script>
+</body>
+</html>

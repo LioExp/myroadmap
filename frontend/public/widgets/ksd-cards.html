@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+:root { --bg: #ffffff; --text: #111827; --border: #E5E7EB; --muted: #6B7280; --card-bg: #F9FAFB; }
+@media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --card-bg: #1a1a1a; } }
+.wrapper { width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.flow { display: flex; align-items: center; gap: 0; width: 100%; justify-content: center; }
+.flow .step { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 8px; }
+.flow .dot-arrow { font-size: 18px; color: var(--border); animation: flowPulse 2s ease-in-out infinite; }
+@keyframes flowPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+.cards { display: flex; gap: 8px; width: 100%; }
+.card { flex: 1; background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; cursor: pointer; transition: all 0.25s ease; text-align: center; }
+.card:hover { border-color: var(--muted); }
+.card.active { flex: 2; }
+.card.kernel.active { border-color: #006400; background: rgba(0,100,0,0.06); }
+.card.shell.active { border-color: #483D8B; background: rgba(72,61,139,0.06); }
+.card.distro-card.active { border-color: #8B4513; background: rgba(139,69,19,0.06); }
+.card .icon { font-size: 28px; margin-bottom: 6px; }
+.card .name { font-size: 12px; font-weight: 800; color: var(--text); }
+.card .brief { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.card .detail { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, margin 0.3s ease; font-size: 11px; color: var(--muted); line-height: 1.5; }
+.card.active .detail { max-height: 120px; margin-top: 10px; }
+.card .detail strong { color: var(--text); }
+@media (max-width: 500px) { .cards { flex-direction: column; } .card.active { flex: none; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="cards">
+    <div class="card distro-card" data-id="distro">
+      <div class="icon">📦</div>
+      <div class="name">Distribuição</div>
+      <div class="brief">O pacote completo</div>
+      <div class="detail"><strong>O que é:</strong> Kernel + shell + programas + gestor de pacotes, tudo empacotado e testado para funcionar junto.<br><br><strong>Analogia:</strong> A loja que vende o carro completo (motor, volante, bancos).</div>
+    </div>
+    <div class="card shell" data-id="shell">
+      <div class="icon">📞</div>
+      <div class="name">Shell</div>
+      <div class="brief">A "casca"</div>
+      <div class="detail"><strong>O que é:</strong> Interpreta comandos do terminal (bash, zsh). Pega o comando e pede para o kernel executar.<br><br><strong>Analogia:</strong> O telefone que usas para falar com o gerente.</div>
+    </div>
+    <div class="card kernel" data-id="kernel">
+      <div class="icon">⚙️</div>
+      <div class="name">Kernel</div>
+      <div class="brief">O "motor"</div>
+      <div class="detail"><strong>O que é:</strong> Núcleo do sistema. Conversa diretamente com o hardware (CPU, RAM, discos).<br><br><strong>Analogia:</strong> O gerente da fábrica.</div>
+    </div>
+  </div>
+  <div class="flow"><span class="step">Distro</span><span class="dot-arrow">→</span><span class="step">Shell</span><span class="dot-arrow">→</span><span class="step">Kernel</span></div>
+</div>
+<script>
+const cards = document.querySelectorAll('.card');
+cards.forEach(c => { c.addEventListener('click', () => {
+  cards.forEach(x => { if(x !== c) { x.classList.remove('active'); } });
+  c.classList.toggle('active');
+}); });
+</script>
+</body>
+</html>

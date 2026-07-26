@@ -2,7 +2,7 @@ function sanitizeHtml(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<iframe(?![^>]*youtube\.com)[^>]*>/gi, "")
+    .replace(/<iframe(?![^>]*youtube\.com)(?![^>]*\/widgets\/)[^>]*>/gi, "")
     .replace(/<object[\s\S]*?<\/object>/gi, "")
     .replace(/<embed[^>]*>/gi, "")
     .replace(/<form[\s\S]*?<\/form>/gi, "")
@@ -16,7 +16,7 @@ function sanitizeHtml(html: string): string {
 /**
  * Simple markdown renderer matching the original script.js implementation.
  * Supports custom tags: {{youtube: ID}}, {{video: URL}}, {{image: URL}},
- * {{alert: text}}, {{divider}}
+ * {{alert: text}}, {{divider}}, {{widget: name}}
  */
 export function renderMarkdown(md: string): string {
   let html = md
@@ -41,6 +41,9 @@ export function renderMarkdown(md: string): string {
       '<div class="md-alert">$1</div>'
     )
     .replace(/\{\{divider\}\}/g, '<hr class="md-divider">')
+    .replace(/\{\{widget:\s*([^}]+)\}\}/g, (_: string, name: string) => {
+      return `<div class="md-widget"><iframe src="/widgets/${name.trim()}.html" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
+    })
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
