@@ -2,7 +2,7 @@ function sanitizeHtml(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<iframe(?![^>]*youtube\.com)(?![^>]*\/widgets\/)[^>]*>/gi, "")
+    .replace(/<iframe(?![^>]*youtube\.com)[^>]*>/gi, "")
     .replace(/<object[\s\S]*?<\/object>/gi, "")
     .replace(/<embed[^>]*>/gi, "")
     .replace(/<form[\s\S]*?<\/form>/gi, "")
@@ -18,7 +18,7 @@ function sanitizeHtml(html: string): string {
  * Supports custom tags: {{youtube: ID}}, {{video: URL}}, {{image: URL}},
  * {{alert: text}}, {{divider}}, {{widget: name}}
  */
-export function renderMarkdown(md: string, dark?: boolean): string {
+export function renderMarkdown(md: string): string {
   let html = md
     .replace(/^---[\s\S]*?---\n*/m, "")
     .replace(/\{\{youtube:?\s*([^}]+)\}\}/g, (_: string, id: string) => {
@@ -44,10 +44,8 @@ export function renderMarkdown(md: string, dark?: boolean): string {
     .replace(/\{\{widget:\s*([^}]+)\}\}/g, (_: string, raw: string) => {
       const parts = raw.trim().split('?');
       const base = parts[0].trim();
-      const qs = parts.length > 1 ? '?' + parts.slice(1).join('?') : '';
-      const sep = qs ? '&' : '?';
-      const finalSrc = dark ? `/widgets/${base}.html${qs}${sep}dark=1` : `/widgets/${base}.html${qs}`;
-      return `<div class="md-widget"><iframe src="${finalSrc}" allowtransparency="true" class="w-full border-0 rounded-xl" style="height:500px;background:transparent" loading="lazy"></iframe></div>`;
+      const qs = parts.length > 1 ? parts.slice(1).join('?') : '';
+      return `<div class="md-widget" data-widget="${base}" data-widget-qs="${qs}"></div>`;
     })
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
