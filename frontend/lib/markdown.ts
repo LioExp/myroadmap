@@ -45,10 +45,7 @@ export function renderMarkdown(md: string, dark?: boolean): string {
       const parts = raw.trim().split('?');
       const base = parts[0].trim();
       const qs = parts.length > 1 ? '?' + parts.slice(1).join('?') : '';
-      const src = `/widgets/${base}.html${qs}`;
-      const sep = qs ? '&' : '?';
-      const finalSrc = dark ? src + sep + 'dark=1' : src;
-      return `<div class="md-widget"><iframe src="${finalSrc}" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
+      return `<div class="md-widget" data-widget="${base}" data-widget-qs="${qs.replace('?', '')}"></div>`;
     })
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
