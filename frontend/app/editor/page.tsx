@@ -1,14 +1,15 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import type { Material } from "@/types";
 import { renderMarkdown } from "@/lib/markdown";
-import Editor from "@/components/editor/Editor";
+import WidgetRenderer from "@/components/widgets";
 
 export default function EditorPage() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [selected, setSelected] = useState<{ mod: string; file: string } | null>(null);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
+  const [preview, setPreview] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -18,6 +19,10 @@ export default function EditorPage() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    setPreview(renderMarkdown(content));
+  }, [content]);
+
   const loadLesson = async (mod: string, aula: number) => {
     setSelected({ mod, file: `0${aula}` });
     try {
@@ -25,12 +30,12 @@ export default function EditorPage() {
       if (res.ok) {
         const data = await res.json();
         setTitle(data.titulo || "");
-        setContent(renderMarkdown(data.conteudo || ""));
+        setContent(data.conteudo || "");
       }
     } catch {}
   };
 
-  const handleSave = useCallback(async () => {
+  const handleSave = async () => {
     if (!selected) return;
     setSaving(true);
     try {
@@ -46,7 +51,7 @@ export default function EditorPage() {
       });
     } catch {}
     setSaving(false);
-  }, [selected, title, content]);
+  };
 
   const modules = Array.from(new Set(materials.map((m) => m.modulo)));
 
@@ -76,7 +81,7 @@ export default function EditorPage() {
         ))}
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col">
         <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-800">
           <input
             value={title}
@@ -93,16 +98,17 @@ export default function EditorPage() {
           </button>
         </div>
 
-        <div className="flex-1 flex overflow-hidden">
-          <div className="flex-1 overflow-y-auto border-r border-gray-200 dark:border-gray-800">
-            <Editor value={content} onChange={setContent} onSave={handleSave} />
-          </div>
-          <div className="flex-1 overflow-y-auto p-6 lesson-material">
-            <div
-              className="prose prose-sm dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-          </div>
+        <div className="flex-1 flex">
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="flex-1 p-4 text-xs font-mono bg-transparent border-r border-gray-200 dark:border-gray-800 resize-none outline-none"
+            placeholder="Conteúdo em markdown..."
+          />
+          <div
+            className="flex-1 p-4 overflow-y-auto lesson-material"
+            dangerouslySetInnerHTML={{ __html: preview }}
+          />
         </div>
       </div>
     </div>
