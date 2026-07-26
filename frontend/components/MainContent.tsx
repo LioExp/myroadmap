@@ -79,7 +79,7 @@ export default function MainContent() {
 
         {/* Mobile practice panel — slides up from bottom */}
         <div
-          className={`hidden max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-40 max-md:transition-transform max-md:duration-300 max-md:ease-in-out ${
+          className={`hidden max-md:block max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-40 max-md:transition-transform max-md:duration-300 max-md:ease-in-out ${
             practiceOpen ? "max-md:translate-y-0" : "max-md:translate-y-full"
           }`}
           style={{ top: "48px" }}
