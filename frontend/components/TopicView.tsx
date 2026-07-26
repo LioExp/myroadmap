@@ -236,6 +236,16 @@ function TipBox() {
 
   return (
     <div ref={ref} className="mt-14 mb-4 flex items-center justify-center gap-3 min-h-[80px]">
+      <Image
+        src="/mascote-tip.png"
+        alt=""
+        width={80}
+        height={80}
+        className="flex-shrink-0 animate-float pointer-events-auto cursor-pointer"
+        onMouseEnter={() => setShowTip(true)}
+        onMouseLeave={() => setShowTip(false)}
+      />
+
       {showTip && (
         <div className="z-20 animate-fade-in">
           <div
@@ -249,20 +259,10 @@ function TipBox() {
                 Termina as matérias antes de avançar para o aprofundamento. A base sólida acelera tudo que vem a seguir.
               </p>
             </div>
-            <div className="w-2.5 h-2.5 bg-[#1F2937] absolute -right-1 top-1/2 -translate-y-1/2 rotate-45" />
+            <div className="w-2.5 h-2.5 bg-[#1F2937] absolute -left-1 top-1/2 -translate-y-1/2 rotate-45" />
           </div>
         </div>
       )}
-
-      <Image
-        src="/mascote-tip.png"
-        alt=""
-        width={80}
-        height={80}
-        className="flex-shrink-0 animate-float pointer-events-auto cursor-pointer"
-        onMouseEnter={() => setShowTip(true)}
-        onMouseLeave={() => setShowTip(false)}
-      />
     </div>
   );
 }
