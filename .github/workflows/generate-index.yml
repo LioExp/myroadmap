@@ -3,8 +3,7 @@ name: Generate Materials Index
 on:
   push:
     paths:
-      - 'docs/materiais/**'
-      - 'frontend/public/materiais/**'
+      - 'materiais/**'
   workflow_dispatch:
 
 jobs:
@@ -20,7 +19,7 @@ jobs:
           node -e "
           const fs = require('fs');
           const path = require('path');
-          const materiasDir = 'docs/materiais';
+          const materiasDir = 'materiais';
           const index = [];
 
           function parseFrontmatter(content) {
@@ -62,7 +61,6 @@ jobs:
           }
 
           const indexJson = JSON.stringify(index, null, 2);
-          fs.writeFileSync('docs/materiais-index.json', indexJson);
           fs.mkdirSync('frontend/public', { recursive: true });
           fs.writeFileSync('frontend/public/materiais-index.json', indexJson);
           console.log('Index generated with ' + index.length + ' materials.');
@@ -72,6 +70,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/materiais-index.json frontend/public/materiais-index.json
+          git add frontend/public/materiais-index.json
           git diff --cached --quiet || git commit -m "chore: update materiais-index.json [skip ci]"
           git push
