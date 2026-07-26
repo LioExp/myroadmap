@@ -1,6 +1,7 @@
 "use client";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Clock, BookOpen, CheckCircle, ChevronRight, Play, Wrench, Flame } from "lucide-react";
+import { Clock, BookOpen, CheckCircle, ChevronRight, Play, Wrench, Flame, Lightbulb } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
 import { hasMaterial } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -201,22 +202,53 @@ export default function TopicView() {
           ))}
         </div>
 
-        {/* Tip box */}
-        <div className="relative mt-12">
-          <Image
-            src="/mascote-tip.png"
-            alt=""
-            width={80}
-            height={80}
-            className="absolute -top-10 -left-2.5 z-10 animate-float pointer-events-none"
-          />
-          <div className="bg-gradient-to-br from-[#111827] to-[#1F2937] dark:from-black dark:to-[#111827] rounded-xl px-4 py-3 pl-20 flex items-center gap-3">
-            <p className="text-[10px] text-[#D1D5DB] dark:text-[#9CA3AF] leading-relaxed text-left">
+        {/* Tip mascot with popup */}
+        <TipBox />
+      </div>
+    </div>
+  );
+}
+
+function TipBox() {
+  const [showTip, setShowTip] = useState(false);
+
+  const showTipTemporarily = useCallback(() => {
+    setShowTip(true);
+    setTimeout(() => setShowTip(false), 6000);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(showTipTemporarily, 2000);
+    return () => clearTimeout(timer);
+  }, [showTipTemporarily]);
+
+  return (
+    <div className="relative mt-14 mb-4">
+      <Image
+        src="/mascote-tip.png"
+        alt=""
+        width={80}
+        height={80}
+        className="relative z-10 animate-float pointer-events-none mx-auto"
+        onMouseEnter={() => setShowTip(true)}
+        onMouseLeave={() => setShowTip(false)}
+      />
+
+      {showTip && (
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-20 animate-fade-in">
+          <div
+            className="bg-gradient-to-br from-[#111827] to-[#1F2937] dark:from-black dark:to-[#111827] rounded-xl px-4 py-3 shadow-lg flex items-center gap-2 max-w-[280px]"
+            onMouseEnter={() => setShowTip(true)}
+            onMouseLeave={() => setShowTip(false)}
+          >
+            <Lightbulb className="w-4 h-4 text-yellow-400 flex-shrink-0" />
+            <p className="text-[10px] text-[#D1D5DB] dark:text-[#9CA3AF] leading-relaxed">
               Termina as matérias antes de avançar para o aprofundamento. A base sólida acelera tudo que vem a seguir.
             </p>
+            <div className="w-2.5 h-2.5 bg-[#1F2937] absolute -bottom-1 left-1/2 -translate-x-1/2 rotate-45" />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
