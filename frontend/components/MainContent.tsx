@@ -36,12 +36,10 @@ export default function MainContent() {
   return (
     <>
       {/* Desktop: flex row. Mobile: only one visible at a time */}
-      <div
-        className={`flex-1 min-h-0 flex min-w-0 overflow-hidden max-md:overflow-visible ${practiceOpen ? "flex-row" : "flex-col"}`}
-      >
+      <div className="flex-1 min-h-0 flex min-w-0 overflow-hidden max-md:overflow-visible">
         {/* Content — hidden on mobile when notes tab is active */}
         <div
-          className={`min-h-0 overflow-y-auto py-5 px-6 pr-1 max-md:px-1 max-md:py-4 ${
+          className={`min-h-0 overflow-y-auto py-5 px-6 pr-1 max-md:px-1 max-md:py-4 transition-all duration-300 ease-in-out ${
             practiceOpen
               ? "flex-[3] min-w-0 max-md:hidden"
               : showContent || !showNotes
@@ -69,11 +67,17 @@ export default function MainContent() {
         </div>
 
         {/* Practice panel — full screen on mobile, split on desktop */}
-        {practiceOpen && (
-          <div className="flex-[2] min-w-0 border-l border-[#30363d] max-md:border-l-0 max-md:flex-1 max-md:min-h-0">
+        <div
+          className={`min-w-0 overflow-hidden border-l transition-all duration-300 ease-in-out ${
+            practiceOpen
+              ? "flex-[2] opacity-100 border-[#30363d] max-md:border-l-0 max-md:flex-1 max-md:min-h-0"
+              : "flex-[0] opacity-0 border-transparent"
+          }`}
+        >
+          <div className="min-w-[300px] h-full max-md:min-w-0">
             <PracticePanel />
           </div>
-        )}
+        </div>
       </div>
 
       {/* Notes — full screen on mobile, side panel on desktop */}
