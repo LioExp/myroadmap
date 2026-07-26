@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useRef } from "react";
 import { renderMarkdown } from "@/lib/markdown";
 import WidgetRenderer from "./widgets";
 import AnimatedSection from "./AnimatedSection";
@@ -12,10 +13,62 @@ type Segment =
   | { type: "widget"; name: string; query: string };
 
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const segments = splitContent(content);
 
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    const codes = el.querySelectorAll<HTMLElement>("code");
+    const controllers = new Set<AbortController>();
+
+    codes.forEach((code) => {
+      if (code.dataset.copySetup) return;
+      code.dataset.copySetup = "1";
+
+      const parent = code.parentElement;
+      if (!parent || parent.tagName === "PRE") return;
+
+      const wrapper = document.createElement("span");
+      wrapper.className = "cmd-copy-wrapper";
+      code.parentNode!.insertBefore(wrapper, code);
+      wrapper.appendChild(code);
+
+      const btn = document.createElement("button");
+      btn.className = "cmd-copy-btn";
+      btn.setAttribute("aria-label", "Copiar comando");
+      btn.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      wrapper.appendChild(btn);
+
+      const ac = new AbortController();
+      controllers.add(ac);
+
+      btn.addEventListener(
+        "click",
+        async () => {
+          const text = code.textContent || "";
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.classList.add("copied");
+            btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+            setTimeout(() => {
+              btn.classList.remove("copied");
+              btn.innerHTML =
+                '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+            }, 1500);
+          } catch {}
+        },
+        { signal: ac.signal }
+      );
+    });
+
+    return () => controllers.forEach((ac) => ac.abort());
+  }, [content]);
+
   return (
-    <div className="lesson-material">
+    <div ref={rootRef} className="lesson-material">
       {segments.map((seg, i) => {
         if (seg.type === "widget") {
           return (

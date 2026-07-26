@@ -107,6 +107,37 @@
   color: #7C3AED;
 }
 
+/* Copy button for inline code */
+.cmd-copy-wrapper {
+  position: relative;
+  display: inline;
+}
+.cmd-copy-btn {
+  position: absolute;
+  top: -2px;
+  right: -20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #9CA3AF;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.cmd-copy-wrapper:hover .cmd-copy-btn {
+  opacity: 1;
+}
+.cmd-copy-btn.copied {
+  color: #22C55E;
+  opacity: 1;
+}
+
 /* Blockquote */
 .lesson-material blockquote {
   border-left: 4px solid #7C3AED;
