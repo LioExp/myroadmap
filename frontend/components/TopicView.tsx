@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { Clock, BookOpen, CheckCircle, ChevronRight, Play, Wrench, Flame, Lightbulb } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
@@ -211,19 +211,31 @@ export default function TopicView() {
 
 function TipBox() {
   const [showTip, setShowTip] = useState(false);
-
-  const showTipTemporarily = useCallback(() => {
-    setShowTip(true);
-    setTimeout(() => setShowTip(false), 6000);
-  }, []);
+  const [hasTriggered, setHasTriggered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(showTipTemporarily, 2000);
-    return () => clearTimeout(timer);
-  }, [showTipTemporarily]);
+    const el = ref.current;
+    if (!el || hasTriggered) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowTip(true);
+          setHasTriggered(true);
+          setTimeout(() => setShowTip(false), 6000);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasTriggered]);
 
   return (
-    <div className="mt-14 mb-4 flex items-center justify-center gap-3">
+    <div ref={ref} className="mt-14 mb-4 flex items-center justify-center gap-3 min-h-[80px]">
       {showTip && (
         <div className="z-20 animate-fade-in">
           <div
