@@ -19,7 +19,6 @@ function sanitizeHtml(html: string): string {
  * {{alert: text}}, {{divider}}, {{widget: name}}
  */
 export function renderMarkdown(md: string, dark?: boolean): string {
-  const darkParam = dark ? "?dark=1" : "";
   let html = md
     .replace(/^---[\s\S]*?---\n*/m, "")
     .replace(/\{\{youtube:?\s*([^}]+)\}\}/g, (_: string, id: string) => {
@@ -42,8 +41,12 @@ export function renderMarkdown(md: string, dark?: boolean): string {
       '<div class="md-alert">$1</div>'
     )
     .replace(/\{\{divider\}\}/g, '<hr class="md-divider">')
-    .replace(/\{\{widget:\s*([^}]+)\}\}/g, (_: string, name: string) => {
-      return `<div class="md-widget"><iframe src="/widgets/${name.trim()}.html${darkParam}" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
+    .replace(/\{\{widget:\s*([^}]+)\}\}/g, (_: string, raw: string) => {
+      const parts = raw.trim().split('?');
+      const base = parts[0].trim();
+      const qs = parts.length > 1 ? '?' + parts.slice(1).join('?') : '';
+      const src = `/widgets/${base}.html${qs}`;
+      return `<div class="md-widget"><iframe src="${src}" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
     })
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")

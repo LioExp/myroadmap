@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+:root { --bg: #ffffff; --text: #111827; --border: #E5E7EB; --muted: #6B7280; --label-bg: #F3F4F6; --accent: #7C22CE; }
+@media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --label-bg: #262626; --accent: #A78BFA; } }
+:root.dark { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --label-bg: #262626; --accent: #A78BFA; }
+.wrapper { width: 100%; max-width: 600px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.label { display: inline-block; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+.cmd { display: none; padding: 12px 16px; border-radius: 8px; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); background: var(--label-bg); color: var(--text); white-space: pre-wrap; word-break: break-all; }
+.cmd.active { display: block; }
+.cmd .prompt { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="label" id="distro-label">Ubuntu/Debian</div>
+  <div class="cmd" id="cmd-debian"><span class="prompt">$</span> instalar git</div>
+  <div class="cmd" id="cmd-fedora"><span class="prompt">$</span> instalar git (fedora)</div>
+  <div class="cmd" id="cmd-arch"><span class="prompt">$</span> instalar git (arch)</div>
+</div>
+<script>
+const CMD = {
+  git: { debian: 'sudo apt install git', fedora: 'sudo dnf install git', arch: 'sudo pacman -S git' },
+  ansible: { debian: 'sudo apt install ansible', fedora: 'sudo dnf install ansible', arch: 'sudo pacman -S ansible' },
+};
+const CMD_MULTI = {
+  vagrant: {
+    debian: 'wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg\necho "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list\nsudo apt update && sudo apt install vagrant',
+    fedora: 'wget -O- https://rpm.releases.hashicorp.com/fedora/hashicorp.repo | sudo tee /etc/yum.repos.d/hashicorp.repo\nsudo dnf -y install vagrant',
+    arch: 'yay -S vagrant'
+  }
+};
+
+const tool = new URLSearchParams(window.location.search).get('tool') || 'git';
+const cmdMap = CMD[tool] || CMD_MULTI[tool] || CMD.git;
+const multi = !!CMD_MULTI[tool];
+
+const LABELS = { debian: 'Ubuntu/Debian', fedora: 'Fedora', arch: 'Arch Linux' };
+
+function showDistro(distro) {
+  const d = distro || 'debian';
+  const cmd = (cmdMap[d] || cmdMap.debian) + (multi ? '' : '');
+  document.getElementById('distro-label').textContent = LABELS[d] || d;
+  document.querySelectorAll('.cmd').forEach(el => el.classList.remove('active'));
+  let el = document.getElementById('cmd-' + d);
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'cmd active';
+    el.id = 'cmd-' + d;
+    document.querySelector('.wrapper').appendChild(el);
+  }
+  el.textContent = '';
+  const promptSpan = document.createElement('span');
+  promptSpan.className = 'prompt';
+  promptSpan.textContent = '$ ';
+  el.appendChild(promptSpan);
+  el.appendChild(document.createTextNode(cmd));
+  el.classList.add('active');
+}
+
+let distro = 'debian';
+try { distro = localStorage.getItem('distro') || 'debian'; } catch(e) {}
+showDistro(distro);
+
+const poll = setInterval(() => {
+  try {
+    const d = localStorage.getItem('distro') || 'debian';
+    if (d !== distro) { distro = d; showDistro(distro); }
+  } catch(e) {}
+}, 500);
+
+if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); }
+</script>
+</body>
+</html>
