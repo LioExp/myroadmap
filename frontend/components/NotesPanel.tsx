@@ -139,8 +139,8 @@ export default function NotesPanel() {
           <Image
             src="/lio_mascote_studing.PNG"
             alt=""
-            width={60}
-            height={60}
+            width={80}
+            height={80}
             className="block mx-auto flex-shrink-0 mt-1"
           />
 
