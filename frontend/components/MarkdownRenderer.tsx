@@ -1,6 +1,7 @@
 "use client";
 import { renderMarkdown } from "@/lib/markdown";
 import WidgetRenderer from "./widgets";
+import AnimatedSection from "./AnimatedSection";
 
 interface MarkdownRendererProps {
   content: string;
@@ -17,11 +18,19 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
     <div className="lesson-material">
       {segments.map((seg, i) => {
         if (seg.type === "widget") {
-          return <WidgetRenderer key={i} name={seg.name} query={seg.query} />;
+          return (
+            <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
+              <WidgetRenderer name={seg.name} query={seg.query} />
+            </AnimatedSection>
+          );
         }
         const html = renderMarkdown(seg.html);
         if (!html) return null;
-        return <div key={i} dangerouslySetInnerHTML={{ __html: html }} />;
+        return (
+          <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
+            <div dangerouslySetInnerHTML={{ __html: html }} />
+          </AnimatedSection>
+        );
       })}
     </div>
   );
