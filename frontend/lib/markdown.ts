@@ -70,6 +70,14 @@ export function renderMarkdown(md: string): string {
         .join("\n");
       return `<div class="md-table-wrapper"><table>${tableRows}</table></div>`;
     })
+    // Smart links: bare domains → clickable links
+    .replace(
+      /(^|[\s(,])\.?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.(org|com|io|net|dev|pt|br|app|gov|edu|me|co)(\/[^\s<)]*)?)/g,
+      (_: string, before: string, domain: string) => {
+        const href = domain.startsWith("http") ? domain : `https://${domain}`;
+        return `${before}<a href="${href}" class="smart-link" target="_blank" rel="noopener noreferrer">${domain}</a>`;
+      }
+    )
     // Unordered lists
     .replace(/^- (.+)$/gm, "<li>$1</li>")
     .replace(/(<li>[\s\S]*?<\/li>\n?)+/g, (m: string) => `<ul>${m}</ul>`)

@@ -107,6 +107,26 @@
   color: #7C3AED;
 }
 
+/* Smart links: bare domains turned into clickable links */
+.lesson-material a.smart-link {
+  color: #7C3AED;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.15s, text-decoration-style 0.15s;
+}
+.lesson-material a.smart-link:hover {
+  color: #5B21B6;
+  text-decoration-style: solid;
+}
+.dark .lesson-material a.smart-link {
+  color: #A78BFA;
+}
+.dark .lesson-material a.smart-link:hover {
+  color: #C4B5FD;
+}
+
 /* Copy button for inline code */
 .cmd-copy-wrapper {
   position: relative;
