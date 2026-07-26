@@ -42,6 +42,7 @@ const arrows = ['a1','a2','a3'];
 blocks.forEach((id, i) => { setTimeout(() => document.getElementById(id).classList.add('visible'), 300 + i * 400); });
 arrows.forEach((id, i) => { setTimeout(() => document.getElementById(id).classList.add('visible'), 700 + i * 400); });
 setTimeout(() => document.getElementById('note').classList.add('visible'), 2500);
+if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); }
 </script>
 </body>
 </html>

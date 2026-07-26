@@ -18,7 +18,8 @@ function sanitizeHtml(html: string): string {
  * Supports custom tags: {{youtube: ID}}, {{video: URL}}, {{image: URL}},
  * {{alert: text}}, {{divider}}, {{widget: name}}
  */
-export function renderMarkdown(md: string): string {
+export function renderMarkdown(md: string, dark?: boolean): string {
+  const darkParam = dark ? "?dark=1" : "";
   let html = md
     .replace(/^---[\s\S]*?---\n*/m, "")
     .replace(/\{\{youtube:?\s*([^}]+)\}\}/g, (_: string, id: string) => {
@@ -42,7 +43,7 @@ export function renderMarkdown(md: string): string {
     )
     .replace(/\{\{divider\}\}/g, '<hr class="md-divider">')
     .replace(/\{\{widget:\s*([^}]+)\}\}/g, (_: string, name: string) => {
-      return `<div class="md-widget"><iframe src="/widgets/${name.trim()}.html" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
+      return `<div class="md-widget"><iframe src="/widgets/${name.trim()}.html${darkParam}" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
     })
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")

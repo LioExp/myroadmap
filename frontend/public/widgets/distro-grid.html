@@ -8,6 +8,7 @@
 body { font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
 :root { --bg: #ffffff; --text: #111827; --border: #E5E7EB; --muted: #6B7280; }
 @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; } }
+:root.dark { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; }
 .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; max-width: 640px; }
 .card { background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; cursor: pointer; transition: all 0.2s; }
 .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
@@ -23,11 +24,16 @@ body { font-family: 'Inter', system-ui, sans-serif; background: transparent; dis
 .card-2 { border-color: #7C3AED; } .card-2 .badge { background: #EDE9FE; color: #6D28D9; } .card-2.active { border-color: #7C3AED; box-shadow: 0 0 0 1px #7C3AED; }
 .card-3 { border-color: #D97706; } .card-3 .badge { background: #FEF3C7; color: #B45309; } .card-3.active { border-color: #D97706; box-shadow: 0 0 0 1px #D97706; }
 @media (prefers-color-scheme: dark) {
+  :root { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; }
   .card-0 .badge { background: rgba(37,99,235,0.2); color: #93C5FD; }
   .card-1 .badge { background: rgba(220,38,38,0.2); color: #FCA5A5; }
   .card-2 .badge { background: rgba(124,58,237,0.2); color: #C4B5FD; }
   .card-3 .badge { background: rgba(217,119,6,0.2); color: #FCD34D; }
 }
+:root.dark .card-0 .badge { background: rgba(37,99,235,0.2); color: #93C5FD; }
+:root.dark .card-1 .badge { background: rgba(220,38,38,0.2); color: #FCA5A5; }
+:root.dark .card-2 .badge { background: rgba(124,58,237,0.2); color: #C4B5FD; }
+:root.dark .card-3 .badge { background: rgba(217,119,6,0.2); color: #FCD34D; }
 @media (max-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 400px) { .grid { grid-template-columns: 1fr; } }
 </style>
@@ -56,7 +62,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: transparent; dis
     <div class="extra">Escolhe quando queres controlo total e aprendizagem profunda. Cada pacote é por tua conta.</div>
   </div>
   <div class="card card-3" data-idx="3">
-    <div class="badge" style="background:#FEF3C7;color:#B45309;">⚠️ segurança</div>
+    <div class="badge badge-kali">⚠️ segurança</div>
     <div class="name">Kali Linux</div>
     <div class="desc">Ferramentas de segurança pré-instaladas</div>
     <code>apt install nmap</code>
@@ -69,6 +75,7 @@ cards.forEach(c => { c.addEventListener('click', () => {
   cards.forEach(x => x.classList.remove('active'));
   c.classList.toggle('active');
 }); });
+if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); }
 </script>
 </body>
 </html>

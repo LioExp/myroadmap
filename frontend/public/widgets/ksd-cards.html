@@ -8,6 +8,7 @@
 body { font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
 :root { --bg: #ffffff; --text: #111827; --border: #E5E7EB; --muted: #6B7280; --card-bg: #F9FAFB; }
 @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --card-bg: #1a1a1a; } }
+:root.dark { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --card-bg: #1a1a1a; }
 .wrapper { width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .flow { display: flex; align-items: center; gap: 0; width: 100%; justify-content: center; }
 .flow .step { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 8px; }
@@ -59,6 +60,7 @@ cards.forEach(c => { c.addEventListener('click', () => {
   cards.forEach(x => { if(x !== c) { x.classList.remove('active'); } });
   c.classList.toggle('active');
 }); });
+if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); }
 </script>
 </body>
 </html>
