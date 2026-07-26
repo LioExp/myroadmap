@@ -46,7 +46,9 @@ export function renderMarkdown(md: string, dark?: boolean): string {
       const base = parts[0].trim();
       const qs = parts.length > 1 ? '?' + parts.slice(1).join('?') : '';
       const src = `/widgets/${base}.html${qs}`;
-      return `<div class="md-widget"><iframe src="${src}" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
+      const sep = qs ? '&' : '?';
+      const finalSrc = dark ? src + sep + 'dark=1' : src;
+      return `<div class="md-widget"><iframe src="${finalSrc}" class="w-full border-0 rounded-xl" style="height:500px" loading="lazy"></iframe></div>`;
     })
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^## (.+)$/gm, "<h2>$1</h2>")
@@ -60,9 +62,14 @@ export function renderMarkdown(md: string, dark?: boolean): string {
     .replace(/(<tr>[\s\S]*?<\/tr>\n?)+/g, (m: string) => `<table>${m}</table>`)
     .replace(/^- (.+)$/gm, "<li>$1</li>")
     .replace(/(<li>[\s\S]*?<\/li>\n?)+/g, (m: string) => `<ul>${m}</ul>`)
-    .replace(/\n{2,}/g, "</p><p>")
-    .replace(/^(?!<[hult])(.+)$/gm, "<p>$1</p>")
-    .replace(/<p><\/p>/g, "")
+    .split(/\n{2,}/)
+    .map(part => {
+      part = part.trim();
+      if (!part || /^</.test(part)) return part;
+      return `<p>${part.replace(/\n/g, ' ')}</p>`;
+    })
+    .join('\n')
+    .replace(/<p>\s*<\/p>/g, "")
     .trim();
   return sanitizeHtml(html);
 }
