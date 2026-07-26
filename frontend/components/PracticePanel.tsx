@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Terminal, Code, X, ChevronRight } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,7 @@ const TERMINAL_HISTORY: { type: string; text?: string }[] = [
 ];
 
 function TerminalView() {
+  const router = useRouter();
   const [history, setHistory] = useState(TERMINAL_HISTORY);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -25,6 +27,12 @@ function TerminalView() {
   function handleCommand(e: React.FormEvent) {
     e.preventDefault();
     if (!input.trim()) return;
+    const cmd = input.trim().toLowerCase();
+    if (cmd === "edit" || cmd === "editor") {
+      router.push("/editor");
+      setInput("");
+      return;
+    }
     setHistory((prev) => [
       ...prev,
       { type: "input", text: `user@roadmap:~$ ${input}` },
