@@ -66,17 +66,26 @@ export default function MainContent() {
           )}
         </div>
 
-        {/* Practice panel — full screen on mobile, split on desktop */}
+        {/* Practice panel — side slide on desktop, top slide on mobile */}
         <div
           className={`min-w-0 overflow-hidden border-l transition-all duration-300 ease-in-out ${
             practiceOpen
-              ? "flex-[2] opacity-100 border-[#30363d] max-md:border-l-0 max-md:flex-1 max-md:min-h-0"
-              : "flex-[0] opacity-0 border-transparent"
+              ? "flex-[2] opacity-100 border-[#30363d] max-md:hidden"
+              : "flex-[0] opacity-0 border-transparent max-md:hidden"
           }`}
         >
-          <div className="min-w-[300px] h-full max-md:min-w-0">
+          <div className="min-w-[300px] h-full">
             <PracticePanel />
           </div>
+        </div>
+
+        {/* Mobile practice panel — slides from top */}
+        <div
+          className={`hidden max-md:fixed max-md:inset-x-0 max-md:top-12 max-md:bottom-0 max-md:z-40 max-md:transition-all max-md:duration-300 max-md:ease-in-out ${
+            practiceOpen ? "max-md:translate-y-0 max-md:opacity-100" : "max-md:-translate-y-full max-md:opacity-0 max-md:pointer-events-none"
+          }`}
+        >
+          <PracticePanel />
         </div>
       </div>
 
