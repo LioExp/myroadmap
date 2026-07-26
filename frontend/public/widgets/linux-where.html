@@ -52,11 +52,11 @@ body { font-family: 'Inter', system-ui, sans-serif; background: transparent; dis
   </div>
 </div>
 <script>
+try { if (window.parent.document.documentElement.classList.contains('dark')) { document.documentElement.classList.add('dark'); } } catch(e) { if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); } }
 const cards = document.querySelectorAll('.card');
 cards.forEach(c => { c.addEventListener('click', () => {
   c.classList.toggle('expanded');
 }); });
-if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); }
 </script>
 </body>
 </html>

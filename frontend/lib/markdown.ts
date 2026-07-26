@@ -66,7 +66,7 @@ export function renderMarkdown(md: string, dark?: boolean): string {
     .map(part => {
       part = part.trim();
       if (!part || /^</.test(part)) return part;
-      return `<p>${part.replace(/\n/g, ' ')}</p>`;
+      return `<p>${part.replace(/  \n/g, '<br>\n').replace(/\n/g, ' ')}</p>`;
     })
     .join('\n')
     .replace(/<p>\s*<\/p>/g, "")

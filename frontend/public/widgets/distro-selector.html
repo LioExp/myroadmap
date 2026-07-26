@@ -6,10 +6,10 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
-:root { --bg: #ffffff; --text: #111827; --border: #E5E7EB; --muted: #6B7280; --active-bg: #F3E8FF; --active-border: #9333EA; --active-text: #7E22CE; }
-@media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --active-bg: #2a1f3e; --active-border: #A78BFA; --active-text: #C084FC; } }
-:root.dark { --bg: #1a1a1a; --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --active-bg: #2a1f3e; --active-border: #A78BFA; --active-text: #C084FC; }
-.wrapper { width: 100%; max-width: 500px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+:root { --text: #111827; --border: #E5E7EB; --muted: #6B7280; --active-bg: #F3E8FF; --active-border: #9333EA; --active-text: #7E22CE; }
+@media (prefers-color-scheme: dark) { :root { --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --active-bg: #2a1f3e; --active-border: #A78BFA; --active-text: #C084FC; } }
+:root.dark { --text: #F3F4F6; --border: #374151; --muted: #9CA3AF; --active-bg: #2a1f3e; --active-border: #A78BFA; --active-text: #C084FC; }
+.wrapper { width: 100%; max-width: 500px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: transparent; }
 .tabs { display: flex; border-bottom: 1px solid var(--border); }
 .tab { flex: 1; padding: 12px; text-align: center; font-size: 12px; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: all 0.2s; border-bottom: 2px solid transparent; }
 .tab:hover { color: var(--text); background: rgba(147,51,234,0.04); }
@@ -45,6 +45,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: transparent; dis
   </div>
 </div>
 <script>
+try { if (window.parent.document.documentElement.classList.contains('dark')) { document.documentElement.classList.add('dark'); } } catch(e) { if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); } }
 const tab = document.querySelectorAll('.tab');
 tab.forEach(t => { t.addEventListener('click', () => {
   tab.forEach(x => x.classList.remove('active'));
@@ -54,7 +55,6 @@ tab.forEach(t => { t.addEventListener('click', () => {
   try { localStorage.setItem('distro', t.dataset.tab); } catch(e) {}
 }); });
 try { const saved = localStorage.getItem('distro'); if(saved) { const el = document.querySelector(`.tab[data-tab="${saved}"]`); if(el) el.click(); } } catch(e) {}
-if (new URLSearchParams(window.location.search).get('dark') === '1') { document.documentElement.classList.add('dark'); }
 </script>
 </body>
 </html>
