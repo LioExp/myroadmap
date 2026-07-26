@@ -83,14 +83,25 @@ export default function EditorPage() {
             className="flex-1 text-sm font-bold bg-transparent border-none outline-none"
             placeholder="Título da aula"
           />
+          <button
+            onClick={handleSave}
+            disabled={saving || !selected}
+            className="text-xs font-bold px-4 py-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-40"
+          >
+            {saving ? "Salvando..." : "Salvar"}
+          </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          <Editor
-            value={content}
-            onChange={setContent}
-            onSave={handleSave}
-          />
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 overflow-y-auto border-r border-gray-200 dark:border-gray-800">
+            <Editor value={content} onChange={setContent} onSave={handleSave} />
+          </div>
+          <div className="flex-1 overflow-y-auto p-6 lesson-material">
+            <div
+              className="prose prose-sm dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </div>
         </div>
       </div>
     </div>
