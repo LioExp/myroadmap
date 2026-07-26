@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
-import { Clock, ChevronRight, Terminal } from "lucide-react";
+import { Clock, ChevronRight, Terminal, ChevronLeft } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
 import { getMaterial, hasMaterial } from "@/lib/api";
 import { abbreviate, cn } from "@/lib/utils";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { Icon } from "@/components/Icons";
+import type { Topic } from "@/types";
 
 export default function LessonView() {
   const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice } = useRoadmapStore();
@@ -100,6 +101,46 @@ export default function LessonView() {
             Vazio por enquanto
           </h3>
         </div>
+      )}
+
+      {/* Prev / Next navigation */}
+      <LessonNav topic={topic} currentLessonId={lesson.id} onNavigate={selectLesson} />
+    </div>
+  );
+}
+
+function LessonNav({ topic, currentLessonId, onNavigate }: { topic: Topic; currentLessonId: number; onNavigate: (id: number | null) => void }) {
+  const sorted = [...topic.lessons].sort((a, b) => a.id - b.id);
+  const idx = sorted.findIndex((l) => l.id === currentLessonId);
+  const prev = idx > 0 ? sorted[idx - 1] : null;
+  const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+  return (
+    <div className="flex items-center justify-between gap-2 mt-6 pt-4 border-t border-[#E5E7EB] dark:border-[#374151]">
+      {prev ? (
+        <button
+          onClick={() => onNavigate(prev.id)}
+          className="flex items-center gap-1.5 text-[11px] font-semibold text-[#6B7280] dark:text-[#9CA3AF] hover:text-[#111827] dark:hover:text-white transition-colors cursor-pointer bg-transparent border-none"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span className="truncate max-w-[160px]">{prev.title}</span>
+        </button>
+      ) : (
+        <div />
+      )}
+      <span className="text-[10px] font-semibold text-[#9CA3AF] dark:text-[#6B7280]">
+        {idx + 1} / {sorted.length}
+      </span>
+      {next ? (
+        <button
+          onClick={() => onNavigate(next.id)}
+          className="flex items-center gap-1.5 text-[11px] font-semibold text-[#6B7280] dark:text-[#9CA3AF] hover:text-[#111827] dark:hover:text-white transition-colors cursor-pointer bg-transparent border-none"
+        >
+          <span className="truncate max-w-[160px]">{next.title}</span>
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      ) : (
+        <div />
       )}
     </div>
   );
