@@ -107,36 +107,6 @@
   color: #7C3AED;
 }
 
-/* Teoria / Prática section labels */
-.lesson-material h3.section-label {
-  font-size: 14px;
-  font-weight: 700;
-  padding: 8px 14px;
-  border-radius: 8px;
-  margin: 28px 0 12px;
-  display: inline-block;
-}
-.lesson-material h3.section-label.label-Teoria {
-  background: #EEF2FF;
-  color: #4338CA;
-  border-left: 3px solid #6366F1;
-}
-.dark .lesson-material h3.section-label.label-Teoria {
-  background: rgba(99,102,241,0.1);
-  color: #A5B4FC;
-  border-left-color: #6366F1;
-}
-.lesson-material h3.section-label.label-Prática {
-  background: #F0FDF4;
-  color: #15803D;
-  border-left: 3px solid #22C55E;
-}
-.dark .lesson-material h3.section-label.label-Prática {
-  background: rgba(34,197,94,0.1);
-  color: #86EFAC;
-  border-left-color: #22C55E;
-}
-
 /* Blockquote */
 .lesson-material blockquote {
   border-left: 4px solid #7C3AED;

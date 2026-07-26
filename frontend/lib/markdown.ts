@@ -43,7 +43,7 @@ export function renderMarkdown(md: string): string {
     .replace(/^### (.+)$/gm, "<h3>$1</h3>")
     .replace(/^#### (.+)$/gm, "<h4>$1</h4>")
     // Teoria / Prática section headings (before bold, so they don't become <strong>)
-    .replace(/^\*\*(Teoria|Prática) — (.+?)\*\*$/gm, '<h3 class="section-label label-$1">$1 — $2</h3>')
+    .replace(/^\*\*(Teoria|Prática) — (.+?)\*\*$/gm, '<h2>$1 — $2</h2>')
     // Bold, italic, inline code, strikethrough, highlight
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
