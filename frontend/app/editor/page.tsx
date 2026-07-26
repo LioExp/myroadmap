@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import type { Material } from "@/types";
+import { renderMarkdown } from "@/lib/markdown";
 import Editor from "@/components/editor/Editor";
 
 export default function EditorPage() {
@@ -24,7 +25,7 @@ export default function EditorPage() {
       if (res.ok) {
         const data = await res.json();
         setTitle(data.titulo || "");
-        setContent(data.conteudo || "");
+        setContent(renderMarkdown(data.conteudo || ""));
       }
     } catch {}
   };
