@@ -137,7 +137,7 @@ export default function NotesPanel() {
 
           {/* Mascote */}
           <Image
-            src="/mascote-notes.png"
+            src="/lio_mascote_studing.PNG"
             alt=""
             width={60}
             height={60}
