@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import Image from "next/image";
 import { Clock, ChevronRight, Terminal, ChevronLeft, ArrowRight } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
@@ -9,7 +10,7 @@ import { Icon } from "@/components/Icons";
 import type { Topic } from "@/types";
 
 export default function LessonView() {
-  const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice } = useRoadmapStore();
+  const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice, glossaryOpen, toggleGlossary, setGlossaryOpen } = useRoadmapStore();
   const topic = getSelectedTopic();
   if (!topic) return null;
   const lesson = topic.lessons.find((l) => l.id === selectedLessonId);
@@ -17,6 +18,18 @@ export default function LessonView() {
 
   const hasContent = hasMaterial(materials, topic.slug, lesson.id);
   const material = getMaterial(materials, topic.slug, lesson.id);
+
+  // Open glossary when URL hash points to a glossary term
+  useEffect(() => {
+    const checkHash = () => {
+      if (window.location.hash.startsWith("#glossario-") && lesson.glossary) {
+        setGlossaryOpen(true);
+      }
+    };
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, [lesson.glossary]);
 
   return (
     <div className="flex flex-col gap-4 relative">
@@ -40,21 +53,32 @@ export default function LessonView() {
       <div className="flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-widest">
         <span
           className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-          onClick={() => selectLesson(null)}
+          onClick={() => { if (glossaryOpen) toggleGlossary(); selectLesson(null) }}
         >
           {topic.module}
         </span>
         <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
         <span
           className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-          onClick={() => selectLesson(null)}
+          onClick={() => { if (glossaryOpen) toggleGlossary(); selectLesson(null) }}
         >
           Intro
         </span>
         <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
-        <span className="text-purple-600 dark:text-purple-400">
+        <span
+          className={cn("cursor-pointer transition-colors", glossaryOpen ? "text-[#9CA3AF] dark:text-[#6B7280] hover:text-purple-600 dark:hover:text-purple-400" : "text-purple-600 dark:text-purple-400")}
+          onClick={() => { if (glossaryOpen) toggleGlossary() }}
+        >
           {abbreviate(lesson.title, 30)}
         </span>
+        {glossaryOpen && (
+          <>
+            <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+            <span className="text-purple-600 dark:text-purple-400">
+              Glossário
+            </span>
+          </>
+        )}
       </div>
 
       {/* Title */}
@@ -69,30 +93,45 @@ export default function LessonView() {
         </div>
       </div>
 
-      {/* Topics index */}
-      {lesson.topics && lesson.topics.length > 0 && (
-        <div className="bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#374151] rounded-xl p-4">
-          <h3 className="text-[12px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-2.5">
-            Índice da Aula
-          </h3>
-          <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
-            {lesson.topics.map((t, i) => (
-              <li
-                key={i}
-                className="flex items-center gap-2.5 text-[12px] text-[#374151] dark:text-[#D1D5DB] leading-relaxed py-1.5 border-b border-[#F3F4F6] dark:border-[#1F2937] last:border-none"
-              >
-                <span className="w-5 h-5 rounded-full bg-[#F3E8FF] dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-[10px] font-black flex items-center justify-center flex-shrink-0">
-                  {i + 1}
-                </span>
-                {t}
-              </li>
-            ))}
-          </ul>
+      {/* Lesson / Glossary tabs */}
+      {lesson.glossary && lesson.glossary.length > 0 && (
+        <div className="flex gap-1 border-b border-[#E5E7EB] dark:border-[#374151] mb-2">
+          <button
+            onClick={() => { if (glossaryOpen) toggleGlossary() }}
+            className={cn(
+              "px-3 py-2 text-[11px] font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer bg-transparent",
+              !glossaryOpen
+                ? "border-purple-600 text-purple-600 dark:border-purple-400 dark:text-purple-400"
+                : "border-transparent text-[#9CA3AF] dark:text-[#6B7280] hover:text-[#111827] dark:hover:text-[#F3F4F6]"
+            )}
+          >
+            Aula
+          </button>
+          <button
+            onClick={toggleGlossary}
+            className={cn(
+              "px-3 py-2 text-[11px] font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer bg-transparent",
+              glossaryOpen
+                ? "border-purple-600 text-purple-600 dark:border-purple-400 dark:text-purple-400"
+                : "border-transparent text-[#9CA3AF] dark:text-[#6B7280] hover:text-[#111827] dark:hover:text-[#F3F4F6]"
+            )}
+          >
+            Glossário
+          </button>
         </div>
       )}
 
-      {/* Content */}
-      {hasContent && material ? (
+      {/* Content or Glossary */}
+      {glossaryOpen && lesson.glossary ? (
+        <div className="flex flex-col gap-4">
+          {lesson.glossary.map((entry, i) => (
+            <div key={i} id={`glossario-${entry.term}`} className="rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-4">
+              <h3 className="text-sm font-bold text-[#111827] dark:text-[#F3F4F6]">{entry.term}</h3>
+              <p className="mt-1 text-[13px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">{entry.def}</p>
+            </div>
+          ))}
+        </div>
+      ) : hasContent && material ? (
         <MarkdownRenderer content={material.conteudo} />
       ) : (
         <div className="flex flex-col items-center justify-center text-center gap-3 py-10">

@@ -12,6 +12,7 @@ interface RoadmapState {
   notesOpen: boolean;
   sidebarWidth: number;
   practiceOpen: boolean;
+  glossaryOpen: boolean;
   copied: boolean;
   mobileView: MobileView;
   // Theme
@@ -32,6 +33,8 @@ interface RoadmapState {
   setSidebarWidth: (w: number) => void;
   togglePractice: () => void;
   setPracticeOpen: (v: boolean) => void;
+  toggleGlossary: () => void;
+  setGlossaryOpen: (v: boolean) => void;
   setCopied: (v: boolean) => void;
   setMobileView: (v: MobileView) => void;
   toggleTheme: () => void;
@@ -50,6 +53,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       notesOpen: true,
       sidebarWidth: 300,
       practiceOpen: false,
+      glossaryOpen: false,
       copied: false,
       mobileView: "content",
       dark: true,
@@ -84,6 +88,8 @@ export const useRoadmapStore = create<RoadmapState>()(
       setSidebarWidth: (w) => set({ sidebarWidth: w }),
       togglePractice: () => set((s) => ({ practiceOpen: !s.practiceOpen })),
       setPracticeOpen: (v) => set({ practiceOpen: v }),
+      toggleGlossary: () => set((s) => ({ glossaryOpen: !s.glossaryOpen })),
+      setGlossaryOpen: (v) => set({ glossaryOpen: v }),
       setCopied: (v) => set({ copied: v }),
       setMobileView: (v) => set({ mobileView: v }),
       toggleTheme: () =>
