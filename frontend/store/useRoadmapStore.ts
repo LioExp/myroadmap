@@ -78,6 +78,7 @@ export const useRoadmapStore = create<RoadmapState>()(
         const lesson = topic?.lessons.find((l) => l.id === id);
         const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
         const shouldCollapse = !isMobile && id !== null && lesson?.practice && state.sidebarWidth > 80;
+        if (typeof window !== "undefined") window.location.hash = "";
         set((s) => ({
           selectedLessonId: s.selectedLessonId === id ? null : id,
           glossaryOpen: false,
