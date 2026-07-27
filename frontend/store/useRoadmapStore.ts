@@ -80,6 +80,7 @@ export const useRoadmapStore = create<RoadmapState>()(
         const shouldCollapse = !isMobile && id !== null && lesson?.practice && state.sidebarWidth > 80;
         set((s) => ({
           selectedLessonId: s.selectedLessonId === id ? null : id,
+          glossaryOpen: false,
           ...(shouldCollapse ? { sidebarWidth: 44 } : {}),
         }));
       },

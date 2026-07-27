@@ -10,7 +10,7 @@ import { Icon } from "@/components/Icons";
 import type { Topic } from "@/types";
 
 export default function LessonView() {
-  const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice, glossaryOpen, toggleGlossary, setGlossaryOpen } = useRoadmapStore();
+  const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice, glossaryOpen, setGlossaryOpen } = useRoadmapStore();
   const topic = getSelectedTopic();
   if (!topic) return null;
   const lesson = topic.lessons.find((l) => l.id === selectedLessonId);
@@ -30,6 +30,18 @@ export default function LessonView() {
     window.addEventListener("hashchange", checkHash);
     return () => window.removeEventListener("hashchange", checkHash);
   }, [lesson.glossary]);
+
+  // Scroll to glossary term after glossary opens
+  useEffect(() => {
+    if (glossaryOpen && window.location.hash.startsWith("#glossario-")) {
+      // Small delay to ensure DOM is rendered
+      const id = window.location.hash.slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [glossaryOpen]);
 
   return (
     <div className="flex flex-col gap-4 relative">
@@ -65,7 +77,10 @@ export default function LessonView() {
           Intro
         </span>
         <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
-        <span className="text-purple-600 dark:text-purple-400">
+        <span
+          className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
+          onClick={() => glossaryOpen && setGlossaryOpen(false)}
+        >
           {abbreviate(lesson.title, 30)}
         </span>
       </div>
@@ -85,12 +100,6 @@ export default function LessonView() {
       {/* Content or Glossary */}
       {glossaryOpen && lesson.glossary ? (
         <div className="flex flex-col gap-4">
-          <button
-            onClick={() => setGlossaryOpen(false)}
-            className="self-start text-[11px] font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors cursor-pointer bg-transparent border-none"
-          >
-            ← Voltar
-          </button>
           {lesson.glossary.map((entry, i) => (
             <div key={i} id={`glossario-${entry.term}`} className="scroll-mt-4 rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-4">
               <h3 className="text-sm font-bold text-[#111827] dark:text-[#F3F4F6]">{entry.term}</h3>
