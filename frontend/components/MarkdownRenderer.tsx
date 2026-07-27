@@ -137,5 +137,7 @@ function splitContent(content: string): Segment[] {
     remaining = remaining.slice(match.index + match[0].length);
   }
 
-  return result;
+  return result.filter(
+    (s) => s.type !== "html" || s.html.trim().length > 0
+  );
 }
