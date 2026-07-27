@@ -72,7 +72,7 @@ export function renderMarkdown(md: string): string {
       return `<div class="md-table-wrapper"><table>${tableRows}</table></div>`;
     })
     // Glossary links: [[term]] → link to /glossario#term
-    .replace(/\[\[([^\]]+)\]\]/g, '<a href="/glossario#$1" class="glossary-link">$1</a>')
+    .replace(/\[\[([^\]]+)\]\]/g, '<a href="#glossario-$1" class="glossary-link">$1</a>')
     // Smart links: bare domains + full URLs → clickable links
     .replace(
       /(^|[\s(,])\.?(https?:\/\/)?(www\.)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.(org|com|io|net|dev|pt|br|app|gov|edu|me|co)(\/[^\s<)]*)?)/gi,
