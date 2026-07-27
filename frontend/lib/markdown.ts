@@ -34,6 +34,7 @@ export function renderMarkdown(md: string): string {
       return `<div class="md-video"><video src="${url.trim()}" controls></video></div>`;
     })
     .replace(/\{\{image:\s*([^}]+)\}\}/g, '<div class="md-image"><img src="$1" alt=""></div>')
+    .replace(/\{\{icon:\s*([^}]+)\}\}/g, '<img src="/icons/$1.svg" class="inline-icon" alt="$1">')
     .replace(/\{\{alert:\s*([^}]+)\}\}/g, '<div class="md-alert">$1</div>')
     .replace(/\{\{divider\}\}/g, '<hr class="md-divider">')
     // Horizontal rule: standalone ---
@@ -70,6 +71,8 @@ export function renderMarkdown(md: string): string {
         .join("\n");
       return `<div class="md-table-wrapper"><table>${tableRows}</table></div>`;
     })
+    // Glossary links: [[term]] → link to /glossario#term
+    .replace(/\[\[([^\]]+)\]\]/g, '<a href="/glossario#$1" class="glossary-link">$1</a>')
     // Smart links: bare domains + full URLs → clickable links
     .replace(
       /(^|[\s(,])\.?(https?:\/\/)?(www\.)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.(org|com|io|net|dev|pt|br|app|gov|edu|me|co)(\/[^\s<)]*)?)/gi,

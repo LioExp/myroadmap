@@ -127,6 +127,27 @@
   color: #C4B5FD;
 }
 
+/* Glossary link */
+.lesson-material a.glossary-link {
+  color: #7C3AED;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.dark .lesson-material a.glossary-link {
+  color: #A78BFA;
+}
+
+/* Inline icon */
+.inline-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin: 0 2px;
+}
+
 /* Copy button for inline code */
 .cmd-copy-wrapper {
   position: relative;
