@@ -265,6 +265,20 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
+.md-side-by-side {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin: 20px 0;
+}
+.md-side-by-side > * {
+  flex: 1;
+  min-width: 0;
+}
+.md-side-by-side .md-image {
+  margin: 0;
+}
+
 /* Alert */
 .md-alert {
   background: #FEF3C7;

@@ -10,7 +10,8 @@ interface MarkdownRendererProps {
 
 type Segment =
   | { type: "html"; html: string }
-  | { type: "widget"; name: string; query: string };
+  | { type: "widget"; name: string; query: string }
+  | { type: "image"; url: string };
 
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -67,30 +68,50 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
     return () => controllers.forEach((ac) => ac.abort());
   }, [content]);
 
-  return (
-    <div ref={rootRef} className="lesson-material">
-      {segments.map((seg, i) => {
-        if (seg.type === "widget") {
-          return (
-            <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
-              <WidgetRenderer name={seg.name} query={seg.query} />
-            </AnimatedSection>
-          );
-        }
-        const html = renderMarkdown(seg.html);
-        if (!html) return null;
-        return (
-          <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
-            <div dangerouslySetInnerHTML={{ __html: html }} />
-          </AnimatedSection>
-        );
-      })}
-    </div>
-  );
+  function renderSegment(seg: Segment, i: number) {
+    if (seg.type === "image") {
+      return (
+        <div className="md-image">
+          <img src={seg.url} alt="" />
+        </div>
+      );
+    }
+    if (seg.type === "widget") {
+      return <WidgetRenderer name={seg.name} query={seg.query} />;
+    }
+    const html = renderMarkdown(seg.html);
+    if (!html) return null;
+    return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  }
+
+  const rendered: React.ReactNode[] = [];
+  for (let i = 0; i < segments.length; i++) {
+    const seg = segments[i];
+    const next = segments[i + 1];
+    if (seg.type === "image" && next && next.type === "widget") {
+      rendered.push(
+        <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
+          <div className="md-side-by-side">
+            {renderSegment(seg, i)}
+            {renderSegment(next, i + 1)}
+          </div>
+        </AnimatedSection>
+      );
+      i++;
+      continue;
+    }
+    rendered.push(
+      <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
+        {renderSegment(seg, i)}
+      </AnimatedSection>
+    );
+  }
+
+  return <div ref={rootRef} className="lesson-material">{rendered}</div>;
 }
 
 function splitContent(content: string): Segment[] {
-  const regex = /\{\{widget:\s*([^}]+)\}\}/;
+  const regex = /\{\{(widget|image):\s*([^}]+)\}\}/;
   const result: Segment[] = [];
   let remaining = content;
 
@@ -103,11 +124,16 @@ function splitContent(content: string): Segment[] {
     if (match.index > 0) {
       result.push({ type: "html", html: remaining.slice(0, match.index) });
     }
-    const raw = match[1].trim();
-    const qIdx = raw.indexOf("?");
-    const name = qIdx >= 0 ? raw.slice(0, qIdx).trim() : raw;
-    const query = qIdx >= 0 ? raw.slice(qIdx + 1) : "";
-    result.push({ type: "widget", name, query });
+    const tag = match[1];
+    const raw = match[2].trim();
+    if (tag === "image") {
+      result.push({ type: "image", url: raw });
+    } else {
+      const qIdx = raw.indexOf("?");
+      const name = qIdx >= 0 ? raw.slice(0, qIdx).trim() : raw;
+      const query = qIdx >= 0 ? raw.slice(qIdx + 1) : "";
+      result.push({ type: "widget", name, query });
+    }
     remaining = remaining.slice(match.index + match[0].length);
   }
 
