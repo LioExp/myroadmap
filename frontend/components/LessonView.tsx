@@ -10,7 +10,7 @@ import { Icon } from "@/components/Icons";
 import type { Topic } from "@/types";
 
 export default function LessonView() {
-  const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice, glossaryOpen, setGlossaryOpen } = useRoadmapStore();
+  const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice, subLesson, setSubLesson } = useRoadmapStore();
   const topic = getSelectedTopic();
   if (!topic) return null;
   const lesson = topic.lessons.find((l) => l.id === selectedLessonId);
@@ -18,30 +18,41 @@ export default function LessonView() {
 
   const hasContent = hasMaterial(materials, topic.slug, lesson.id);
   const material = getMaterial(materials, topic.slug, lesson.id);
+  const activeSub = subLesson ? lesson.subLessons?.[subLesson] : undefined;
+  const subLessonTitle = activeSub?.title;
 
-  // Open glossary when URL hash points to a glossary term
+  // Open sub-lesson when URL hash points to one, or via click on .sub-lesson-link
   useEffect(() => {
-    const checkHash = () => {
-      if (window.location.hash.startsWith("#glossario-") && lesson.glossary) {
-        setGlossaryOpen(true);
+    const handler = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest?.(".sub-lesson-link") as HTMLAnchorElement | null;
+      if (link) {
+        e.preventDefault();
+        const id = link.hash.replace("#sub-", "");
+        setSubLesson(id);
       }
     };
-    checkHash();
-    window.addEventListener("hashchange", checkHash);
-    return () => window.removeEventListener("hashchange", checkHash);
-  }, [lesson.glossary]);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [setSubLesson]);
 
-  // Scroll to glossary term after glossary opens
   useEffect(() => {
-    if (glossaryOpen && window.location.hash.startsWith("#glossario-")) {
-      // Small delay to ensure DOM is rendered
-      const id = window.location.hash.slice(1);
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (window.location.hash.startsWith("#sub-")) {
+      const id = window.location.hash.replace("#sub-", "");
+      if (lesson.subLessons?.[id]) {
+        setSubLesson(id);
       }
     }
-  }, [glossaryOpen]);
+    const onHash = () => {
+      if (window.location.hash.startsWith("#sub-")) {
+        const id = window.location.hash.replace("#sub-", "");
+        if (lesson.subLessons?.[id]) {
+          setSubLesson(id);
+        }
+      }
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [lesson.subLessons]);
 
   return (
     <div className="flex flex-col gap-4 relative">
@@ -79,10 +90,21 @@ export default function LessonView() {
         <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
         <span
           className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-          onClick={() => glossaryOpen && setGlossaryOpen(false)}
+          onClick={() => setSubLesson(null)}
         >
           {abbreviate(lesson.title, 30)}
         </span>
+        {subLessonTitle && (
+          <>
+            <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+            <span
+              className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
+              onClick={() => setSubLesson(null)}
+            >
+              {abbreviate(subLessonTitle, 30)}
+            </span>
+          </>
+        )}
       </div>
 
       {/* Title */}
@@ -97,15 +119,11 @@ export default function LessonView() {
         </div>
       </div>
 
-      {/* Content or Glossary */}
-      {glossaryOpen && lesson.glossary ? (
-        <div className="flex flex-col gap-4">
-          {lesson.glossary.map((entry, i) => (
-            <div key={i} id={`glossario-${entry.term}`} className="scroll-mt-4 rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-4">
-              <h3 className="text-sm font-bold text-[#111827] dark:text-[#F3F4F6]">{entry.term}</h3>
-              <p className="mt-1 text-[13px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">{entry.def}</p>
-            </div>
-          ))}
+      {/* Content or Sub-lesson */}
+      {activeSub ? (
+        <div className="rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-4">
+          <h3 className="text-sm font-bold text-[#111827] dark:text-[#F3F4F6]">{activeSub.title}</h3>
+          <p className="mt-1 text-[13px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">{activeSub.def}</p>
         </div>
       ) : hasContent && material ? (
         <MarkdownRenderer content={material.conteudo} />

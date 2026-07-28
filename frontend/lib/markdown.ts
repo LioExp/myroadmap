@@ -71,8 +71,8 @@ export function renderMarkdown(md: string): string {
         .join("\n");
       return `<div class="md-table-wrapper"><table>${tableRows}</table></div>`;
     })
-    // Glossary links: [[term]] → link to /glossario#term
-    .replace(/\[\[([^\]]+)\]\]/g, '<a href="#glossario-$1" class="glossary-link">$1</a>')
+    // Sub-lesson links: [[term]] → link to #sub-term
+    .replace(/\[\[([^\]]+)\]\]/g, '<a href="#sub-$1" class="sub-lesson-link">$1</a>')
     // Standard markdown links: [text](url)
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="smart-link" target="_blank" rel="noopener noreferrer">$1</a>')
     // Smart links: bare domains + full URLs → clickable links

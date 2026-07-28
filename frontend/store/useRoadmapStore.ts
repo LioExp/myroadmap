@@ -12,7 +12,7 @@ interface RoadmapState {
   notesOpen: boolean;
   sidebarWidth: number;
   practiceOpen: boolean;
-  glossaryOpen: boolean;
+  subLesson: string | null;
   copied: boolean;
   mobileView: MobileView;
   // Theme
@@ -33,8 +33,7 @@ interface RoadmapState {
   setSidebarWidth: (w: number) => void;
   togglePractice: () => void;
   setPracticeOpen: (v: boolean) => void;
-  toggleGlossary: () => void;
-  setGlossaryOpen: (v: boolean) => void;
+  setSubLesson: (id: string | null) => void;
   setCopied: (v: boolean) => void;
   setMobileView: (v: MobileView) => void;
   toggleTheme: () => void;
@@ -53,7 +52,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       notesOpen: true,
       sidebarWidth: 300,
       practiceOpen: false,
-      glossaryOpen: false,
+      subLesson: null,
       copied: false,
       mobileView: "content",
       dark: true,
@@ -81,7 +80,7 @@ export const useRoadmapStore = create<RoadmapState>()(
         if (typeof window !== "undefined") window.location.hash = "";
         set((s) => ({
           selectedLessonId: s.selectedLessonId === id ? null : id,
-          glossaryOpen: false,
+          subLesson: null,
           ...(shouldCollapse ? { sidebarWidth: 44 } : {}),
         }));
       },
@@ -90,8 +89,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       setSidebarWidth: (w) => set({ sidebarWidth: w }),
       togglePractice: () => set((s) => ({ practiceOpen: !s.practiceOpen })),
       setPracticeOpen: (v) => set({ practiceOpen: v }),
-      toggleGlossary: () => set((s) => ({ glossaryOpen: !s.glossaryOpen })),
-      setGlossaryOpen: (v) => set({ glossaryOpen: v }),
+      setSubLesson: (id) => set({ subLesson: id }),
       setCopied: (v) => set({ copied: v }),
       setMobileView: (v) => set({ mobileView: v }),
       toggleTheme: () =>

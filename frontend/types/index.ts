@@ -1,8 +1,8 @@
 export type TopicStatus = "completed" | "in-progress" | "upcoming";
 export type ResourceType = "video" | "article" | "book" | "platform" | "tool" | "cert";
 
-export interface GlossaryEntry {
-  term: string;
+export interface SubLesson {
+  title: string;
   def: string;
 }
 
@@ -12,7 +12,7 @@ export interface Lesson {
   duration: string;
   topics: string[];
   practice?: boolean;
-  glossary?: GlossaryEntry[];
+  subLessons?: Record<string, SubLesson>;
 }
 
 export interface Resource {
