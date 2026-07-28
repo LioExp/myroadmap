@@ -126,7 +126,21 @@ export default function LessonView() {
           <p className="mt-1 text-[13px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">{activeSub.def}</p>
         </div>
       ) : hasContent && material ? (
-        <MarkdownRenderer content={material.conteudo} />
+        <>
+          {lesson.topics && lesson.topics.length > 0 && (
+            <div className="rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-3">
+              <ul className="flex flex-col gap-1.5">
+                {lesson.topics.map((t, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[12px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <MarkdownRenderer content={material.conteudo} />
+        </>
       ) : (
         <div className="flex flex-col items-center justify-center text-center gap-3 py-10">
           <Image src="/mascote.png" alt="Mascote" width={120} height={120} className="opacity-80" style={{ width: 120, height: "auto" }} />
