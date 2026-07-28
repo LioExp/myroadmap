@@ -125,7 +125,7 @@ export default function LessonView() {
           <h3 className="text-sm font-bold text-[#111827] dark:text-[#F3F4F6]">{activeSub.title}</h3>
           <p className="mt-1 text-[13px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">{activeSub.def}</p>
         </div>
-      ) : hasContent && material ? (
+      ) : (
         <>
           {lesson.topics && lesson.topics.length > 0 && (
             <div className="rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-3">
@@ -139,15 +139,17 @@ export default function LessonView() {
               </ul>
             </div>
           )}
-          <MarkdownRenderer content={material.conteudo} />
+          {hasContent && material ? (
+            <MarkdownRenderer content={material.conteudo} />
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center gap-3 py-10">
+              <Image src="/mascote.png" alt="Mascote" width={120} height={120} className="opacity-80" style={{ width: 120, height: "auto" }} />
+              <h3 className="text-base font-bold text-[#6B7280] dark:text-[#9CA3AF]">
+                Vazio por enquanto
+              </h3>
+            </div>
+          )}
         </>
-      ) : (
-        <div className="flex flex-col items-center justify-center text-center gap-3 py-10">
-          <Image src="/mascote.png" alt="Mascote" width={120} height={120} className="opacity-80" style={{ width: 120, height: "auto" }} />
-          <h3 className="text-base font-bold text-[#6B7280] dark:text-[#9CA3AF]">
-            Vazio por enquanto
-          </h3>
-        </div>
       )}
 
       {/* Prev / Next navigation */}
