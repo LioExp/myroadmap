@@ -8,18 +8,18 @@ titulo: O que é Linux — Distribuições, kernel e shell
 
 ## Teoria — O que é um Sistema Operacional e onde o Linux se encaixa
 
-Um sistema operacional, normalmente abreviado para SO, é um programa especial que faz a "ponte" entre o hardware (processador, memória, disco) e os programas, tais como o navegador, jogos e scripts. Ele gerencia os recursos do computador: processos, memória, sistema de arquivos e dispositivos, como por exemplo os drivers.
+Um sistema operacional, normalmente abreviado para **SO**, é um programa especial que faz a **ponte** entre o **hardware** (*processador, memória, disco*) e os **programas**, tais como o navegador, jogos e scripts. Ele gerencia os recursos do computador: processos, memória, sistema de arquivos e dispositivos, como por exemplo os drivers.
 
-Linux, tecnicamente, é um kernel — ou seja, é o núcleo que fala diretamente com o hardware. O que normalmente chamamos de "Linux", ao nos referirmos a Ubuntu, Arch, Fedora, Debian, são na verdade distribuições, normalmente chamadas distro. O que acontece é que há uma junção do kernel (núcleo) Linux + ferramentas GNU + gestor de pacotes +, às vezes, um ambiente gráfico como KDE, Hyprland, etc. Por isso o termo mais técnico é GNU/Linux.
+Linux, tecnicamente, é um **kernel** — ou seja, é o núcleo que fala diretamente com o hardware. O que normalmente chamamos de "Linux", ao nos referirmos a **Ubuntu**, **Arch**, **Fedora**, **Debian**, são na verdade distribuições, normalmente chamadas **distro**. O que acontece é que há uma junção do **kernel (núcleo) Linux** + **ferramentas GNU** + **gestor de pacotes** +, às vezes, um **ambiente gráfico** como KDE, Hyprland, etc. Por isso o termo mais técnico é GNU/Linux.
 
 
 {{widget: linux-arch}}
 
 Comparando corretamente:
 
-- Windows = kernel NT + tudo o resto, empacotado pela Microsoft
-- MacOS = kernel Darwin (XNU) + tudo o resto, empacotado pela Apple
-- Linux = kernel Linux, empacotado de formas diferentes por cada distro
+- **Windows** = kernel NT + tudo o resto, empacotado pela Microsoft
+- **MacOS** = kernel Darwin (XNU) + tudo o resto, empacotado pela Apple
+- **Linux** = kernel Linux, empacotado de formas diferentes por cada distro
 
 A grande diferença do Linux é que ele é Open Source (código aberto), extremamente estável, seguro e personalizável — e foi criado em 1991 por Linus Torvalds, inspirado no Unix.
 
