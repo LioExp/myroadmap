@@ -184,23 +184,19 @@ export default function LearningPlan() {
 
         <div className="relative flex-1 min-h-0 flex flex-col gap-0 px-5 pb-5 overflow-y-auto max-md:overflow-visible">
           {grouped.map((phase, pi) => (
-            <div key={pi} className="flex flex-col">
+            <div key={pi} className={cn("flex flex-col", pi > 0 && "mt-8 pt-6 border-t-2 border-[#D1D5DB] dark:border-[#374151]")}>
               {/* Phase header */}
-              <div className="sticky top-0 z-20 bg-[#F9FAFB] dark:bg-[#0a0a0a] pt-4 pb-2">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-px bg-[#D1D5DB] dark:bg-[#374151]" />
-                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#6B7280] dark:text-[#9CA3AF] whitespace-nowrap">
-                    {phase.phase}
-                  </span>
-                  <div className="flex-1 h-px bg-[#D1D5DB] dark:bg-[#374151]" />
-                </div>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#6B7280] dark:text-[#9CA3AF]">
+                  {phase.phase}
+                </span>
               </div>
 
               {phase.blocks.map((block, bi) => (
-                <div key={bi} className="flex flex-col">
+                <div key={bi} className={cn("flex flex-col", bi > 0 && "mt-4")}>
                   {/* Block header */}
                   {block.block && (
-                    <div className="pt-3 pb-1 px-1">
+                    <div className="pb-1.5 px-0.5">
                       <span className="text-[9px] font-bold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest">
                         {block.block}
                       </span>
