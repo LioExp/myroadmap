@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useMemo } from "react";
 import { Compass, PanelLeft } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
 import { topics } from "@/lib/data";
@@ -19,6 +19,33 @@ function topicProgress(topic: Topic, materials: Material[]) {
   return { completed, total: topic.lessons.length, pct: Math.round((completed / topic.lessons.length) * 100) };
 }
 
+function modNumber(topic: Topic): string {
+  return topic.module.replace("Módulo ", "");
+}
+
+interface BlockGroup { block: string; topics: Topic[] }
+interface PhaseGroup { phase: string; blocks: BlockGroup[] }
+
+function groupTopics(): PhaseGroup[] {
+  const phases: PhaseGroup[] = [];
+  let currentPhase: PhaseGroup | null = null;
+  let currentBlock: BlockGroup | null = null;
+
+  for (const t of topics) {
+    if (!currentPhase || currentPhase.phase !== t.phase) {
+      currentPhase = { phase: t.phase, blocks: [] };
+      phases.push(currentPhase);
+      currentBlock = null;
+    }
+    if (!currentBlock || currentBlock.block !== t.block) {
+      currentBlock = { block: t.block, topics: [] };
+      currentPhase.blocks.push(currentBlock);
+    }
+    currentBlock.topics.push(t);
+  }
+  return phases;
+}
+
 export default function LearningPlan() {
   const { selectedTopicId, selectTopic, materials, loaded, sidebarWidth, setSidebarWidth } = useRoadmapStore();
   const [dragging, setDragging] = useState(false);
@@ -26,6 +53,7 @@ export default function LearningPlan() {
   const startWidth = useRef(300);
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   const collapsed = !isMobile && sidebarWidth <= COLLAPSED_WIDTH;
+  const grouped = useMemo(() => groupTopics(), []);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -60,6 +88,59 @@ export default function LearningPlan() {
     [sidebarWidth, setSidebarWidth]
   );
 
+  // ── Collapsed dots helper ──
+  function renderCollapsed() {
+    let globalIndex = 0;
+    return grouped.map((phase) =>
+      phase.blocks.map((block) =>
+        block.topics.map((topic) => {
+          const idx = globalIndex++;
+          const sel = topic.id === selectedTopicId;
+          const { pct } = topicProgress(topic, materials);
+          const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : "upcoming";
+          return (
+            <button
+              key={topic.id}
+              onClick={() => selectTopic(topic.id)}
+              title={topic.title}
+              className="relative z-10 cursor-pointer"
+            >
+              {idx < topics.length - 1 && (
+                <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-3 border-l-2 border-dashed border-[#E5E7EB] dark:border-[#374151] z-0" />
+              )}
+              {effectiveStatus === "completed" ? (
+                <div
+                  className={cn(
+                    "w-7 h-7 rounded-full bg-green-500 text-white font-black text-[10px] flex items-center justify-center shadow-sm",
+                    sel
+                      ? "ring-2 ring-green-400 ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
+                      : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
+                  )}
+                >
+                  {idx + 1}
+                </div>
+              ) : (
+                <div
+                  className={cn(
+                    "w-3 h-3 rounded-full",
+                    effectiveStatus === "in-progress"
+                      ? "bg-purple-400 animate-pulse-slow"
+                      : "bg-[#E5E7EB] dark:bg-[#4B5563]",
+                    sel && effectiveStatus === "in-progress"
+                      ? "ring-2 ring-white dark:ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
+                      : sel
+                      ? "ring-2 ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
+                      : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
+                  )}
+                />
+              )}
+            </button>
+          );
+        })
+      )
+    );
+  }
+
   return (
     <aside
       className={cn(
@@ -85,50 +166,7 @@ export default function LearningPlan() {
           <PanelLeft className="w-3.5 h-3.5" />
         </button>
         <div className="relative flex flex-col items-center gap-3">
-          {topics.map((topic, i) => {
-            const sel = topic.id === selectedTopicId;
-            const { pct } = topicProgress(topic, materials);
-            const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : "upcoming";
-
-            return (
-              <button
-                key={topic.id}
-                onClick={() => selectTopic(topic.id)}
-                title={topic.title}
-                className="relative z-10 cursor-pointer"
-              >
-                {i < topics.length - 1 && (
-                  <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-3 border-l-2 border-dashed border-[#E5E7EB] dark:border-[#374151] z-0" />
-                )}
-                {effectiveStatus === "completed" ? (
-                  <div
-                    className={cn(
-                      "w-7 h-7 rounded-full bg-green-500 text-white font-black text-[10px] flex items-center justify-center shadow-sm",
-                      sel
-                        ? "ring-2 ring-green-400 ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
-                        : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
-                    )}
-                  >
-                    {i + 1}
-                  </div>
-                ) : (
-                  <div
-                    className={cn(
-                      "w-3 h-3 rounded-full",
-                      effectiveStatus === "in-progress"
-                        ? "bg-purple-400 animate-pulse-slow"
-                        : "bg-[#E5E7EB] dark:bg-[#4B5563]",
-                      sel && effectiveStatus === "in-progress"
-                        ? "ring-2 ring-white dark:ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
-                        : sel
-                        ? "ring-2 ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
-                        : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
-                    )}
-                  />
-                )}
-              </button>
-            );
-          })}
+          {renderCollapsed()}
         </div>
       </div>
 
@@ -144,147 +182,180 @@ export default function LearningPlan() {
           </span>
         </h2>
 
-        <div className="relative flex-1 min-h-0 flex flex-col gap-3 px-5 pb-5 overflow-y-auto max-md:overflow-visible">
-          {topics.map((topic, i) => {
-            const sel = topic.id === selectedTopicId;
-            const { pct } = topicProgress(topic, materials);
-            const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : "upcoming";
-
-            return (
-              <div key={topic.id} className="relative z-10 flex gap-3">
-                {i < topics.length - 1 && (
-                  <div className="absolute left-[15px] top-[24px] bottom-[-12px] w-0 border-l-2 border-dashed border-[#E5E7EB] dark:border-[#374151] z-0" />
-                )}
-                <div className="w-8 flex-shrink-0 flex justify-center pt-3.5">
-                  {effectiveStatus === "completed" ? (
-                    <div
-                      className={cn(
-                        "w-7 h-7 rounded-full bg-green-500 text-white font-black text-[10px] flex items-center justify-center shadow-sm",
-                        sel
-                          ? "ring-2 ring-green-400 ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
-                          : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
-                      )}
-                    >
-                      {i + 1}
-                    </div>
-                  ) : (
-                    <div
-                      className={cn(
-                        "w-3 h-3 rounded-full mt-1",
-                        effectiveStatus === "in-progress"
-                          ? "bg-purple-400 animate-pulse-slow"
-                          : "bg-[#E5E7EB] dark:bg-[#4B5563]",
-                        sel && effectiveStatus === "in-progress"
-                          ? "ring-2 ring-white dark:ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
-                          : sel
-                          ? "ring-2 ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
-                          : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
-                      )}
-                    />
-                  )}
+        <div className="relative flex-1 min-h-0 flex flex-col gap-0 px-5 pb-5 overflow-y-auto max-md:overflow-visible">
+          {grouped.map((phase, pi) => (
+            <div key={pi} className="flex flex-col">
+              {/* Phase header */}
+              <div className="sticky top-0 z-20 bg-[#F9FAFB] dark:bg-[#0a0a0a] pt-4 pb-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-px bg-[#D1D5DB] dark:bg-[#374151]" />
+                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#6B7280] dark:text-[#9CA3AF] whitespace-nowrap">
+                    {phase.phase}
+                  </span>
+                  <div className="flex-1 h-px bg-[#D1D5DB] dark:bg-[#374151]" />
                 </div>
-
-                <button
-                  onClick={() => selectTopic(topic.id)}
-                  className={cn(
-                    "flex-1 text-left rounded-2xl p-3.5 border shadow-sm cursor-pointer transition-all duration-150 font-sans",
-                    effectiveStatus === "completed" && sel
-                      ? "bg-green-50 border-green-300 dark:bg-[#1a2e1a] dark:border-green-800 shadow-md"
-                      : effectiveStatus === "completed"
-                      ? "bg-white border-[#F3F4F6] dark:bg-[#1a1a1a] dark:border-[#374151]"
-                      : effectiveStatus === "in-progress" && sel
-                      ? "bg-[#EDE9F7] border-purple-400 dark:bg-[#2a1f3e] dark:border-purple-600 shadow-md"
-                      : effectiveStatus === "in-progress"
-                      ? "bg-[#F5F0FF] border-[#F3E8FF] dark:bg-[#1e1a2e] dark:border-purple-900"
-                      : sel
-                      ? "bg-[#F9FAFB] border-[#D1D5DB] dark:bg-[#2a2a2a] dark:border-[#6B7280]"
-                      : "bg-white border-[#F3F4F6] dark:bg-[#1a1a1a] dark:border-[#374151] opacity-70 hover:opacity-90"
-                  )}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[9px] font-black text-[#9CA3AF] uppercase tracking-widest">
-                      {topic.module}
-                    </span>
-                    <span
-                      className={cn(
-                        "text-[9px] font-bold px-1.5 py-0.5 rounded-full",
-                        effectiveStatus === "completed"
-                          ? "bg-[#DCFCE7] text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                          : effectiveStatus === "in-progress"
-                          ? "bg-[#F3E8FF] text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
-                          : "bg-[#F3F4F6] text-[#6B7280] dark:bg-[#111827] dark:text-[#6B7280]"
-                      )}
-                    >
-                      {effectiveStatus === "completed"
-                        ? "Concluído"
-                        : effectiveStatus === "in-progress"
-                        ? "Em progresso"
-                        : "A seguir"}
-                    </span>
-                  </div>
-
-                  <h3
-                    className={cn(
-                      "text-[12px] font-bold leading-snug flex items-center gap-1.5",
-                      effectiveStatus === "in-progress"
-                        ? "text-purple-900 dark:text-purple-200"
-                        : "text-[#111827] dark:text-[#F3F4F6]"
-                    )}
-                  >
-                    <Icon name={topic.emoji} size={14} />
-                    {topic.title}
-                  </h3>
-
-                  <p
-                    className={cn(
-                      "text-[10px] mt-1 leading-relaxed line-clamp-2",
-                      effectiveStatus === "in-progress"
-                        ? "text-purple-800/60 dark:text-purple-300/60"
-                        : "text-[#9CA3AF] dark:text-[#6B7280]"
-                    )}
-                  >
-                    {topic.desc}
-                  </p>
-
-                  <div className="flex items-center gap-2 mt-2">
-                    <div
-                      className={cn(
-                        "w-5 h-5 rounded-full flex items-center justify-center",
-                        effectiveStatus === "completed"
-                          ? "bg-green-50 dark:bg-green-900/30"
-                          : effectiveStatus === "in-progress"
-                          ? "bg-[#F3E8FF] dark:bg-purple-900/30"
-                          : "bg-[#F9FAFB] dark:bg-[#111827]"
-                      )}
-                    >
-                      {effectiveStatus === "completed" ? (
-                        <Icon name="checkBold" size={12} className="text-green-500" />
-                      ) : effectiveStatus === "in-progress" ? (
-                        <Icon name="play" size={10} className="text-purple-600 dark:text-purple-400" />
-                      ) : (
-                        <Icon name="lock" size={10} className="text-[#9CA3AF]" />
-                      )}
-                    </div>
-                    <span
-                      className={cn(
-                        "text-[10px] font-semibold",
-                        effectiveStatus === "in-progress"
-                          ? "text-purple-700 dark:text-purple-400"
-                          : "text-[#9CA3AF] dark:text-[#6B7280]"
-                      )}
-                    >
-                      ~{topic.estimatedHours}h
-                    </span>
-                    {sel && (
-                      <span className="ml-auto text-[9px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">
-                        ← Aberto
-                      </span>
-                    )}
-                  </div>
-                </button>
               </div>
-            );
-          })}
+
+              {phase.blocks.map((block, bi) => (
+                <div key={bi} className="flex flex-col">
+                  {/* Block header */}
+                  {block.block && (
+                    <div className="pt-3 pb-1 px-1">
+                      <span className="text-[9px] font-bold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest">
+                        {block.block}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="relative flex flex-col">
+                    {block.topics.map((topic, ti) => {
+                      const sel = topic.id === selectedTopicId;
+                      const { pct } = topicProgress(topic, materials);
+                      const effectiveStatus = pct === 100 ? "completed" : pct > 0 ? "in-progress" : "upcoming";
+                      const isLastInBlock = ti === block.topics.length - 1;
+
+                      return (
+                        <div key={topic.id} className="relative z-10 flex gap-3">
+                          {/* Connecting line — only within block */}
+                          {!isLastInBlock && (
+                            <div className="absolute left-[15px] top-[24px] bottom-[-12px] w-0 border-l-2 border-dashed border-[#E5E7EB] dark:border-[#374151] z-0" />
+                          )}
+
+                          <div className="w-8 flex-shrink-0 flex justify-center pt-3.5">
+                            {effectiveStatus === "completed" ? (
+                              <div
+                                className={cn(
+                                  "w-7 h-7 rounded-full bg-green-500 text-white font-black text-[10px] flex items-center justify-center shadow-sm",
+                                  sel
+                                    ? "ring-2 ring-green-400 ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
+                                    : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
+                                )}
+                              >
+                                {modNumber(topic)}
+                              </div>
+                            ) : (
+                              <div
+                                className={cn(
+                                  "w-3 h-3 rounded-full mt-1",
+                                  effectiveStatus === "in-progress"
+                                    ? "bg-purple-400 animate-pulse-slow"
+                                    : "bg-[#E5E7EB] dark:bg-[#4B5563]",
+                                  sel && effectiveStatus === "in-progress"
+                                    ? "ring-2 ring-white dark:ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
+                                    : sel
+                                    ? "ring-2 ring-white ring-offset-2 ring-offset-[#F9FAFB] dark:ring-offset-[#0a0a0a]"
+                                    : "ring-4 ring-[#F9FAFB] dark:ring-[#0a0a0a]"
+                                )}
+                              />
+                            )}
+                          </div>
+
+                          <button
+                            onClick={() => selectTopic(topic.id)}
+                            className={cn(
+                              "flex-1 text-left rounded-2xl p-3.5 border shadow-sm cursor-pointer transition-all duration-150 font-sans mb-2",
+                              effectiveStatus === "completed" && sel
+                                ? "bg-green-50 border-green-300 dark:bg-[#1a2e1a] dark:border-green-800 shadow-md"
+                                : effectiveStatus === "completed"
+                                ? "bg-white border-[#F3F4F6] dark:bg-[#1a1a1a] dark:border-[#374151]"
+                                : effectiveStatus === "in-progress" && sel
+                                ? "bg-[#EDE9F7] border-purple-400 dark:bg-[#2a1f3e] dark:border-purple-600 shadow-md"
+                                : effectiveStatus === "in-progress"
+                                ? "bg-[#F5F0FF] border-[#F3E8FF] dark:bg-[#1e1a2e] dark:border-purple-900"
+                                : sel
+                                ? "bg-[#F9FAFB] border-[#D1D5DB] dark:bg-[#2a2a2a] dark:border-[#6B7280]"
+                                : "bg-white border-[#F3F4F6] dark:bg-[#1a1a1a] dark:border-[#374151] opacity-70 hover:opacity-90"
+                            )}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[9px] font-black text-[#9CA3AF] uppercase tracking-widest">
+                                {topic.module}
+                              </span>
+                              <span
+                                className={cn(
+                                  "text-[9px] font-bold px-1.5 py-0.5 rounded-full",
+                                  effectiveStatus === "completed"
+                                    ? "bg-[#DCFCE7] text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                                    : effectiveStatus === "in-progress"
+                                    ? "bg-[#F3E8FF] text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+                                    : "bg-[#F3F4F6] text-[#6B7280] dark:bg-[#111827] dark:text-[#6B7280]"
+                                )}
+                              >
+                                {effectiveStatus === "completed"
+                                  ? "Concluído"
+                                  : effectiveStatus === "in-progress"
+                                  ? "Em progresso"
+                                  : "A seguir"}
+                              </span>
+                            </div>
+
+                            <h3
+                              className={cn(
+                                "text-[12px] font-bold leading-snug flex items-center gap-1.5",
+                                effectiveStatus === "in-progress"
+                                  ? "text-purple-900 dark:text-purple-200"
+                                  : "text-[#111827] dark:text-[#F3F4F6]"
+                              )}
+                            >
+                              <Icon name={topic.emoji} size={14} />
+                              {topic.title}
+                            </h3>
+
+                            <p
+                              className={cn(
+                                "text-[10px] mt-1 leading-relaxed line-clamp-2",
+                                effectiveStatus === "in-progress"
+                                  ? "text-purple-800/60 dark:text-purple-300/60"
+                                  : "text-[#9CA3AF] dark:text-[#6B7280]"
+                              )}
+                            >
+                              {topic.desc}
+                            </p>
+
+                            <div className="flex items-center gap-2 mt-2">
+                              <div
+                                className={cn(
+                                  "w-5 h-5 rounded-full flex items-center justify-center",
+                                  effectiveStatus === "completed"
+                                    ? "bg-green-50 dark:bg-green-900/30"
+                                    : effectiveStatus === "in-progress"
+                                    ? "bg-[#F3E8FF] dark:bg-purple-900/30"
+                                    : "bg-[#F9FAFB] dark:bg-[#111827]"
+                                )}
+                              >
+                                {effectiveStatus === "completed" ? (
+                                  <Icon name="checkBold" size={12} className="text-green-500" />
+                                ) : effectiveStatus === "in-progress" ? (
+                                  <Icon name="play" size={10} className="text-purple-600 dark:text-purple-400" />
+                                ) : (
+                                  <Icon name="lock" size={10} className="text-[#9CA3AF]" />
+                                )}
+                              </div>
+                              <span
+                                className={cn(
+                                  "text-[10px] font-semibold",
+                                  effectiveStatus === "in-progress"
+                                    ? "text-purple-700 dark:text-purple-400"
+                                    : "text-[#9CA3AF] dark:text-[#6B7280]"
+                                )}
+                              >
+                                ~{topic.estimatedHours}h
+                              </span>
+                              {sel && (
+                                <span className="ml-auto text-[9px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">
+                                  ← Aberto
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 

@@ -21,7 +21,7 @@ export function buildMarkdown(topic: Topic, fields: NoteFields): string {
     month: "2-digit",
     year: "numeric",
   });
-  const lines = [`## ${topic.module} — ${topic.title}`, `**Data:** ${date}`, ``];
+  const lines = [`## ${topic.phase} › ${topic.module} — ${topic.title}`, `**Data:** ${date}`, ``];
   if (fields.learned.trim()) lines.push(`### O que aprendi`, fields.learned.trim(), ``);
   if (fields.difficulty.trim()) lines.push(`### Dificuldades`, fields.difficulty.trim(), ``);
   if (fields.nextStep.trim()) lines.push(`### Proximo passo`, fields.nextStep.trim(), ``);

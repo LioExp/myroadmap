@@ -42,6 +42,19 @@ export default function TopicView() {
       <div>
         <div className="flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-widest mb-2">
           <span
+            className="text-[#9CA3AF] dark:text-[#6B7280] cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            onClick={() => selectTopic(null)}
+          >
+            {topic.phase}
+          </span>
+          {topic.block && (
+            <>
+              <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+              <span className="text-[#9CA3AF] dark:text-[#6B7280]">{topic.block}</span>
+            </>
+          )}
+          <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+          <span
             className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
             onClick={() => selectTopic(null)}
           >

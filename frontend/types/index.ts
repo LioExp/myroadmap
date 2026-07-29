@@ -34,6 +34,8 @@ export interface Topic {
   id: number;
   slug: string;
   module: string;
+  phase: string;
+  block: string;
   title: string;
   emoji: string;
   desc: string;

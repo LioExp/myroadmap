@@ -1,5 +1,6 @@
 import {
   Play, Lock, Compass, Network, Terminal, Check,
+  Shield, Search, Brain, Skull, Globe, Sigma, Cpu, Bot, Zap, Gauge, Layers, Swords,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -10,6 +11,18 @@ export const IconMap: Record<string, React.ReactNode> = {
   play: <Play />,
   lock: <Lock />,
   checkBold: <Check strokeWidth={3} />,
+  shield: <Shield />,
+  search: <Search />,
+  brain: <Brain />,
+  skull: <Skull />,
+  globe: <Globe />,
+  sigma: <Sigma />,
+  cpu: <Cpu />,
+  bot: <Bot />,
+  zap: <Zap />,
+  gauge: <Gauge />,
+  layers: <Layers />,
+  swords: <Swords />,
   python: (
     <Image src="/python-logo.png" alt="Python" width={14} height={14} className="object-contain" />
   ),
