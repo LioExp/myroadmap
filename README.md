@@ -35,7 +35,7 @@ Você apenas entra, aprende e avança.
 
 ---
 
-# 🎯 Objetivos
+# Objetivos
 
 ### Para mim (Curador)
 
@@ -51,7 +51,7 @@ Você apenas entra, aprende e avança.
 
 ---
 
-# 🧠 Filosofia
+# Filosofia
 
 O Roadmap Vivo segue uma ideia simples:
 
@@ -78,7 +78,7 @@ Por isso ele é um **Roadmap Vivo**.
 
 ---
 
-# 🚀 Como Funciona
+# Como Funciona
 
 O utilizador apenas precisa seguir a sequência:
 
@@ -98,7 +98,7 @@ Sem precisar de procurar recursos adicionais.
 
 ---
 
-# 🎓 Exemplo de Jornada
+# Exemplo de Jornada
 
 ```text
 AI Security Engineer
@@ -115,7 +115,7 @@ AI Security Engineer
 
 ---
 
-# 🏗️ Arquitetura Técnica
+# Arquitetura Técnica
 
 | Camada         | Tecnologia                      |
 | -------------- | ------------------------------- |
@@ -127,7 +127,7 @@ AI Security Engineer
 
 ---
 
-# 📁 Estrutura do Projeto
+# Estrutura do Projeto
 
 ```bash
 /
@@ -143,7 +143,7 @@ AI Security Engineer
 
 ---
 
-# 🗃️ Estrutura dos Dados
+# Estrutura dos Dados
 
 ```json
 {
@@ -158,7 +158,7 @@ AI Security Engineer
 
 ---
 
-# 🔥 Diferenciais
+# Diferenciais
 
 ## Curadoria Humana
 
@@ -186,7 +186,7 @@ O próximo passo já foi decidido.
 
 ---
 
-# 💡 Futuras Funcionalidades
+# Futuras Funcionalidades
 
 * [ ] Sistema de progresso.
 * [ ] Guardar progresso no navegador.
@@ -201,7 +201,7 @@ O próximo passo já foi decidido.
 
 ---
 
-# 🌍 Comunidade
+# Comunidade
 
 No futuro, outras pessoas poderão:
 
@@ -221,7 +221,7 @@ Roadmap AI Security
 
 ---
 
-# 🤝 Como Contribuir
+# Como Contribuir
 
 Caso encontre um link quebrado, conteúdo desatualizado ou tenha sugestões:
 
@@ -232,7 +232,7 @@ Caso encontre um link quebrado, conteúdo desatualizado ou tenha sugestões:
 
 ---
 
-# 📄 Licença
+# licença
 
 MIT License.
 
@@ -240,7 +240,7 @@ Sinta-se livre para utilizar, modificar e distribuir.
 
 ---
 
-# 💬 Filosofia Final
+# Filosofia Final
 
 Este projeto existe porque acredito que ninguém deveria perder centenas de horas apenas para descobrir:
 
