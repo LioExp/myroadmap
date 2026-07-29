@@ -8,12 +8,14 @@ titulo: O que é Linux — Distribuições, kernel e shell
 
 ## Teoria — O que é um Sistema Operacional e onde o Linux se encaixa
 
-Um sistema operacional, normalmente abreviado para **SO**, é um programa especial que faz a **ponte** entre o **hardware** (*processador, memória, disco*) e os **programas**, tais como o navegador, jogos e scripts. Ele gerencia os recursos do computador: processos, memória, sistema de arquivos e dispositivos, como por exemplo os drivers.
+Um sistema operacional, normalmente abreviado para **SO**, é um programa especial que faz a **ponte** entre o **hardware** (*processador, memória, disco*) e os **programas**, tais como o navegador, jogos e scripts. Ele gerencia os recursos do computador: processos, memória, sistema de arquivos e dispositivos, como por exemplo os [[drivers]].
 
-Linux, tecnicamente, é um **kernel** — ou seja, é o núcleo que fala diretamente com o hardware. O que normalmente chamamos de "Linux", ao nos referirmos a **Ubuntu**, **Arch**, **Fedora**, **Debian**, são na verdade distribuições, normalmente chamadas **distro**. O que acontece é que há uma junção do **kernel (núcleo) Linux** + **ferramentas GNU** + **gestor de pacotes** +, às vezes, um **ambiente gráfico** como KDE, Hyprland, etc. Por isso o termo mais técnico é GNU/Linux.
+Linux, tecnicamente, é um **kernel** — ou seja, é o núcleo que fala diretamente com o hardware. O que normalmente chamamos de "Linux", ao nos referirmos a **Ubuntu**{{icon: ubuntu}}, **Arch**{{icon: arch}}, **Fedora**{{icon: fedora}}, **Debian**{{icon: debian}}, são na verdade distribuições, normalmente chamadas **distro**. O que acontece é que há uma junção do **kernel (núcleo) Linux** + **ferramentas GNU** + **gestor de pacotes** +, às vezes, um **ambiente gráfico** como **KDE**{{icon: kde}}, **Hyprland**{{icon: hyprland}}, etc. Por isso o termo mais técnico é GNU/Linux.
 
 
 {{widget: linux-arch}}
+
+{{image: https://upload.wikimedia.org/wikipedia/commons/7/74/Alternative_virtual_machine_host.svg}}
 
 Comparando corretamente:
 
