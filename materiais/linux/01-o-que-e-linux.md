@@ -15,8 +15,6 @@ Linux, tecnicamente, é um **kernel** — ou seja, é o núcleo que fala diretam
 
 {{widget: linux-arch}}
 
-{{image: https://upload.wikimedia.org/wikipedia/commons/7/74/Alternative_virtual_machine_host.svg}}
-
 Comparando corretamente:
 
 - **Windows** = kernel NT + tudo o resto, empacotado pela Microsoft
@@ -28,6 +26,8 @@ A grande diferença do Linux é que ele é Open Source (código aberto), extrema
 **Prática — Instalar o VirtualBox (no teu computador real)**
 
 Em virtualbox.org você encontra a versão compatível com o seu sistema operacional (Linux, Windows ou macOS). Ainda em Downloads, na secção "VirtualBox [versão x]", procure o "Oracle VM VirtualBox Extension Pack" e baixe o "All supported platforms" — ele serve para adicionar funcionalidades extra ao VirtualBox. O VirtualBox será usado para gerenciar as máquinas virtuais.
+
+{{image: https://upload.wikimedia.org/wikipedia/commons/7/74/Alternative_virtual_machine_host.svg}}
 
 {{widget: distro-selector}}
 
