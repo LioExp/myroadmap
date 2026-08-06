@@ -1,37 +1,16 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
 import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import NotesPanel from "@/components/NotesPanel";
 import TopicView from "@/components/TopicView";
 import LessonView from "@/components/LessonView";
 import PracticePanel from "@/components/PracticePanel";
-import { TopicViewSkeleton, LessonViewSkeleton } from "@/components/Skeleton";
 
 export default function MainContent() {
   const topic = useRoadmapStore(selectSelectedTopic);
   const selectedLessonId = useRoadmapStore((s) => s.selectedLessonId);
   const mobileView = useRoadmapStore((s) => s.mobileView);
   const practiceOpen = useRoadmapStore((s) => s.practiceOpen);
-  const setPracticeOpen = useRoadmapStore((s) => s.setPracticeOpen);
-
-  const [loading, setLoading] = useState(false);
-  const prevTopicId = useRef(topic?.id ?? null);
-  const prevLessonId = useRef(selectedLessonId);
-
-  useEffect(() => {
-    const topicChanged = topic?.id !== prevTopicId.current;
-    const lessonChanged = selectedLessonId !== prevLessonId.current;
-
-    if (topicChanged || lessonChanged) {
-      setLoading(true);
-      const t = setTimeout(() => setLoading(false), 250);
-      prevTopicId.current = topic?.id ?? null;
-      prevLessonId.current = selectedLessonId;
-      if (selectedLessonId === null && practiceOpen) setPracticeOpen(false);
-      return () => clearTimeout(t);
-    }
-  }, [topic?.id, selectedLessonId]);
 
   const showNotes = mobileView === "notes";
   const showContent = mobileView === "content";
@@ -60,8 +39,6 @@ export default function MainContent() {
                 Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.
               </p>
             </div>
-          ) : loading ? (
-            selectedLessonId !== null ? <LessonViewSkeleton /> : <TopicViewSkeleton />
           ) : selectedLessonId !== null ? (
             <LessonView />
           ) : (

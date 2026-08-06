@@ -1,12 +1,13 @@
 "use client";
 import { useEffect } from "react";
 import Image from "next/image";
-import { Clock, ChevronRight, Terminal, ChevronLeft, ArrowRight } from "lucide-react";
+import { Clock, Terminal, ChevronLeft, ArrowRight } from "lucide-react";
 import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import { getMaterial, hasMaterial } from "@/lib/api";
 import { useMaterialsMap } from "@/hooks/useMaterialsMap";
 import { abbreviate, cn } from "@/lib/utils";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Icon } from "@/components/Icons";
 import type { Topic } from "@/types";
 
@@ -80,52 +81,24 @@ export default function LessonView() {
       )}
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-widest">
-        <span
-          className="text-faint cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-          onClick={() => selectLesson(null)}
-        >
-          {topic.phase}
-        </span>
-        {topic.block && (
-          <>
-            <ChevronRight className="w-3 h-3 text-ghost" />
-            <span className="text-faint">{topic.block}</span>
-          </>
-        )}
-        <ChevronRight className="w-3 h-3 text-ghost" />
-        <span
-          className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-          onClick={() => selectLesson(null)}
-        >
-          {topic.module}
-        </span>
-        <ChevronRight className="w-3 h-3 text-ghost" />
-        <span
-          className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-          onClick={() => selectLesson(null)}
-        >
-          Intro
-        </span>
-        <ChevronRight className="w-3 h-3 text-ghost" />
-        <span
-          className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-          onClick={() => setSubLesson(null)}
-        >
-          {abbreviate(lesson.title, 30)}
-        </span>
-        {subLessonTitle && (
-          <>
-            <ChevronRight className="w-3 h-3 text-ghost" />
-            <span
-              className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-              onClick={() => setSubLesson(null)}
-            >
-              {abbreviate(subLessonTitle, 30)}
-            </span>
-          </>
-        )}
-      </div>
+      <Breadcrumb
+        crumbs={[
+          { label: topic.phase, onClick: () => selectLesson(null) },
+          ...(topic.block ? [{ label: topic.block }] : []),
+          { label: topic.module, onClick: () => selectLesson(null), active: true },
+          { label: "Intro", onClick: () => selectLesson(null), active: true },
+          { label: abbreviate(lesson.title, 30), onClick: () => setSubLesson(null), active: true },
+          ...(subLessonTitle
+            ? [
+                {
+                  label: abbreviate(subLessonTitle, 30),
+                  onClick: () => setSubLesson(null),
+                  active: true,
+                },
+              ]
+            : []),
+        ]}
+      />
 
       {/* Title */}
       <div>

@@ -18,6 +18,7 @@ export const createSelectionSlice: StateCreator<
     set((s) => ({
       selectedTopicId: s.selectedTopicId === id ? null : id,
       selectedLessonId: null,
+      ...(s.practiceOpen ? { practiceOpen: false } : {}),
     })),
 
   selectLesson: (id) => {
@@ -28,10 +29,14 @@ export const createSelectionSlice: StateCreator<
     const shouldCollapse =
       !isMobile && id !== null && lesson?.practice && state.sidebarWidth > COLLAPSE_THRESHOLD;
     if (typeof window !== "undefined") window.location.hash = "";
-    set((s) => ({
-      selectedLessonId: s.selectedLessonId === id ? null : id,
-      subLesson: null,
-      ...(shouldCollapse ? { sidebarWidth: COLLAPSED_WIDTH } : {}),
-    }));
+    set((s) => {
+      const nextLesson = s.selectedLessonId === id ? null : id;
+      return {
+        selectedLessonId: nextLesson,
+        subLesson: null,
+        ...(shouldCollapse ? { sidebarWidth: COLLAPSED_WIDTH } : {}),
+        ...(nextLesson === null && s.practiceOpen ? { practiceOpen: false } : {}),
+      };
+    });
   },
 });

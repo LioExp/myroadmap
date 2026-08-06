@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { Clock, BookOpen, CheckCircle, ChevronRight, Play, Wrench, Flame, Lightbulb } from "lucide-react";
+import { Clock, BookOpen, CheckCircle, Play, Wrench, Flame, Lightbulb } from "lucide-react";
 import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import { hasMaterial } from "@/lib/api";
 import { useMaterialsMap } from "@/hooks/useMaterialsMap";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icons";
 import ResourceCard from "@/components/ResourceCard";
 import VideoEmbed from "@/components/VideoEmbed";
+import Breadcrumb from "@/components/Breadcrumb";
 
 function SectionTitle({ icon, label, orange = false }: { icon: React.ReactNode; label: string; orange?: boolean }) {
   return (
@@ -39,33 +40,20 @@ export default function TopicView() {
     <div className="flex flex-col gap-5">
       {/* Breadcrumb + header */}
       <div>
-        <div className="flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-widest mb-2">
-          <span
-            className="text-faint cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-            onClick={() => selectTopic(null)}
-          >
-            {topic.phase}
-          </span>
-          {topic.block && (
-            <>
-              <ChevronRight className="w-3 h-3 text-ghost" />
-              <span className="text-faint">{topic.block}</span>
-            </>
-          )}
-          <ChevronRight className="w-3 h-3 text-ghost" />
-          <span
-            className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
-            onClick={() => selectTopic(null)}
-          >
-            {topic.module}
-          </span>
-          <ChevronRight className="w-3 h-3 text-ghost" />
-          <span className="text-purple-600 dark:text-purple-400">Intro</span>
-          {/* Status badge */}
-          <span className={cn("ml-1 text-[9px] font-bold px-2 py-0.5 rounded-full", statusBadge.bg, statusBadge.fg)}>
-            {STATUS_LABEL[topicStatus]}
-          </span>
-        </div>
+        <Breadcrumb
+          className="mb-2"
+          crumbs={[
+            { label: topic.phase, onClick: () => selectTopic(null) },
+            ...(topic.block ? [{ label: topic.block }] : []),
+            { label: topic.module, onClick: () => selectTopic(null), active: true },
+            { label: "Intro", active: true },
+          ]}
+          trailing={
+            <span className={cn("ml-1 text-[9px] font-bold px-2 py-0.5 rounded-full", statusBadge.bg, statusBadge.fg)}>
+              {STATUS_LABEL[topicStatus]}
+            </span>
+          }
+        />
 
         <h1 className="text-lg font-black leading-tight flex items-center gap-2 text-main">
           <Icon name={topic.emoji} size={22} />

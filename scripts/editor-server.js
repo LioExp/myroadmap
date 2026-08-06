@@ -21,6 +21,15 @@ function listModules() {
   });
 }
 
+const MOD_SAFE = /^[a-z0-9-]+$/;
+const FILE_SAFE = /^[\w-]+\.md$/;
+
+// Guards against path traversal: mod/file come from the browser and are used
+// in path.join below.
+function safe(mod, file) {
+  return MOD_SAFE.test(mod || "") && FILE_SAFE.test(file || "");
+}
+
 function listLessons(mod) {
   const dir = path.join(MATERIAIS_DIR, mod);
   if (!fs.existsSync(dir)) return [];
@@ -286,6 +295,10 @@ const server = http.createServer((req, res) => {
 
   if (pathname === "/api/lessons" && req.method === "GET") {
     const mod = url.searchParams.get("mod");
+    if (!MOD_SAFE.test(mod || "")) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "mod inválido" }));
+    }
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify(listLessons(mod)));
   }
@@ -293,6 +306,10 @@ const server = http.createServer((req, res) => {
   if (pathname === "/api/lesson" && req.method === "GET") {
     const mod = url.searchParams.get("mod");
     const file = url.searchParams.get("file");
+    if (!safe(mod, file)) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "parâmetros inválidos" }));
+    }
     const data = readLesson(mod, file);
     res.writeHead(data ? 200 : 404, { "Content-Type": "application/json" });
     return res.end(JSON.stringify(data || { error: "not found" }));
@@ -304,7 +321,7 @@ const server = http.createServer((req, res) => {
     req.on("end", () => {
       try {
         const { mod, file, content, frontmatter } = JSON.parse(body);
-        if (!mod || !file || frontmatter === undefined) {
+        if (!safe(mod, file) || frontmatter === undefined) {
           res.writeHead(400, { "Content-Type": "application/json" });
           return res.end(JSON.stringify({ ok: false, error: "mod, file e frontmatter obrigatórios" }));
         }

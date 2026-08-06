@@ -1,3 +1,5 @@
+import { parseFrontmatter } from "./frontmatter";
+
 function sanitizeHtml(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -19,9 +21,8 @@ function sanitizeHtml(html: string): string {
  * {{alert: text}}, {{divider}}
  */
 export function renderMarkdown(md: string): string {
-  let html = md
-    // Remove frontmatter
-    .replace(/^---[\s\S]*?---\n*/m, "")
+  const { content } = parseFrontmatter(md);
+  let html = content
     // Custom widgets
     .replace(/\{\{youtube:?\s*([^}]+)\}\}/g, (_: string, id: string) => {
       const videoId = id.trim().match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1] ?? id.trim();
