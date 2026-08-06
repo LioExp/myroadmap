@@ -24,18 +24,22 @@ export async function fetchMaterialsIndex(): Promise<Material[]> {
   return [];
 }
 
+export function buildMaterialsMap(materials: Material[]): Map<string, Material> {
+  return new Map(materials.map((m) => [`${m.modulo}:${m.aula}`, m]));
+}
+
 export function getMaterial(
-  materials: Material[],
+  map: Map<string, Material>,
   slug: string,
   lessonId: number
 ): Material | undefined {
-  return materials.find((m) => m.modulo === slug && m.aula === lessonId);
+  return map.get(`${slug}:${lessonId}`);
 }
 
 export function hasMaterial(
-  materials: Material[],
+  map: Map<string, Material>,
   slug: string,
   lessonId: number
 ): boolean {
-  return materials.some((m) => m.modulo === slug && m.aula === lessonId && m.conteudo);
+  return Boolean(getMaterial(map, slug, lessonId)?.conteudo);
 }

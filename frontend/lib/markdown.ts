@@ -106,3 +106,43 @@ export function renderMarkdown(md: string): string {
 
   return sanitizeHtml(html);
 }
+
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&nbsp;/g, " ");
+}
+
+function escapeAttr(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+const COPY_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+
+/**
+ * Wraps inline <code> elements (outside <pre> blocks) with a copy button.
+ * The button stores the plain text in a data attribute, so the rendered HTML
+ * stays declarative and no imperative DOM work is needed at runtime.
+ */
+export function wrapCodeCopyButtons(html: string): string {
+  const preBlocks: string[] = [];
+  const protectedHtml = html.replace(/<pre[\s\S]*?<\/pre>/gi, (m) => {
+    preBlocks.push(m);
+    return `\u0000PRE${preBlocks.length - 1}\u0000`;
+  });
+  const wrapped = protectedHtml.replace(/<code>([\s\S]*?)<\/code>/g, (_m, code: string) => {
+    const text = decodeEntities(code.replace(/<[^>]+>/g, ""));
+    return `<span class="cmd-copy-wrapper"><button type="button" class="cmd-copy-btn" aria-label="Copiar comando" data-copy-code="${escapeAttr(text)}">${COPY_SVG}</button>${code}</span>`;
+  });
+  return wrapped.replace(/\u0000PRE(\d+)\u0000/g, (_m, i: string) => preBlocks[Number(i)]);
+}

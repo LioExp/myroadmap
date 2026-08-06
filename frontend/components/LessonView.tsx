@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Clock, ChevronRight, Terminal, ChevronLeft, ArrowRight } from "lucide-react";
 import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import { getMaterial, hasMaterial } from "@/lib/api";
+import { useMaterialsMap } from "@/hooks/useMaterialsMap";
 import { abbreviate, cn } from "@/lib/utils";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { Icon } from "@/components/Icons";
@@ -13,7 +14,7 @@ export default function LessonView() {
   const topic = useRoadmapStore(selectSelectedTopic);
   const selectedLessonId = useRoadmapStore((s) => s.selectedLessonId);
   const selectLesson = useRoadmapStore((s) => s.selectLesson);
-  const materials = useRoadmapStore((s) => s.materials);
+  const materialsMap = useMaterialsMap();
   const practiceOpen = useRoadmapStore((s) => s.practiceOpen);
   const togglePractice = useRoadmapStore((s) => s.togglePractice);
   const subLesson = useRoadmapStore((s) => s.subLesson);
@@ -22,8 +23,8 @@ export default function LessonView() {
   const lesson = topic.lessons.find((l) => l.id === selectedLessonId);
   if (!lesson) return null;
 
-  const hasContent = hasMaterial(materials, topic.slug, lesson.id);
-  const material = getMaterial(materials, topic.slug, lesson.id);
+  const hasContent = hasMaterial(materialsMap, topic.slug, lesson.id);
+  const material = getMaterial(materialsMap, topic.slug, lesson.id);
   const activeSub = subLesson ? lesson.subLessons?.[subLesson] : undefined;
   const subLessonTitle = activeSub?.title;
 
@@ -70,7 +71,7 @@ export default function LessonView() {
             "fixed bottom-6 right-6 z-30 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200",
             practiceOpen
               ? "bg-purple-600 text-white shadow-purple-500/30"
-              : "bg-[#111827] dark:bg-white text-white dark:text-[#111827] hover:scale-105"
+              : "bg-main dark:bg-white text-white dark:text-main hover:scale-105"
           )}
           title={practiceOpen ? "Fechar terminal" : "Abrir terminal de prática"}
         >
@@ -81,32 +82,32 @@ export default function LessonView() {
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-widest">
         <span
-          className="text-[#9CA3AF] dark:text-[#6B7280] cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+          className="text-faint cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
           onClick={() => selectLesson(null)}
         >
           {topic.phase}
         </span>
         {topic.block && (
           <>
-            <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
-            <span className="text-[#9CA3AF] dark:text-[#6B7280]">{topic.block}</span>
+            <ChevronRight className="w-3 h-3 text-ghost" />
+            <span className="text-faint">{topic.block}</span>
           </>
         )}
-        <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+        <ChevronRight className="w-3 h-3 text-ghost" />
         <span
           className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
           onClick={() => selectLesson(null)}
         >
           {topic.module}
         </span>
-        <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+        <ChevronRight className="w-3 h-3 text-ghost" />
         <span
           className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
           onClick={() => selectLesson(null)}
         >
           Intro
         </span>
-        <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+        <ChevronRight className="w-3 h-3 text-ghost" />
         <span
           className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
           onClick={() => setSubLesson(null)}
@@ -115,7 +116,7 @@ export default function LessonView() {
         </span>
         {subLessonTitle && (
           <>
-            <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+            <ChevronRight className="w-3 h-3 text-ghost" />
             <span
               className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
               onClick={() => setSubLesson(null)}
@@ -128,11 +129,11 @@ export default function LessonView() {
 
       {/* Title */}
       <div>
-        <h1 className="text-lg font-black leading-tight flex items-center gap-2 text-[#111827] dark:text-[#F3F4F6]">
+        <h1 className="text-lg font-black leading-tight flex items-center gap-2 text-main">
           <Icon name={topic.emoji} size={22} />
           {lesson.title}
         </h1>
-        <div className="flex items-center gap-1.5 mt-2 text-[11px] font-semibold text-[#6B7280] dark:text-[#9CA3AF]">
+        <div className="flex items-center gap-1.5 mt-2 text-[11px] font-semibold text-muted">
           <Clock className="w-3.5 h-3.5" />
           {lesson.duration}
         </div>
@@ -140,17 +141,17 @@ export default function LessonView() {
 
       {/* Content or Sub-lesson */}
       {activeSub ? (
-        <div className="rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-4">
-          <h3 className="text-sm font-bold text-[#111827] dark:text-[#F3F4F6]">{activeSub.title}</h3>
-          <p className="mt-1 text-[13px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">{activeSub.def}</p>
+        <div className="rounded-lg border border-line bg-surface p-4">
+          <h3 className="text-sm font-bold text-main">{activeSub.title}</h3>
+          <p className="mt-1 text-[13px] text-muted leading-relaxed">{activeSub.def}</p>
         </div>
       ) : (
         <>
           {lesson.topics && lesson.topics.length > 0 && (
-            <div className="rounded-lg border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1a1a1a] p-3">
+            <div className="rounded-lg border border-line bg-surface p-3">
               <ul className="flex flex-col gap-1.5">
                 {lesson.topics.map((t, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[12px] text-[#6B7280] dark:text-[#9CA3AF] leading-relaxed">
+                  <li key={i} className="flex items-start gap-2 text-[12px] text-muted leading-relaxed">
                     <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0" />
                     {t}
                   </li>
@@ -163,7 +164,7 @@ export default function LessonView() {
           ) : (
             <div className="flex flex-col items-center justify-center text-center gap-3 py-10">
               <Image src="/mascote.png" alt="Mascote" width={120} height={120} className="opacity-80" style={{ width: 120, height: "auto" }} />
-              <h3 className="text-base font-bold text-[#6B7280] dark:text-[#9CA3AF]">
+              <h3 className="text-base font-bold text-muted">
                 Vazio por enquanto
               </h3>
             </div>
@@ -184,11 +185,11 @@ function LessonNav({ topic, currentLessonId, onNavigate }: { topic: Topic; curre
   const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
 
   return (
-    <div className="flex items-center justify-between gap-2 mt-6 pt-4 border-t border-[#E5E7EB] dark:border-[#374151]">
+    <div className="flex items-center justify-between gap-2 mt-6 pt-4 border-t border-line">
       {prev ? (
         <button
           onClick={() => onNavigate(prev.id)}
-          className="flex items-center gap-1.5 text-[11px] font-semibold text-[#6B7280] dark:text-[#9CA3AF] hover:text-[#111827] dark:hover:text-white transition-colors cursor-pointer bg-transparent border-none"
+          className="flex items-center gap-1.5 text-[11px] font-semibold text-muted hover:text-main dark:hover:text-white transition-colors cursor-pointer bg-transparent border-none"
         >
           <ChevronLeft className="w-4 h-4" />
           <span className="truncate max-w-[160px]">{prev.title}</span>
@@ -196,7 +197,7 @@ function LessonNav({ topic, currentLessonId, onNavigate }: { topic: Topic; curre
       ) : (
         <div />
       )}
-      <span className="text-[10px] font-semibold text-[#9CA3AF] dark:text-[#6B7280]">
+      <span className="text-[10px] font-semibold text-faint">
         {idx + 1} / {sorted.length}
       </span>
       {next ? (

@@ -34,7 +34,7 @@ function ToolbarBtn({
       onMouseDown={(e) => { e.preventDefault(); onClick(); }}
       title={title}
       className={cn(
-        "w-5 h-5 flex items-center justify-center rounded text-[#6B7280] dark:text-[#9CA3AF] hover:bg-[#F3F4F6] dark:hover:bg-[#374151] transition-colors",
+        "w-5 h-5 flex items-center justify-center rounded text-muted hover:bg-surface-2 dark:hover:bg-line transition-colors",
         active && "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
       )}
     >
@@ -78,13 +78,13 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
 
   return (
     <div
-      className="tiptap-wrapper border border-[#E5E7EB] dark:border-[#374151] rounded-xl bg-white dark:bg-[#1a1a1a] overflow-hidden focus-within:border-green-300 focus-within:ring-2 focus-within:ring-green-400/30 transition-all"
+      className="tiptap-wrapper border border-line rounded-xl bg-surface overflow-hidden focus-within:border-green-300 focus-within:ring-2 focus-within:ring-green-400/30 transition-all"
       style={{ cursor: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E\") 2 18, auto" }}
     >
       <BubbleMenu
         editor={editor}
         tippyOptions={{ duration: 100, placement: "top" }}
-        className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#374151] shadow-lg z-50"
+        className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg bg-surface border border-line shadow-lg z-50"
       >
         <ToolbarBtn onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} title="Negrito">
           <Bold className="w-3 h-3" />
@@ -98,7 +98,7 @@ export default function TiptapEditor({ value, onChange, placeholder }: TiptapEdi
         <ToolbarBtn onClick={() => editor.chain().focus().toggleHighlight().run()} active={editor.isActive("highlight")} title="Destacar">
           <Highlighter className="w-3 h-3" />
         </ToolbarBtn>
-        <div className="w-px h-3 bg-[#E5E7EB] dark:bg-[#374151] mx-0.5" />
+        <div className="w-px h-3 bg-line mx-0.5" />
         <ToolbarBtn onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive("bulletList")} title="Lista">
           <List className="w-3 h-3" />
         </ToolbarBtn>

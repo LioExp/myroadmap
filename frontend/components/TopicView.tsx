@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Clock, BookOpen, CheckCircle, ChevronRight, Play, Wrench, Flame, Lightbulb } from "lucide-react";
 import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import { hasMaterial } from "@/lib/api";
+import { useMaterialsMap } from "@/hooks/useMaterialsMap";
+import { STATUS_BADGE, STATUS_LABEL, getTopicStatus, topicProgress } from "@/lib/status";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icons";
 import ResourceCard from "@/components/ResourceCard";
@@ -13,7 +15,7 @@ function SectionTitle({ icon, label, orange = false }: { icon: React.ReactNode; 
   return (
     <h2 className={cn(
       "text-[10px] font-black uppercase tracking-widest mb-2.5 flex items-center gap-1.5 flex-shrink-0",
-      orange ? "text-[#9CA3AF] dark:text-[#6B7280]" : "text-[#9CA3AF] dark:text-[#6B7280]"
+      orange ? "text-faint" : "text-faint"
     )}>
       <span className={cn("w-3 h-3", orange && "text-orange-400")}>{icon}</span>
       {label}
@@ -26,18 +28,12 @@ export default function TopicView() {
   const selectedLessonId = useRoadmapStore((s) => s.selectedLessonId);
   const selectLesson = useRoadmapStore((s) => s.selectLesson);
   const selectTopic = useRoadmapStore((s) => s.selectTopic);
-  const materials = useRoadmapStore((s) => s.materials);
+  const materialsMap = useMaterialsMap();
   if (!topic) return null;
 
-  const completedLessons = topic.lessons.filter((l) => hasMaterial(materials, topic.slug, l.id)).length;
-  const progressPct = Math.round((completedLessons / topic.lessons.length) * 100);
-  const topicStatus = progressPct === 100 ? "completed" : progressPct > 0 ? "in-progress" : "upcoming";
-
-  const statusColors = {
-    completed: { bg: "bg-[#DCFCE7] dark:bg-green-900/30", fg: "text-green-700 dark:text-green-400", label: "Concluído" },
-    "in-progress": { bg: "bg-[#F3E8FF] dark:bg-purple-900/30", fg: "text-purple-700 dark:text-purple-400", label: "Em progresso" },
-    upcoming: { bg: "bg-[#F3F4F6] dark:bg-[#111827]", fg: "text-[#6B7280]", label: "A seguir" },
-  }[topicStatus];
+  const { completed: completedLessons, total: totalLessons, pct: progressPct } = topicProgress(topic, materialsMap);
+  const topicStatus = getTopicStatus(completedLessons, totalLessons);
+  const statusBadge = STATUS_BADGE[topicStatus];
 
   return (
     <div className="flex flex-col gap-5">
@@ -45,47 +41,47 @@ export default function TopicView() {
       <div>
         <div className="flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-widest mb-2">
           <span
-            className="text-[#9CA3AF] dark:text-[#6B7280] cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            className="text-faint cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             onClick={() => selectTopic(null)}
           >
             {topic.phase}
           </span>
           {topic.block && (
             <>
-              <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
-              <span className="text-[#9CA3AF] dark:text-[#6B7280]">{topic.block}</span>
+              <ChevronRight className="w-3 h-3 text-ghost" />
+              <span className="text-faint">{topic.block}</span>
             </>
           )}
-          <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+          <ChevronRight className="w-3 h-3 text-ghost" />
           <span
             className="text-purple-600 dark:text-purple-400 cursor-pointer hover:text-purple-800 dark:hover:text-purple-300 transition-colors"
             onClick={() => selectTopic(null)}
           >
             {topic.module}
           </span>
-          <ChevronRight className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563]" />
+          <ChevronRight className="w-3 h-3 text-ghost" />
           <span className="text-purple-600 dark:text-purple-400">Intro</span>
           {/* Status badge */}
-          <span className={cn("ml-1 text-[9px] font-bold px-2 py-0.5 rounded-full", statusColors.bg, statusColors.fg)}>
-            {statusColors.label}
+          <span className={cn("ml-1 text-[9px] font-bold px-2 py-0.5 rounded-full", statusBadge.bg, statusBadge.fg)}>
+            {STATUS_LABEL[topicStatus]}
           </span>
         </div>
 
-        <h1 className="text-lg font-black leading-tight flex items-center gap-2 text-[#111827] dark:text-[#F3F4F6]">
+        <h1 className="text-lg font-black leading-tight flex items-center gap-2 text-main">
           <Icon name={topic.emoji} size={22} />
           {topic.title}
         </h1>
-        <p className="text-[12px] text-[#6B7280] dark:text-[#9CA3AF] mt-1.5 leading-relaxed max-w-xl">
+        <p className="text-[12px] text-muted mt-1.5 leading-relaxed max-w-xl">
           {topic.longDesc}
         </p>
 
         {/* Meta row */}
         <div className="flex items-center gap-3 mt-3 flex-wrap">
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#6B7280] dark:text-[#9CA3AF]">
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-muted">
             <Clock className="w-3.5 h-3.5" />
             ~{topic.estimatedHours}h estimadas
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#6B7280] dark:text-[#9CA3AF]">
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-muted">
             <BookOpen className="w-3.5 h-3.5" />
             {topic.lessons.length} aulas
           </div>
@@ -100,7 +96,7 @@ export default function TopicView() {
         {/* Progress bar */}
         {progressPct > 0 && (
           <div className="flex items-center gap-3 mt-3">
-            <div className="flex-1 h-1.5 bg-[#F3F4F6] dark:bg-[#1F2937] rounded-full overflow-hidden">
+            <div className="flex-1 h-1.5 bg-surface-2 dark:bg-line-strong rounded-full overflow-hidden">
               <div
                 className="h-full bg-green-500 rounded-full transition-all duration-500"
                 style={{ width: `${progressPct}%` }}
@@ -129,7 +125,7 @@ export default function TopicView() {
         <div className="flex flex-col gap-1.5">
           {topic.lessons.map((lesson, i) => {
             const sel = selectedLessonId === lesson.id;
-            const isCompleted = hasMaterial(materials, topic.slug, lesson.id);
+            const isCompleted = hasMaterial(materialsMap, topic.slug, lesson.id);
             return (
               <div
                 key={lesson.id}
@@ -140,7 +136,7 @@ export default function TopicView() {
                     ? "bg-[#FAF5FF] dark:bg-purple-900/20 border-purple-300 dark:border-purple-600 shadow-sm"
                     : isCompleted
                     ? "bg-green-50/60 dark:bg-green-900/20 border-[#DCFCE7] dark:border-green-900/50"
-                    : "bg-white dark:bg-[#1a1a1a] border-[#F3F4F6] dark:border-[#374151] hover:border-[#E5E7EB] dark:hover:border-[#4B5563] hover:shadow-sm"
+                    : "bg-surface border-line-strong dark:border-line hover:border-line dark:hover:border-ghost hover:shadow-sm"
                 )}
               >
                 {/* Check icon */}
@@ -151,7 +147,7 @@ export default function TopicView() {
                       ? "text-green-500"
                       : sel
                       ? "text-purple-500"
-                      : "text-[#D1D5DB] dark:text-[#4B5563]"
+                      : "text-ghost"
                   )}
                 >
                   {isCompleted ? (
@@ -166,10 +162,10 @@ export default function TopicView() {
                   className={cn(
                     "flex-1 min-w-0 text-[11px] font-semibold leading-snug",
                     isCompleted
-                      ? "text-[#6B7280] line-through"
+                      ? "text-muted line-through"
                       : sel
                       ? "text-purple-700 dark:text-purple-300"
-                      : "text-[#1F2937] dark:text-[#E5E7EB]"
+                      : "text-strong"
                   )}
                 >
                   {i + 1}. {lesson.title}
@@ -179,7 +175,7 @@ export default function TopicView() {
                 </div>
 
                 {/* Duration */}
-                <div className="flex items-center gap-1 text-[10px] text-[#9CA3AF] flex-shrink-0">
+                <div className="flex items-center gap-1 text-[10px] text-faint flex-shrink-0">
                   <Clock className="w-2.5 h-2.5" />
                   {lesson.duration}
                 </div>
@@ -189,7 +185,7 @@ export default function TopicView() {
                   <Play
                     className={cn(
                       "w-3 h-3 flex-shrink-0",
-                      sel ? "text-purple-500" : "text-[#D1D5DB] dark:text-[#4B5563]"
+                      sel ? "text-purple-500" : "text-ghost"
                     )}
                   />
                 )}
@@ -277,7 +273,7 @@ function TipBox() {
             onMouseLeave={() => setShowTip(false)}
           >
             <Lightbulb className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
-            <p className="text-[10px] text-[#D1D5DB] dark:text-[#9CA3AF] leading-relaxed">
+            <p className="text-[10px] text-ghost dark:text-muted leading-relaxed">
               Termina as matérias antes de avançar para o aprofundamento. A base sólida acelera tudo que vem a seguir.
             </p>
           </div>

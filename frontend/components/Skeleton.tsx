@@ -4,7 +4,7 @@ export function SidebarSkeleton() {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="py-5 px-5 pb-3 border-b border-[#E5E7EB] dark:border-[#1F2937] flex-shrink-0">
+      <div className="py-5 px-5 pb-3 border-b border-line dark:border-line-strong flex-shrink-0">
         <div className="flex items-center gap-1.5">
           <div className="skeleton w-24 h-3" />
           <div className="skeleton w-4 h-4 rounded-full" />
@@ -20,7 +20,7 @@ export function SidebarSkeleton() {
               <div className="skeleton w-3 h-3 rounded-full" />
             </div>
             {/* Card */}
-            <div className="flex-1 rounded-2xl p-3.5 border border-[#F3F4F6] dark:border-[#374151]">
+            <div className="flex-1 rounded-2xl p-3.5 border border-line-strong dark:border-line">
               <div className="flex items-center justify-between mb-1">
                 <div className="skeleton w-16 h-1.5" />
                 <div className="skeleton w-14 h-3 rounded-full" />
@@ -62,11 +62,11 @@ export function LessonViewSkeleton() {
       </div>
 
       {/* Topics index */}
-      <div className="bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#374151] rounded-xl p-4">
+      <div className="bg-surface border border-line rounded-xl p-4">
         <div className="skeleton w-24 h-3 mb-3" />
         <div className="flex flex-col gap-2.5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-2.5 py-1.5 border-b border-[#F3F4F6] dark:border-[#1F2937] last:border-none">
+            <div key={i} className="flex items-center gap-2.5 py-1.5 border-b border-line-strong last:border-none">
               <div className="skeleton w-5 h-5 rounded-full flex-shrink-0" />
               <div className="skeleton h-2.5 flex-1" style={{ width: `${85 - i * 8}%` }} />
             </div>
@@ -111,7 +111,7 @@ export function TopicViewSkeleton() {
         <div className="skeleton w-28 h-2.5 mb-3" />
         <div className="flex flex-col gap-1.5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-3 px-2.5 py-2.5 rounded-xl border border-[#F3F4F6] dark:border-[#374151]">
+            <div key={i} className="flex items-center gap-3 px-2.5 py-2.5 rounded-xl border border-line-strong dark:border-line">
               <div className="skeleton w-4 h-4 rounded-full flex-shrink-0" />
               <div className="skeleton h-2.5 flex-1" style={{ width: `${90 - i * 5}%` }} />
               <div className="skeleton w-12 h-2.5 flex-shrink-0" />

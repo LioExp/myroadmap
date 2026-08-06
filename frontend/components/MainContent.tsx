@@ -53,10 +53,10 @@ export default function MainContent() {
           {!topic ? (
             <div className="flex flex-col items-center justify-center text-center gap-3 p-10 h-full">
               <Image src="/mascote.png" alt="Mascote" width={160} height={160} priority style={{ width: 160, height: "auto" }} />
-              <h2 className="text-xl font-bold text-[#374151] dark:text-[#F3F4F6]">
+              <h2 className="text-xl font-bold text-strong dark:text-main">
                 Escolhe um módulo
               </h2>
-              <p className="text-sm text-[#6B7280] dark:text-[#9CA3AF] max-w-xs">
+              <p className="text-sm text-muted max-w-xs">
                 Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.
               </p>
             </div>

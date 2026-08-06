@@ -56,7 +56,7 @@ export default function EditorPage() {
   const modules = Array.from(new Set(materials.map((m) => m.modulo)));
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100">
+    <div className="flex h-screen bg-gray-50 dark:bg-page text-gray-900 dark:text-gray-100">
       <aside className="w-64 border-r border-gray-200 dark:border-gray-800 p-4 overflow-y-auto flex-shrink-0">
         <h1 className="text-lg font-extrabold mb-4">Editor</h1>
         {modules.map((mod) => (

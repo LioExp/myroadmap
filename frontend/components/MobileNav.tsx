@@ -15,7 +15,7 @@ export default function MobileNav() {
   const setMobileView = useRoadmapStore((s) => s.setMobileView);
 
   return (
-    <nav className="hidden max-md:flex fixed bottom-3 left-1/2 -translate-x-1/2 z-50 bg-white/65 dark:bg-[#111827]/75 backdrop-blur-xl border border-white/50 dark:border-white/8 rounded-full px-4 py-1.5 gap-0.5 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.6)]">
+    <nav className="hidden max-md:flex fixed bottom-3 left-1/2 -translate-x-1/2 z-50 bg-white/65 dark:bg-surface-2/75 backdrop-blur-xl border border-white/50 dark:border-white/8 rounded-full px-4 py-1.5 gap-0.5 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.6)]">
       {tabs.map(({ view, icon, label }) => (
         <button
           key={view}
@@ -24,7 +24,7 @@ export default function MobileNav() {
             "flex flex-col items-center gap-0.5 bg-transparent border-none cursor-pointer px-3 py-1.5 text-[9px] font-semibold tracking-wide font-sans rounded-full transition-all duration-200",
             mobileView === view
               ? "text-white bg-gradient-to-br from-purple-600 to-purple-800 shadow-[0_2px_12px_rgba(147,51,234,0.4),0_0_0_1px_rgba(147,51,234,0.2)]"
-              : "text-[#9CA3AF] dark:text-[#6B7280] hover:text-[#6B7280] dark:hover:text-[#D1D5DB]"
+              : "text-faint hover:text-muted dark:hover:text-ghost"
           )}
         >
           {icon}

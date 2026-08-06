@@ -25,12 +25,12 @@ function NoteField({
   return (
       <div className="flex-shrink-0 flex flex-col gap-0.5">
       <div className="flex items-center gap-1">
-        <span className="inline-flex items-center justify-center w-3 h-3 text-[#1F2937] dark:text-[#E5E7EB]">
+        <span className="inline-flex items-center justify-center w-3 h-3 text-strong">
           {icon}
         </span>
-        <span className="text-[10px] font-black text-[#1F2937] dark:text-[#E5E7EB]">{label}</span>
+        <span className="text-[10px] font-black text-strong">{label}</span>
       </div>
-      <p className="text-[8px] text-[#9CA3AF] leading-relaxed max-md:hidden">{hint}</p>
+      <p className="text-[8px] text-faint leading-relaxed max-md:hidden">{hint}</p>
       <TiptapEditor value={value} onChange={onChange} placeholder={placeholder} />
     </div>
   );
@@ -62,8 +62,8 @@ export default function NotesPanel() {
   return (
     <aside
       className={cn(
-        "relative flex-shrink-0 min-h-0 flex flex-col border-l border-[#E5E7EB] dark:border-[#374151]/80 transition-all duration-300 ease-in-out",
-        isMobileNotes ? "w-full border-l-0 border-t border-[#F3F4F6] dark:border-[#374151] mt-4 max-md:rounded-2xl max-md:bg-white dark:max-md:bg-[#1a1a1a] max-md:border max-md:shadow-sm" : notesOpen ? "w-[300px]" : "w-11"
+        "relative flex-shrink-0 min-h-0 flex flex-col border-l border-line dark:border-line/80 transition-all duration-300 ease-in-out",
+        isMobileNotes ? "w-full border-l-0 border-t border-line-strong dark:border-line mt-4 max-md:rounded-2xl max-md:bg-surface max-md:border max-md:shadow-sm" : notesOpen ? "w-[300px]" : "w-11"
       )}
     >
       {/* Toggle button (hidden on mobile notes view) */}
@@ -71,7 +71,7 @@ export default function NotesPanel() {
         <button
           onClick={toggleNotes}
           title={notesOpen ? "Fechar notas" : "Abrir notas"}
-          className="absolute -left-3.5 top-5 z-20 w-7 h-7 rounded-full bg-white dark:bg-[#1a1a1a] border border-[#E5E7EB] dark:border-[#4B5563] shadow-md flex items-center justify-center text-[#6B7280] dark:text-[#9CA3AF] cursor-pointer transition-all hover:shadow-lg hover:text-[#111827] dark:hover:text-white"
+          className="absolute -left-3.5 top-5 z-20 w-7 h-7 rounded-full bg-surface border border-line dark:border-ghost shadow-md flex items-center justify-center text-muted cursor-pointer transition-all hover:shadow-lg hover:text-main dark:hover:text-white"
         >
           {notesOpen ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
         </button>
@@ -80,10 +80,10 @@ export default function NotesPanel() {
       {/* Collapsed state */}
       {!notesOpen && !isMobileNotes && (
         <div className="flex-1 flex flex-col items-center pt-14 gap-3">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#F3F4F6] dark:bg-[#1a1a1a] dark:border dark:border-[#374151] text-[#9CA3AF]">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface-2 dark:bg-surface dark:border dark:border-line text-faint">
             <FileText className="w-3.5 h-3.5" />
           </div>
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#111827] dark:bg-white text-white dark:text-[#111827]">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-main dark:bg-white text-white dark:text-main">
             <MessageSquare className="w-3.5 h-3.5" />
           </div>
         </div>
@@ -98,12 +98,12 @@ export default function NotesPanel() {
           {/* Header */}
           <div className="flex-shrink-0">
             <div className="flex items-center gap-1.5">
-              <FileText className="w-4 h-4 text-[#9CA3AF]" />
-              <span className="text-xs font-black text-[#9CA3AF] uppercase tracking-widest">
+              <FileText className="w-4 h-4 text-faint" />
+              <span className="text-xs font-black text-faint uppercase tracking-widest">
                 Notas
               </span>
             </div>
-            <p className="text-[10px] text-[#9CA3AF] mt-1 leading-relaxed">
+            <p className="text-[10px] text-faint mt-1 leading-relaxed">
               Preenche depois de estudar. Salvo automaticamente por módulo.
             </p>
           </div>
@@ -156,7 +156,7 @@ export default function NotesPanel() {
               className={cn(
                 "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans",
                 empty
-                  ? "bg-[#F3F4F6] dark:bg-[#1F2937] text-[#9CA3AF] dark:text-[#4B5563] cursor-not-allowed"
+                  ? "bg-surface-2 dark:bg-line-strong text-faint dark:text-ghost cursor-not-allowed"
                   : copied
                   ? "bg-green-500 text-white shadow-md"
                   : "bg-green-500 text-white hover:bg-green-600 active:scale-[0.98] shadow-sm"
@@ -165,7 +165,7 @@ export default function NotesPanel() {
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               {copied ? "Copiado!" : "Copiar Markdown"}
             </button>
-            <p className="text-[10px] text-[#9CA3AF] text-center leading-relaxed">
+            <p className="text-[10px] text-faint text-center leading-relaxed">
               Cola no teu editor → git push
             </p>
           </div>

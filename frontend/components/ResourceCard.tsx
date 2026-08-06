@@ -43,7 +43,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
   return (
     <Tag
       {...linkProps}
-      className="flex items-start gap-2.5 bg-white dark:bg-[#1a1a1a] rounded-xl p-3 border border-[#F3F4F6] dark:border-[#374151] shadow-sm cursor-pointer transition-all hover:shadow-md hover:border-[#E5E7EB] dark:hover:border-[#4B5563] no-underline text-inherit group"
+      className="flex items-start gap-2.5 bg-surface rounded-xl p-3 border border-line-strong dark:border-line shadow-sm cursor-pointer transition-all hover:shadow-md hover:border-line dark:hover:border-ghost no-underline text-inherit group"
     >
       {/* Icon */}
       <div
@@ -57,11 +57,11 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="text-[11px] font-bold leading-snug text-[#111827] dark:text-[#F3F4F6] group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
+        <p className="text-[11px] font-bold leading-snug text-main group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
           {resource.title}
         </p>
         {resource.author && (
-          <p className="text-[10px] text-[#9CA3AF] mt-0.5">{resource.author}</p>
+          <p className="text-[10px] text-faint mt-0.5">{resource.author}</p>
         )}
         <div className="flex items-center gap-2 mt-1 flex-wrap">
           <span
@@ -78,7 +78,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
                 "text-[9px] font-bold px-1.5 py-0.5 rounded-full",
                 resource.free
                   ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                  : "bg-[#F3F4F6] text-[#9CA3AF] dark:bg-[#111827] dark:text-[#6B7280]"
+                  : "bg-surface-2 text-faint dark:bg-surface-2 dark:text-faint"
               )}
             >
               {resource.free ? "Grátis" : "Pago"}
@@ -88,7 +88,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
       </div>
 
       {/* External link */}
-      <ExternalLink className="w-3 h-3 text-[#D1D5DB] dark:text-[#4B5563] flex-shrink-0 mt-0.5 group-hover:text-green-500 transition-colors" />
+      <ExternalLink className="w-3 h-3 text-ghost flex-shrink-0 mt-0.5 group-hover:text-green-500 transition-colors" />
     </Tag>
   );
 }
