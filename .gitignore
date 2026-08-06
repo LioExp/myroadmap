@@ -22,3 +22,4 @@ venv/
 *.pem
 npm-debug.log*
 *.tsbuildinfo
+tsconfig.tsbuildinfo
