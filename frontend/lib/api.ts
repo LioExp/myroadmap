@@ -1,20 +1,20 @@
-import type { Material } from "@/types";
+import type { Material, Topic } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+// ── Roadmap data ────────────────────────────────────────────────────────────
+
+export async function fetchTopics(): Promise<Topic[]> {
+  try {
+    const res = await fetch("/roadmap-data.json", { cache: "no-store" });
+    if (res.ok) return res.json();
+  } catch {
+    // ignore
+  }
+  return [];
+}
 
 // ── Materials ──────────────────────────────────────────────────────────────
 
 export async function fetchMaterialsIndex(): Promise<Material[]> {
-  // Try FastAPI backend first, fall back to local JSON
-  if (API_URL) {
-    try {
-      const res = await fetch(`${API_URL}/materiais`, { cache: "no-store" });
-      if (res.ok) return res.json();
-    } catch {
-      // fall through to local
-    }
-  }
-  // Local fallback (Next.js serves /public/materiais-index.json)
   try {
     const res = await fetch("/materiais-index.json", { cache: "no-store" });
     if (res.ok) return res.json();

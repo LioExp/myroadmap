@@ -8,7 +8,9 @@ export const createMaterialsSlice: StateCreator<
   MaterialsSlice
 > = (set) => ({
   materials: [],
+  topics: [],
   loaded: false,
 
   setMaterials: (m) => set({ materials: m, loaded: true }),
+  setTopics: (t) => set({ topics: t }),
 });

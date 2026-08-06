@@ -6,8 +6,7 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",
-    "lint": "next lint",
-    "edit": "node ../scripts/editor-server.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.1.0",
@@ -31,10 +30,12 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.441.0",
+    "marked": "^18.0.9",
     "next": "14.2.29",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.5.2",
+    "zod": "^4.4.3",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

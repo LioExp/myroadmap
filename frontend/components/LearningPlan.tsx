@@ -1,7 +1,6 @@
 "use client";
 import { Compass, PanelLeft } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
-import { topics } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icons";
 import { SidebarSkeleton } from "@/components/Skeleton";
@@ -177,6 +176,7 @@ function ResizeHandle({
 export default function LearningPlan() {
   const selectedTopicId = useRoadmapStore((s) => s.selectedTopicId);
   const selectTopic = useRoadmapStore((s) => s.selectTopic);
+  const topics = useRoadmapStore((s) => s.topics);
   const loaded = useRoadmapStore((s) => s.loaded);
   const sidebarWidth = useRoadmapStore((s) => s.sidebarWidth);
   const setSidebarWidth = useRoadmapStore((s) => s.setSidebarWidth);

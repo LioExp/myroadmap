@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
-import { fetchMaterialsIndex } from "@/lib/api";
+import { fetchMaterialsIndex, fetchTopics } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import LearningPlan from "@/components/LearningPlan";
 import MainContent from "@/components/MainContent";
@@ -10,6 +10,7 @@ import MobileNav from "@/components/MobileNav";
 export default function Home() {
   const dark = useRoadmapStore((s) => s.dark);
   const setMaterials = useRoadmapStore((s) => s.setMaterials);
+  const setTopics = useRoadmapStore((s) => s.setTopics);
   const mobileView = useRoadmapStore((s) => s.mobileView);
 
   // Apply theme on mount
@@ -17,10 +18,15 @@ export default function Home() {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
 
-  // Load materials index
+  // Load roadmap data + materials index
   useEffect(() => {
-    fetchMaterialsIndex().then(setMaterials);
-  }, [setMaterials]);
+    Promise.all([fetchMaterialsIndex(), fetchTopics()]).then(
+      ([materials, topics]) => {
+        setMaterials(materials);
+        setTopics(topics);
+      }
+    );
+  }, [setMaterials, setTopics]);
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden max-md:h-auto max-md:min-h-screen max-md:overflow-visible bg-page text-main">

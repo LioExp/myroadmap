@@ -1,4 +1,4 @@
-import type { Material, MobileView, NoteFields } from "@/types";
+import type { Material, MobileView, NoteFields, Topic } from "@/types";
 
 export interface SelectionSlice {
   selectedTopicId: number | null;
@@ -28,8 +28,10 @@ export interface ThemeSlice {
 
 export interface MaterialsSlice {
   materials: Material[];
+  topics: Topic[];
   loaded: boolean;
   setMaterials: (m: Material[]) => void;
+  setTopics: (t: Topic[]) => void;
 }
 
 export interface NotesSlice {

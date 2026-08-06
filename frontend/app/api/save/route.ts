@@ -1,19 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { saveLessonByAula, validateMod, writeIndex } from "@/lib/materiais";
+import { z } from "zod";
+import { saveLessonByAula, writeIndex, MOD_SAFE } from "@/lib/materiais";
+
+const SaveBody = z.object({
+  mod: z.string().regex(MOD_SAFE),
+  aula: z.number().int().positive(),
+  titulo: z.string(),
+  conteudo: z.string(),
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const { mod, aula, titulo, conteudo } = await req.json();
-    if (
-      !validateMod(mod) ||
-      typeof aula !== "number" ||
-      !Number.isFinite(aula) ||
-      titulo === undefined ||
-      conteudo === undefined
-    ) {
-      return NextResponse.json({ error: "missing or invalid fields" }, { status: 400 });
+    const body = SaveBody.safeParse(await req.json());
+    if (!body.success) {
+      return NextResponse.json(
+        { error: "missing or invalid fields" },
+        { status: 400 }
+      );
     }
 
+    const { mod, aula, titulo, conteudo } = body.data;
     const filename = saveLessonByAula(mod, aula, titulo, conteudo);
     writeIndex();
 

@@ -5,9 +5,9 @@ import { parseFrontmatter, buildFrontmatter } from "./frontmatter";
 const MATERIAIS_DIR = path.resolve(process.cwd(), "..", "materiais");
 const INDEX_PATH = path.resolve(process.cwd(), "public", "materiais-index.json");
 
-const MOD_SAFE = /^[a-z0-9-]+$/;
+export const MOD_SAFE = /^[a-z0-9-]+$/;
 const FILE_SAFE = /^[\w-]+\.md$/;
-const AULA_SAFE = /^\d+$/;
+export const AULA_SAFE = /^\d+$/;
 
 export function validateMod(mod: string | null): mod is string {
   return typeof mod === "string" && MOD_SAFE.test(mod);
