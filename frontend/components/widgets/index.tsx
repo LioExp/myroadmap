@@ -5,7 +5,7 @@ import DistroGrid from "./DistroGrid";
 import LinuxWhere from "./LinuxWhere";
 import DistroCmd from "./DistroCmd";
 
-const widgetMap: Record<string, React.ComponentType<any>> = {
+const widgetMap: Record<string, React.ComponentType<Record<string, string>>> = {
   "linux-arch": LinuxArch,
   "distro-selector": DistroSelector,
   "ksd-cards": KsdCards,
