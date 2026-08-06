@@ -5,13 +5,13 @@ export const createUiSlice: StateCreator<RoadmapState, [], [], UiSlice> = (
   set
 ) => ({
   notesOpen: true,
-  sidebarWidth: 300,
+  roadmapOpen: true,
   practiceOpen: false,
   subLesson: null,
   mobileView: "content",
 
   toggleNotes: () => set((s) => ({ notesOpen: !s.notesOpen })),
-  setSidebarWidth: (w) => set({ sidebarWidth: w }),
+  setRoadmapOpen: (v) => set({ roadmapOpen: v }),
   togglePractice: () => set((s) => ({ practiceOpen: !s.practiceOpen })),
   setPracticeOpen: (v) => set({ practiceOpen: v }),
   setSubLesson: (id) => set({ subLesson: id }),

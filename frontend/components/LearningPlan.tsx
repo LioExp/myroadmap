@@ -1,17 +1,14 @@
 "use client";
-import { Compass, PanelLeft } from "lucide-react";
+import { Compass, PanelRight } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icons";
 import { SidebarSkeleton } from "@/components/Skeleton";
 import { useMaterialsMap } from "@/hooks/useMaterialsMap";
-import { useSidebarDrag } from "@/hooks/useSidebarDrag";
 import { STATUS_BADGE, STATUS_LABEL, getTopicStatus, topicProgress } from "@/lib/status";
 import type { Topic, TopicStatus } from "@/types";
 
-const COLLAPSED_WIDTH = 44;
-
-function TimelineDot({
+export function TimelineDot({
   index,
   status,
   selected,
@@ -143,112 +140,40 @@ function TopicCard({
   );
 }
 
-function ResizeHandle({
-  onMouseDown,
-  dragging,
-}: {
-  onMouseDown: (e: React.MouseEvent) => void;
-  dragging: boolean;
-}) {
-  return (
-    <div
-      onMouseDown={onMouseDown}
-      className={cn(
-        "absolute top-0 right-0 h-full w-1 cursor-col-resize z-30 group",
-        "hover:bg-purple-400/40 dark:hover:bg-purple-400/30",
-        dragging && "bg-purple-400/60 dark:bg-purple-400/40"
-      )}
-    >
-      <div
-        className={cn(
-          "absolute top-1/2 -translate-y-1/2 -left-1 w-3 h-8 rounded-l-md flex items-center justify-center transition-opacity",
-          "bg-surface border border-line shadow-sm",
-          "opacity-0 group-hover:opacity-100",
-          dragging && "opacity-100"
-        )}
-      >
-        <div className="w-0.5 h-3 rounded-full bg-faint" />
-      </div>
-    </div>
-  );
-}
-
 export default function LearningPlan() {
   const selectedTopicId = useRoadmapStore((s) => s.selectedTopicId);
   const selectTopic = useRoadmapStore((s) => s.selectTopic);
   const topics = useRoadmapStore((s) => s.topics);
   const loaded = useRoadmapStore((s) => s.loaded);
-  const sidebarWidth = useRoadmapStore((s) => s.sidebarWidth);
-  const setSidebarWidth = useRoadmapStore((s) => s.setSidebarWidth);
+  const setRoadmapOpen = useRoadmapStore((s) => s.setRoadmapOpen);
   const materialsMap = useMaterialsMap();
-  const { dragging, onMouseDown } = useSidebarDrag();
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const collapsed = !isMobile && sidebarWidth <= COLLAPSED_WIDTH;
 
   return (
-    <aside
-      className={cn(
-        "h-full flex-shrink-0 min-h-0 flex flex-col border-r border-line dark:border-line-strong max-md:w-full max-md:border-r-0 max-md:overflow-visible",
-        !dragging && "transition-[width] duration-300 ease-in-out"
-      )}
-      style={isMobile ? undefined : { width: sidebarWidth }}
-    >
+    <aside className="h-full min-h-0 flex flex-col bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl overflow-hidden shadow-sm max-md:h-auto max-md:overflow-visible">
       {!loaded ? (
         <SidebarSkeleton />
       ) : (
         <>
-          {/* Collapsed state */}
-          <div
-            className={cn(
-              "flex-1 min-h-0 flex flex-col items-center pt-4 gap-3 overflow-y-auto max-md:overflow-visible transition-opacity duration-300 ease-in-out",
-              collapsed ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none absolute inset-0"
-            )}
-          >
-            <button
-              onClick={() => setSidebarWidth(300)}
-              title="Expandir roadmap"
-              className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface-2 dark:bg-surface dark:border dark:border-line text-faint hover:text-main dark:hover:text-white cursor-pointer transition-colors"
-            >
-              <PanelLeft className="w-3.5 h-3.5" />
-            </button>
-            <div className="relative flex flex-col items-center gap-3">
-              {topics.map((topic, i) => {
-                const progress = topicProgress(topic, materialsMap);
-                const status = getTopicStatus(progress.completed, progress.total);
-                const sel = topic.id === selectedTopicId;
-
-                return (
-                  <button
-                    key={topic.id}
-                    onClick={() => selectTopic(topic.id)}
-                    title={topic.title}
-                    className="relative z-10 cursor-pointer"
-                  >
-                    {i < topics.length - 1 && (
-                      <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-3 border-l-2 border-dashed border-line z-0" />
-                    )}
-                    <TimelineDot index={i} status={status} selected={sel} />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Expanded state */}
-          <div
-            className={cn(
-              "flex flex-col h-full transition-opacity duration-300 ease-in-out",
-              !collapsed ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none absolute inset-0"
-            )}
-          >
-            <h2 className="text-sm font-bold mb-4 flex items-center gap-1.5 py-5 px-5 pb-3 border-b border-line dark:border-line-strong flex-shrink-0 text-main">
+          {/* Header */}
+          <div className="h-12 flex-shrink-0 flex items-center justify-between px-4 border-b border-line dark:border-line-strong">
+            <h2 className="text-xs font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
               Meu Roadmap{" "}
               <span className="inline-flex items-center justify-center w-4 h-4">
                 <Compass className="w-3.5 h-3.5" />
               </span>
             </h2>
+            <button
+              onClick={() => setRoadmapOpen(false)}
+              title="Recolher roadmap"
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
+            >
+              <PanelRight className="w-4 h-4" />
+            </button>
+          </div>
 
-            <div className="relative flex-1 min-h-0 flex flex-col gap-3 px-5 pb-5 overflow-y-auto max-md:overflow-visible">
+          {/* Expanded state */}
+          <div className="flex flex-col h-full transition-opacity duration-300 ease-in-out">
+            <div className="relative flex-1 min-h-0 flex flex-col gap-3 px-5 py-4 overflow-y-auto max-md:overflow-visible">
               {topics.map((topic, i) => {
                 const progress = topicProgress(topic, materialsMap);
                 const status = getTopicStatus(progress.completed, progress.total);
@@ -279,8 +204,6 @@ export default function LearningPlan() {
               })}
             </div>
           </div>
-
-          <ResizeHandle onMouseDown={onMouseDown} dragging={dragging} />
         </>
       )}
     </aside>

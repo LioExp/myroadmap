@@ -23,7 +23,7 @@ export const useRoadmapStore = create<RoadmapState>()(
         dark: s.dark,
         notes: s.notes,
         notesOpen: s.notesOpen,
-        sidebarWidth: s.sidebarWidth,
+        roadmapOpen: s.roadmapOpen,
       }),
     }
   )

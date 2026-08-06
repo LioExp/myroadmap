@@ -9,12 +9,12 @@ export interface SelectionSlice {
 
 export interface UiSlice {
   notesOpen: boolean;
-  sidebarWidth: number;
+  roadmapOpen: boolean;
   practiceOpen: boolean;
   subLesson: string | null;
   mobileView: MobileView;
   toggleNotes: () => void;
-  setSidebarWidth: (w: number) => void;
+  setRoadmapOpen: (v: boolean) => void;
   togglePractice: () => void;
   setPracticeOpen: (v: boolean) => void;
   setSubLesson: (id: string | null) => void;

@@ -2,9 +2,6 @@ import type { StateCreator } from "zustand";
 import { selectSelectedTopic } from "../selectors";
 import type { RoadmapState, SelectionSlice } from "../types";
 
-const COLLAPSED_WIDTH = 44;
-const COLLAPSE_THRESHOLD = 80;
-
 export const createSelectionSlice: StateCreator<
   RoadmapState,
   [],
@@ -26,15 +23,14 @@ export const createSelectionSlice: StateCreator<
     const topic = selectSelectedTopic(state);
     const lesson = topic?.lessons.find((l) => l.id === id);
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const shouldCollapse =
-      !isMobile && id !== null && lesson?.practice && state.sidebarWidth > COLLAPSE_THRESHOLD;
+    const shouldCollapse = !isMobile && id !== null && lesson?.practice && state.roadmapOpen;
     if (typeof window !== "undefined") window.location.hash = "";
     set((s) => {
       const nextLesson = s.selectedLessonId === id ? null : id;
       return {
         selectedLessonId: nextLesson,
         subLesson: null,
-        ...(shouldCollapse ? { sidebarWidth: COLLAPSED_WIDTH } : {}),
+        ...(shouldCollapse ? { roadmapOpen: false } : {}),
         ...(nextLesson === null && s.practiceOpen ? { practiceOpen: false } : {}),
       };
     });

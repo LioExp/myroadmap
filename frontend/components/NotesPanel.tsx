@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { ChevronRight, ChevronLeft, FileText, MessageSquare, CheckSquare, AlertTriangle, ArrowRight, Copy, Check } from "lucide-react";
+import { FileText, PanelLeft, CheckSquare, AlertTriangle, ArrowRight, Copy, Check } from "lucide-react";
 import { useRoadmapStore, selectSelectedTopic, DEFAULT_NOTES } from "@/store/useRoadmapStore";
 import { buildMarkdown, isNotesEmpty, cn } from "@/lib/utils";
 import TiptapEditor from "@/components/TiptapEditor";
@@ -23,7 +23,7 @@ function NoteField({
   onChange: (v: string) => void;
 }) {
   return (
-      <div className="flex-shrink-0 flex flex-col gap-0.5">
+    <div className="flex-shrink-0 flex flex-col gap-0.5">
       <div className="flex items-center gap-1">
         <span className="inline-flex items-center justify-center w-3 h-3 text-strong">
           {icon}
@@ -38,11 +38,10 @@ function NoteField({
 
 export default function NotesPanel() {
   const topic = useRoadmapStore(selectSelectedTopic);
-  const notesOpen = useRoadmapStore((s) => s.notesOpen);
   const toggleNotes = useRoadmapStore((s) => s.toggleNotes);
+  const setMobileView = useRoadmapStore((s) => s.setMobileView);
   const notesMap = useRoadmapStore((s) => s.notes);
   const updateNote = useRoadmapStore((s) => s.updateNote);
-  const mobileView = useRoadmapStore((s) => s.mobileView);
   const [copied, setCopied] = useState(false);
 
   const notes: NoteFields = topic ? notesMap[topic.id] ?? DEFAULT_NOTES : DEFAULT_NOTES;
@@ -56,121 +55,93 @@ export default function NotesPanel() {
     });
   }
 
-  // Mobile notes view is always full-width expanded
-  const isMobileNotes = mobileView === "notes";
-
   return (
-    <aside
-      className={cn(
-        "relative flex-shrink-0 min-h-0 flex flex-col border-l border-line dark:border-line/80 transition-all duration-300 ease-in-out",
-        isMobileNotes ? "w-full border-l-0 border-t border-line-strong dark:border-line mt-4 max-md:rounded-2xl max-md:bg-surface max-md:border max-md:shadow-sm" : notesOpen ? "w-[300px]" : "w-11"
-      )}
-    >
-      {/* Toggle button (hidden on mobile notes view) */}
-      {!isMobileNotes && (
+    <aside className="h-full min-h-0 flex flex-col bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl overflow-hidden shadow-sm max-md:h-auto max-md:overflow-visible">
+      {/* Header */}
+      <div className="h-12 flex-shrink-0 flex items-center justify-between px-4 border-b border-line dark:border-line-strong">
+        <span className="text-[11px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
+          <FileText className="w-3.5 h-3.5" />
+          Notas
+        </span>
         <button
-          onClick={toggleNotes}
-          title={notesOpen ? "Fechar notas" : "Abrir notas"}
-          className="absolute -left-3.5 top-5 z-20 w-7 h-7 rounded-full bg-surface border border-line dark:border-ghost shadow-md flex items-center justify-center text-muted cursor-pointer transition-all hover:shadow-lg hover:text-main dark:hover:text-white"
+          onClick={() => {
+            toggleNotes();
+            setMobileView("content");
+          }}
+          title="Fechar notas"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
         >
-          {notesOpen ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+          <PanelLeft className="w-4 h-4" />
         </button>
-      )}
+      </div>
 
-      {/* Collapsed state */}
-      {!notesOpen && !isMobileNotes && (
-        <div className="flex-1 flex flex-col items-center pt-14 gap-3">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface-2 dark:bg-surface dark:border dark:border-line text-faint">
-            <FileText className="w-3.5 h-3.5" />
-          </div>
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-main dark:bg-white text-white dark:text-main">
-            <MessageSquare className="w-3.5 h-3.5" />
-          </div>
+      <div className="flex-1 min-h-0 flex flex-col px-3 py-4 gap-3 overflow-y-auto max-md:overflow-visible">
+        {/* Hint */}
+        <div className="flex-shrink-0">
+          <p className="text-[10px] text-faint leading-relaxed">
+            Preenche depois de estudar. Salvo automaticamente por módulo.
+          </p>
         </div>
-      )}
 
-      {/* Open state */}
-      {(notesOpen || isMobileNotes) && (
-        <div className={cn(
-          "flex-1 min-h-0 flex flex-col px-3 py-4 gap-3",
-          isMobileNotes ? "overflow-y-auto" : "overflow-hidden"
-        )}>
-          {/* Header */}
-          <div className="flex-shrink-0">
-            <div className="flex items-center gap-1.5">
-              <FileText className="w-4 h-4 text-faint" />
-              <span className="text-xs font-black text-faint uppercase tracking-widest">
-                Notas
-              </span>
-            </div>
-            <p className="text-[10px] text-faint mt-1 leading-relaxed">
-              Preenche depois de estudar. Salvo automaticamente por módulo.
-            </p>
-          </div>
-
-          {/* Note fields */}
-          <div className={cn(
-            "flex-1 flex flex-col gap-3 pr-0.5",
-            isMobileNotes ? "overflow-visible max-md:gap-2" : "min-h-0 overflow-y-auto"
-          )}>
-            <NoteField
-              icon={<CheckSquare className="w-3 h-3" />}
-              label="O que aprendi"
-              hint="Escreve como se explicasses a um amigo. 2-3 frases é o suficiente."
-              placeholder="Ex: Aprendi como as permissões funcionam no Linux..."
-              value={notes.learned}
-              onChange={(v) => topic && updateNote(topic.id, "learned", v)}
-            />
-            <NoteField
-              icon={<AlertTriangle className="w-3 h-3" />}
-              label="Dificuldades"
-              hint="Sem julgamento — identificar o obstáculo é o primeiro passo."
-              placeholder="Ex: Ainda não ficou claro como o sudo funciona..."
-              value={notes.difficulty}
-              onChange={(v) => topic && updateNote(topic.id, "difficulty", v)}
-            />
-            <NoteField
-              icon={<ArrowRight className="w-3 h-3" />}
-              label="Próximo passo"
-              hint="Uma ação concreta. Quanto mais específica, melhor."
-              placeholder="Ex: Fazer o desafio Bandit do OverTheWire..."
-              value={notes.nextStep}
-              onChange={(v) => topic && updateNote(topic.id, "nextStep", v)}
-            />
-          </div>
-
-          {/* Mascote */}
-          <Image
-            src="/lio_mascote_studing.PNG"
-            alt=""
-            width={80}
-            height={80}
-            className="block mx-auto flex-shrink-0 mt-1"
+        {/* Note fields */}
+        <div className="flex-1 flex flex-col gap-3 pr-0.5">
+          <NoteField
+            icon={<CheckSquare className="w-3 h-3" />}
+            label="O que aprendi"
+            hint="Escreve como se explicasses a um amigo. 2-3 frases é o suficiente."
+            placeholder="Ex: Aprendi como as permissões funcionam no Linux..."
+            value={notes.learned}
+            onChange={(v) => topic && updateNote(topic.id, "learned", v)}
           />
-
-          {/* Footer */}
-          <div className="flex-shrink-0 flex flex-col gap-1.5">
-            <button
-              onClick={handleCopy}
-              disabled={empty}
-              className={cn(
-                "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans",
-                empty
-                  ? "bg-surface-2 dark:bg-line-strong text-faint dark:text-ghost cursor-not-allowed"
-                  : copied
-                  ? "bg-green-500 text-white shadow-md"
-                  : "bg-green-500 text-white hover:bg-green-600 active:scale-[0.98] shadow-sm"
-              )}
-            >
-              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              {copied ? "Copiado!" : "Copiar Markdown"}
-            </button>
-            <p className="text-[10px] text-faint text-center leading-relaxed">
-              Cola no teu editor → git push
-            </p>
-          </div>
+          <NoteField
+            icon={<AlertTriangle className="w-3 h-3" />}
+            label="Dificuldades"
+            hint="Sem julgamento — identificar o obstáculo é o primeiro passo."
+            placeholder="Ex: Ainda não ficou claro como o sudo funciona..."
+            value={notes.difficulty}
+            onChange={(v) => topic && updateNote(topic.id, "difficulty", v)}
+          />
+          <NoteField
+            icon={<ArrowRight className="w-3 h-3" />}
+            label="Próximo passo"
+            hint="Uma ação concreta. Quanto mais específica, melhor."
+            placeholder="Ex: Fazer o desafio Bandit do OverTheWire..."
+            value={notes.nextStep}
+            onChange={(v) => topic && updateNote(topic.id, "nextStep", v)}
+          />
         </div>
-      )}
+
+        {/* Mascote */}
+        <Image
+          src="/lio_mascote_studing.PNG"
+          alt=""
+          width={80}
+          height={80}
+          className="block mx-auto flex-shrink-0 mt-1"
+        />
+
+        {/* Footer */}
+        <div className="flex-shrink-0 flex flex-col gap-1.5">
+          <button
+            onClick={handleCopy}
+            disabled={empty}
+            className={cn(
+              "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans",
+              empty
+                ? "bg-surface-2 dark:bg-line-strong text-faint dark:text-ghost cursor-not-allowed"
+                : copied
+                ? "bg-green-500 text-white shadow-md"
+                : "bg-green-500 text-white hover:bg-green-600 active:scale-[0.98] shadow-sm"
+            )}
+          >
+            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            {copied ? "Copiado!" : "Copiar Markdown"}
+          </button>
+          <p className="text-[10px] text-faint text-center leading-relaxed">
+            Cola no teu editor → git push
+          </p>
+        </div>
+      </div>
     </aside>
   );
 }
