@@ -19,14 +19,14 @@
   .dark {
     --c-page: 10 10 10;
     --c-surface: 26 26 26;
-    --c-surface-2: 17 24 39;
-    --c-main: 243 244 246;
-    --c-strong: 229 231 235;
-    --c-muted: 156 163 175;
-    --c-faint: 107 114 128;
-    --c-ghost: 75 85 99;
-    --c-line: 55 65 81;
-    --c-line-strong: 31 41 55;
+    --c-surface-2: 22 22 24;
+    --c-main: 242 242 244;
+    --c-strong: 228 228 231;
+    --c-muted: 152 152 156;
+    --c-faint: 105 105 110;
+    --c-ghost: 70 70 74;
+    --c-line: 44 44 47;
+    --c-line-strong: 34 34 37;
   }
   html { overscroll-behavior: none; background: rgb(var(--c-page)); color-scheme: light; }
   html.dark { background: rgb(var(--c-page)); color-scheme: dark; }
