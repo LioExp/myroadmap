@@ -8,7 +8,9 @@ import MainContent from "@/components/MainContent";
 import MobileNav from "@/components/MobileNav";
 
 export default function Home() {
-  const { dark, setMaterials, mobileView } = useRoadmapStore();
+  const dark = useRoadmapStore((s) => s.dark);
+  const setMaterials = useRoadmapStore((s) => s.setMaterials);
+  const mobileView = useRoadmapStore((s) => s.mobileView);
 
   // Apply theme on mount
   useEffect(() => {

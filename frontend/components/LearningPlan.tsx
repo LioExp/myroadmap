@@ -20,7 +20,12 @@ function topicProgress(topic: Topic, materials: Material[]) {
 }
 
 export default function LearningPlan() {
-  const { selectedTopicId, selectTopic, materials, loaded, sidebarWidth, setSidebarWidth } = useRoadmapStore();
+  const selectedTopicId = useRoadmapStore((s) => s.selectedTopicId);
+  const selectTopic = useRoadmapStore((s) => s.selectTopic);
+  const materials = useRoadmapStore((s) => s.materials);
+  const loaded = useRoadmapStore((s) => s.loaded);
+  const sidebarWidth = useRoadmapStore((s) => s.sidebarWidth);
+  const setSidebarWidth = useRoadmapStore((s) => s.setSidebarWidth);
   const [dragging, setDragging] = useState(false);
   const startX = useRef(0);
   const startWidth = useRef(300);

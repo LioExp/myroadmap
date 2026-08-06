@@ -11,7 +11,8 @@ const tabs: { view: MobileView; icon: React.ReactNode; label: string }[] = [
 ];
 
 export default function MobileNav() {
-  const { mobileView, setMobileView } = useRoadmapStore();
+  const mobileView = useRoadmapStore((s) => s.mobileView);
+  const setMobileView = useRoadmapStore((s) => s.setMobileView);
 
   return (
     <nav className="hidden max-md:flex fixed bottom-3 left-1/2 -translate-x-1/2 z-50 bg-white/65 dark:bg-[#111827]/75 backdrop-blur-xl border border-white/50 dark:border-white/8 rounded-full px-4 py-1.5 gap-0.5 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.6)]">

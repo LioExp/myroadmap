@@ -15,7 +15,8 @@ function DiscordIcon({ className }: { className?: string }) {
 const DISCORD_URL = "https://discord.gg/5S5cXd7q4M";
 
 export default function Navbar() {
-  const { dark, toggleTheme } = useRoadmapStore();
+  const dark = useRoadmapStore((s) => s.dark);
+  const toggleTheme = useRoadmapStore((s) => s.toggleTheme);
   const [showCta, setShowCta] = useState(false);
 
   const showCtaTemporarily = useCallback(() => {

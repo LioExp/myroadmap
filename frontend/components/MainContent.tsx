@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import { useRoadmapStore } from "@/store/useRoadmapStore";
+import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import NotesPanel from "@/components/NotesPanel";
 import TopicView from "@/components/TopicView";
 import LessonView from "@/components/LessonView";
@@ -9,8 +9,11 @@ import PracticePanel from "@/components/PracticePanel";
 import { TopicViewSkeleton, LessonViewSkeleton } from "@/components/Skeleton";
 
 export default function MainContent() {
-  const { getSelectedTopic, selectedLessonId, mobileView, practiceOpen, setPracticeOpen } = useRoadmapStore();
-  const topic = getSelectedTopic();
+  const topic = useRoadmapStore(selectSelectedTopic);
+  const selectedLessonId = useRoadmapStore((s) => s.selectedLessonId);
+  const mobileView = useRoadmapStore((s) => s.mobileView);
+  const practiceOpen = useRoadmapStore((s) => s.practiceOpen);
+  const setPracticeOpen = useRoadmapStore((s) => s.setPracticeOpen);
 
   const [loading, setLoading] = useState(false);
   const prevTopicId = useRef(topic?.id ?? null);

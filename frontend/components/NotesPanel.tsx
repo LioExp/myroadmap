@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { ChevronRight, ChevronLeft, FileText, MessageSquare, CheckSquare, AlertTriangle, ArrowRight, Copy, Check } from "lucide-react";
-import { useRoadmapStore } from "@/store/useRoadmapStore";
+import { useRoadmapStore, selectSelectedTopic, DEFAULT_NOTES } from "@/store/useRoadmapStore";
 import { buildMarkdown, isNotesEmpty, cn } from "@/lib/utils";
 import TiptapEditor from "@/components/TiptapEditor";
 import type { NoteFields } from "@/types";
@@ -37,11 +37,15 @@ function NoteField({
 }
 
 export default function NotesPanel() {
-  const { notesOpen, toggleNotes, getSelectedTopic, getNotes, updateNote, mobileView } = useRoadmapStore();
+  const topic = useRoadmapStore(selectSelectedTopic);
+  const notesOpen = useRoadmapStore((s) => s.notesOpen);
+  const toggleNotes = useRoadmapStore((s) => s.toggleNotes);
+  const notesMap = useRoadmapStore((s) => s.notes);
+  const updateNote = useRoadmapStore((s) => s.updateNote);
+  const mobileView = useRoadmapStore((s) => s.mobileView);
   const [copied, setCopied] = useState(false);
 
-  const topic = getSelectedTopic();
-  const notes: NoteFields = topic ? getNotes(topic.id) : { learned: "", difficulty: "", nextStep: "" };
+  const notes: NoteFields = topic ? notesMap[topic.id] ?? DEFAULT_NOTES : DEFAULT_NOTES;
   const empty = !topic || isNotesEmpty(notes);
 
   function handleCopy() {

@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { Clock, BookOpen, CheckCircle, ChevronRight, Play, Wrench, Flame, Lightbulb } from "lucide-react";
-import { useRoadmapStore } from "@/store/useRoadmapStore";
+import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import { hasMaterial } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/Icons";
@@ -22,8 +22,11 @@ function SectionTitle({ icon, label, orange = false }: { icon: React.ReactNode; 
 }
 
 export default function TopicView() {
-  const { getSelectedTopic, selectedLessonId, selectLesson, selectTopic, materials } = useRoadmapStore();
-  const topic = getSelectedTopic();
+  const topic = useRoadmapStore(selectSelectedTopic);
+  const selectedLessonId = useRoadmapStore((s) => s.selectedLessonId);
+  const selectLesson = useRoadmapStore((s) => s.selectLesson);
+  const selectTopic = useRoadmapStore((s) => s.selectTopic);
+  const materials = useRoadmapStore((s) => s.materials);
   if (!topic) return null;
 
   const completedLessons = topic.lessons.filter((l) => hasMaterial(materials, topic.slug, l.id)).length;

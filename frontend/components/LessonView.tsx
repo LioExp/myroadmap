@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { Clock, ChevronRight, Terminal, ChevronLeft, ArrowRight } from "lucide-react";
-import { useRoadmapStore } from "@/store/useRoadmapStore";
+import { useRoadmapStore, selectSelectedTopic } from "@/store/useRoadmapStore";
 import { getMaterial, hasMaterial } from "@/lib/api";
 import { abbreviate, cn } from "@/lib/utils";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
@@ -10,8 +10,14 @@ import { Icon } from "@/components/Icons";
 import type { Topic } from "@/types";
 
 export default function LessonView() {
-  const { getSelectedTopic, selectedLessonId, selectLesson, materials, practiceOpen, togglePractice, subLesson, setSubLesson } = useRoadmapStore();
-  const topic = getSelectedTopic();
+  const topic = useRoadmapStore(selectSelectedTopic);
+  const selectedLessonId = useRoadmapStore((s) => s.selectedLessonId);
+  const selectLesson = useRoadmapStore((s) => s.selectLesson);
+  const materials = useRoadmapStore((s) => s.materials);
+  const practiceOpen = useRoadmapStore((s) => s.practiceOpen);
+  const togglePractice = useRoadmapStore((s) => s.togglePractice);
+  const subLesson = useRoadmapStore((s) => s.subLesson);
+  const setSubLesson = useRoadmapStore((s) => s.setSubLesson);
   if (!topic) return null;
   const lesson = topic.lessons.find((l) => l.id === selectedLessonId);
   if (!lesson) return null;

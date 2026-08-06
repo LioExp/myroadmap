@@ -150,7 +150,7 @@ const TABS: { id: PanelView; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function PracticePanel() {
-  const { togglePractice } = useRoadmapStore();
+  const togglePractice = useRoadmapStore((s) => s.togglePractice);
   const [activeView, setActiveView] = useState<PanelView>("terminal");
 
   return (
