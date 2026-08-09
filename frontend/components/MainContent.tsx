@@ -16,25 +16,27 @@ export default function MainContent() {
       {/* Content */}
       <div
         className={cn(
-          "min-h-0 overflow-y-auto py-5 px-6 pr-1 max-md:px-1 max-md:py-4 max-md:overflow-visible transition-all duration-300 ease-in-out min-w-0",
+          "min-h-0 overflow-y-auto py-6 px-8 max-md:px-3 max-md:py-4 max-md:overflow-visible transition-all duration-300 ease-in-out min-w-0",
           practiceOpen ? "flex-[3]" : "flex-1"
         )}
       >
-        {!topic ? (
-          <div className="flex flex-col items-center justify-center text-center gap-3 p-10 h-full">
-            <Image src="/mascote.png" alt="Mascote" width={160} height={160} priority style={{ width: 160, height: "auto" }} />
-            <h2 className="text-xl font-bold text-strong dark:text-main">
-              Escolhe um módulo
-            </h2>
-            <p className="text-sm text-muted max-w-xs">
-              Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.
-            </p>
-          </div>
-        ) : selectedLessonId !== null ? (
-          <LessonView />
-        ) : (
-          <TopicView />
-        )}
+        <div className="mx-auto w-full max-w-4xl h-full">
+          {!topic ? (
+            <div className="flex flex-col items-center justify-center text-center gap-3 p-10 h-full">
+              <Image src="/mascote.png" alt="Mascote" width={160} height={160} priority style={{ width: 160, height: "auto" }} />
+              <h2 className="text-xl font-bold text-strong dark:text-main">
+                Escolhe um módulo
+              </h2>
+              <p className="text-sm text-muted max-w-xs">
+                Clica num dos módulos ao lado para veres o conteúdo, aulas e recursos.
+              </p>
+            </div>
+          ) : selectedLessonId !== null ? (
+            <LessonView />
+          ) : (
+            <TopicView />
+          )}
+        </div>
       </div>
 
       {/* Practice panel — side slide on desktop */}
