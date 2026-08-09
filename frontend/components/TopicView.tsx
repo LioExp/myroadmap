@@ -44,9 +44,7 @@ export default function TopicView() {
           className="mb-2"
           crumbs={[
             { label: topic.phase, onClick: () => selectTopic(null) },
-            ...(topic.block ? [{ label: topic.block }] : []),
-            { label: topic.module, onClick: () => selectTopic(null), active: true },
-            { label: "Intro", active: true },
+            { label: topic.module, active: true },
           ]}
           trailing={
             <span className={cn("ml-1 text-[9px] font-bold px-2 py-0.5 rounded-full", statusBadge.bg, statusBadge.fg)}>

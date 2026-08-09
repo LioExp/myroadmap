@@ -74,22 +74,18 @@ export default function LessonView() {
         </button>
       )}
 
-      {/* Breadcrumb */}
+      {/* Breadcrumb: Fase > Módulo > Aula > Sub-aula */}
       <Breadcrumb
         crumbs={[
           { label: topic.phase, onClick: () => selectLesson(null) },
-          ...(topic.block ? [{ label: topic.block }] : []),
-          { label: topic.module, onClick: () => selectLesson(null), active: true },
-          { label: "Intro", onClick: () => selectLesson(null), active: true },
-          { label: abbreviate(lesson.title, 30), onClick: () => setSubLesson(null), active: true },
+          { label: topic.module, onClick: () => selectLesson(null) },
+          {
+            label: abbreviate(`Aula ${lesson.id} — ${lesson.title}`, 36),
+            onClick: subLessonTitle ? () => setSubLesson(null) : undefined,
+            active: !subLessonTitle,
+          },
           ...(subLessonTitle
-            ? [
-                {
-                  label: abbreviate(subLessonTitle, 30),
-                  onClick: () => setSubLesson(null),
-                  active: true,
-                },
-              ]
+            ? [{ label: abbreviate(subLessonTitle, 30), active: true }]
             : []),
         ]}
       />
