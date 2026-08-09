@@ -20,47 +20,41 @@ export default function LessonView() {
   const togglePractice = useRoadmapStore((s) => s.togglePractice);
   const subLesson = useRoadmapStore((s) => s.subLesson);
   const setSubLesson = useRoadmapStore((s) => s.setSubLesson);
+  const lesson = topic?.lessons.find((l) => l.id === selectedLessonId);
+  const subLessons = lesson?.subLessons;
+
+  // Abre sub-aulas a partir do hash (#sub-...) — no mount, em clicks em
+  // .sub-lesson-link e em hashchange. Um único handler para os três casos.
+  useEffect(() => {
+    const openFromHash = () => {
+      const hash = window.location.hash;
+      if (!hash.startsWith("#sub-")) return;
+      const id = hash.replace("#sub-", "");
+      if (subLessons?.[id]) setSubLesson(id);
+    };
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest?.(".sub-lesson-link") as HTMLAnchorElement | null;
+      if (link) {
+        e.preventDefault();
+        setSubLesson(link.hash.replace("#sub-", ""));
+      }
+    };
+    openFromHash();
+    document.addEventListener("click", onClick);
+    window.addEventListener("hashchange", openFromHash);
+    return () => {
+      document.removeEventListener("click", onClick);
+      window.removeEventListener("hashchange", openFromHash);
+    };
+  }, [setSubLesson, subLessons]);
+
   if (!topic) return null;
-  const lesson = topic.lessons.find((l) => l.id === selectedLessonId);
   if (!lesson) return null;
 
   const hasContent = hasMaterial(materialsMap, topic.slug, lesson.id);
   const material = getMaterial(materialsMap, topic.slug, lesson.id);
   const activeSub = subLesson ? lesson.subLessons?.[subLesson] : undefined;
   const subLessonTitle = activeSub?.title;
-
-  // Open sub-lesson when URL hash points to one, or via click on .sub-lesson-link
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      const link = (e.target as HTMLElement).closest?.(".sub-lesson-link") as HTMLAnchorElement | null;
-      if (link) {
-        e.preventDefault();
-        const id = link.hash.replace("#sub-", "");
-        setSubLesson(id);
-      }
-    };
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, [setSubLesson]);
-
-  useEffect(() => {
-    if (window.location.hash.startsWith("#sub-")) {
-      const id = window.location.hash.replace("#sub-", "");
-      if (lesson.subLessons?.[id]) {
-        setSubLesson(id);
-      }
-    }
-    const onHash = () => {
-      if (window.location.hash.startsWith("#sub-")) {
-        const id = window.location.hash.replace("#sub-", "");
-        if (lesson.subLessons?.[id]) {
-          setSubLesson(id);
-        }
-      }
-    };
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, [lesson.subLessons]);
 
   return (
     <div className="flex flex-col gap-4 relative">

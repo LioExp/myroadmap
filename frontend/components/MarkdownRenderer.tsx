@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef } from "react";
-import { renderMarkdown, wrapCodeCopyButtons } from "@/lib/markdown";
+import { parseBlocks, blockToHtml, renderMarkdown, wrapCodeCopyButtons } from "@/lib/markdown";
+import type { Block } from "@/lib/markdown";
 import WidgetRenderer from "./widgets";
 import AnimatedSection from "./AnimatedSection";
 
@@ -8,13 +9,8 @@ interface MarkdownRendererProps {
   content: string;
 }
 
-type Segment =
-  | { type: "html"; html: string }
-  | { type: "widget"; name: string; query: string }
-  | { type: "image"; url: string };
-
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
-  const segments = useMemo(() => splitContent(content), [content]);
+  const blocks = useMemo(() => parseBlocks(content), [content]);
   const copiedTimer = useRef<number | null>(null);
 
   useEffect(
@@ -37,32 +33,35 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
     copiedTimer.current = window.setTimeout(() => btn.classList.remove("copied"), 1500);
   }
 
-  function renderSegment(seg: Segment, i: number) {
-    if (seg.type === "image") {
+  function renderBlock(block: Block, i: number) {
+    if (block.type === "image") {
       return (
         <div className="md-image">
-          <img src={seg.url} alt="" />
+          <img src={block.url} alt="" />
         </div>
       );
     }
-    if (seg.type === "widget") {
-      return <WidgetRenderer name={seg.name} query={seg.query} />;
+    if (block.type === "widget") {
+      return <WidgetRenderer name={block.name} query={block.query} />;
     }
-    const html = wrapCodeCopyButtons(renderMarkdown(seg.html));
-    if (!html) return null;
-    return <div dangerouslySetInnerHTML={{ __html: html }} />;
+    if (block.type === "html") {
+      const html = wrapCodeCopyButtons(renderMarkdown(block.content));
+      if (!html) return null;
+      return <div dangerouslySetInnerHTML={{ __html: html }} />;
+    }
+    return <div dangerouslySetInnerHTML={{ __html: blockToHtml(block) }} />;
   }
 
   const rendered: React.ReactNode[] = [];
-  for (let i = 0; i < segments.length; i++) {
-    const seg = segments[i];
-    const next = segments[i + 1];
-    if (seg.type === "image" && next && next.type === "widget") {
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    const next = blocks[i + 1];
+    if (block.type === "image" && next && next.type === "widget") {
       rendered.push(
         <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
           <div className="md-side-by-side">
-            {renderSegment(seg, i)}
-            {renderSegment(next, i + 1)}
+            {renderBlock(block, i)}
+            {renderBlock(next, i + 1)}
           </div>
         </AnimatedSection>
       );
@@ -71,7 +70,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
     }
     rendered.push(
       <AnimatedSection key={i} delay={Math.min(i * 40, 200)}>
-        {renderSegment(seg, i)}
+        {renderBlock(block, i)}
       </AnimatedSection>
     );
   }
@@ -81,34 +80,4 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
       {rendered}
     </div>
   );
-}
-
-function splitContent(content: string): Segment[] {
-  const regex = /\{\{(widget|image):\s*([^}]+)\}\}/;
-  const result: Segment[] = [];
-  let remaining = content;
-
-  while (remaining.length > 0) {
-    const match = remaining.match(regex);
-    if (!match || match.index == null) {
-      result.push({ type: "html", html: remaining });
-      break;
-    }
-    if (match.index > 0) {
-      result.push({ type: "html", html: remaining.slice(0, match.index) });
-    }
-    const tag = match[1];
-    const raw = match[2].trim();
-    if (tag === "image") {
-      result.push({ type: "image", url: raw });
-    } else {
-      const qIdx = raw.indexOf("?");
-      const name = qIdx >= 0 ? raw.slice(0, qIdx).trim() : raw;
-      const query = qIdx >= 0 ? raw.slice(qIdx + 1) : "";
-      result.push({ type: "widget", name, query });
-    }
-    remaining = remaining.slice(match.index + match[0].length);
-  }
-
-  return result.filter((s) => s.type !== "html" || s.html.trim().length > 0);
 }

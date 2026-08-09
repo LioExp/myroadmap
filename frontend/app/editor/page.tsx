@@ -1,15 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import type { Material } from "@/types";
-import { renderMarkdown } from "@/lib/markdown";
-import WidgetRenderer from "@/components/widgets";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 
 export default function EditorPage() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [selected, setSelected] = useState<{ mod: string; file: string } | null>(null);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-  const [preview, setPreview] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -18,10 +16,6 @@ export default function EditorPage() {
       .then(setMaterials)
       .catch(() => {});
   }, []);
-
-  useEffect(() => {
-    setPreview(renderMarkdown(content));
-  }, [content]);
 
   const loadLesson = async (mod: string, aula: number) => {
     setSelected({ mod, file: `0${aula}` });
@@ -105,10 +99,7 @@ export default function EditorPage() {
             className="flex-1 p-4 text-xs font-mono bg-transparent border-r border-gray-200 dark:border-gray-800 resize-none outline-none"
             placeholder="Conteúdo em markdown..."
           />
-          <div
-            className="flex-1 p-4 overflow-y-auto lesson-material"
-            dangerouslySetInnerHTML={{ __html: preview }}
-          />
+          <MarkdownRenderer content={content} />
         </div>
       </div>
     </div>
