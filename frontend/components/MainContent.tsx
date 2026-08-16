@@ -12,11 +12,11 @@ export default function MainContent() {
   const practiceOpen = useRoadmapStore((s) => s.practiceOpen);
 
   return (
-    <div className="h-full min-h-0 flex min-w-0 overflow-hidden bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl shadow-sm max-md:h-auto max-md:overflow-visible">
+    <div className="h-full min-h-0 flex min-w-0 overflow-hidden bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl shadow-sm max-md:h-auto max-md:w-full max-md:overflow-visible max-md:border-0 max-md:rounded-none max-md:shadow-none">
       {/* Content */}
       <div
         className={cn(
-          "min-h-0 overflow-y-auto py-6 px-8 max-md:px-3 max-md:py-4 max-md:overflow-visible transition-all duration-300 ease-in-out min-w-0",
+          "min-h-0 overflow-y-auto py-6 px-8 max-md:px-3 max-md:py-4 max-md:pb-24 max-md:overflow-visible transition-all duration-300 ease-in-out min-w-0",
           practiceOpen ? "flex-[3]" : "flex-1"
         )}
       >

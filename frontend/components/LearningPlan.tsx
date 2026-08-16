@@ -149,7 +149,7 @@ export default function LearningPlan() {
   const materialsMap = useMaterialsMap();
 
   return (
-    <aside className="h-full min-h-0 flex flex-col bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl overflow-hidden shadow-sm max-md:h-auto max-md:overflow-visible">
+    <aside className="h-full min-h-0 flex flex-col bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl overflow-hidden shadow-sm max-md:h-auto max-md:overflow-visible max-md:border-0 max-md:rounded-none max-md:shadow-none">
       {!loaded ? (
         <SidebarSkeleton />
       ) : (
@@ -165,7 +165,7 @@ export default function LearningPlan() {
             <button
               onClick={() => setRoadmapOpen(false)}
               title="Recolher roadmap"
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors max-md:hidden"
             >
               <PanelRight className="w-4 h-4" />
             </button>
@@ -173,7 +173,7 @@ export default function LearningPlan() {
 
           {/* Expanded state */}
           <div className="flex flex-col h-full transition-opacity duration-300 ease-in-out">
-            <div className="relative flex-1 min-h-0 flex flex-col gap-3 px-5 py-4 overflow-y-auto max-md:overflow-visible">
+            <div className="relative flex-1 min-h-0 flex flex-col gap-3 px-5 py-4 overflow-y-auto max-md:overflow-visible max-md:pb-24">
               {topics.map((topic, i) => {
                 const progress = topicProgress(topic, materialsMap);
                 const status = getTopicStatus(progress.completed, progress.total);

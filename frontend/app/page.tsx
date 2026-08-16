@@ -37,12 +37,12 @@ export default function Home() {
   const rightCols = notesOpen ? "318px" : "64px";
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden max-md:h-auto max-md:min-h-screen bg-page text-main">
+    <div className="h-screen w-full flex flex-col overflow-hidden max-md:h-auto max-md:min-h-screen bg-page text-main">
       <Navbar />
       {/* Desktop: 3-column workspace grid. Mobile: single column driven by tabs */}
-      <div className="flex-1 min-h-0 max-md:min-h-0 max-md:overflow-visible max-md:pb-16">
+      <div className="flex-1 min-h-0 max-md:min-h-0 max-md:overflow-visible max-md:overflow-x-clip">
         <div
-          className="grid gap-3 p-3 h-full min-h-0 max-md:grid-cols-1 max-md:gap-2 max-md:p-2.5 md:[grid-template-columns:var(--shell-cols)] transition-[grid-template-columns] duration-300 ease-in-out"
+          className="grid gap-3 p-3 h-full min-h-0 grid-rows-1 max-md:grid-cols-1 max-md:gap-0 max-md:p-0 max-md:h-[calc(100dvh-48px)] md:[grid-template-columns:var(--shell-cols)] transition-[grid-template-columns] duration-300 ease-in-out"
           style={{ "--shell-cols": `${cols} minmax(0, 1fr) ${rightCols}` } as React.CSSProperties}
         >
           {/* Roadmap / rail */}

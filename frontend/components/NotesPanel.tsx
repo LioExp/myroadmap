@@ -56,7 +56,7 @@ export default function NotesPanel() {
   }
 
   return (
-    <aside className="h-full min-h-0 flex flex-col bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl overflow-hidden shadow-sm max-md:h-auto max-md:overflow-visible">
+    <aside className="h-full min-h-0 flex flex-col bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl overflow-hidden shadow-sm max-md:h-auto max-md:w-full max-md:overflow-visible max-md:border-0 max-md:rounded-none max-md:shadow-none">
       {/* Header */}
       <div className="h-12 flex-shrink-0 flex items-center justify-between px-4 border-b border-line dark:border-line-strong">
         <span className="text-[11px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
@@ -69,13 +69,13 @@ export default function NotesPanel() {
             setMobileView("content");
           }}
           title="Fechar notas"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors max-md:hidden"
         >
           <PanelLeft className="w-4 h-4" />
         </button>
       </div>
 
-      <div className="flex-1 min-h-0 flex flex-col px-3 py-4 gap-3 overflow-y-auto max-md:overflow-visible">
+      <div className="flex-1 min-h-0 flex flex-col px-3 py-4 gap-3 overflow-y-auto max-md:overflow-visible max-md:pb-24">
         {/* Hint */}
         <div className="flex-shrink-0">
           <p className="text-[10px] text-faint leading-relaxed">
