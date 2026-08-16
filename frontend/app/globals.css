@@ -46,38 +46,41 @@
 
 /* ── Lesson material rendered HTML ── */
 .lesson-material {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.75;
-  color: rgb(var(--c-muted));
+  color: rgb(var(--c-main));
 }
 
 /* Headings */
 .lesson-material h2 {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 800;
   color: rgb(var(--c-main));
-  margin: 32px 0 12px;
+  margin: 36px 0 14px;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .lesson-material h3 {
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 700;
-  color: rgb(var(--c-strong));
-  margin: 24px 0 10px;
+  color: rgb(var(--c-main));
+  margin: 28px 0 12px;
+  text-wrap: balance;
 }
 
 .lesson-material h4 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  color: rgb(var(--c-muted));
-  margin: 20px 0 8px;
+  color: rgb(var(--c-strong));
+  margin: 22px 0 10px;
 }
 
 /* Paragraphs */
 .lesson-material p {
   margin-bottom: 16px;
   color: inherit;
+  text-wrap: pretty;
 }
 
 /* Inline elements */
@@ -136,7 +139,7 @@
 }
 .lesson-material li {
   margin-bottom: 6px;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 .lesson-material li::marker {
   color: #7C3AED;
@@ -232,7 +235,7 @@
   border-radius: 0 10px 10px 0;
   margin: 16px 0;
   color: #5B21B6;
-  font-size: 14px;
+  font-size: 15px;
 }
 .dark .lesson-material blockquote {
   background: rgba(124,58,237,0.08);
@@ -338,7 +341,7 @@
   padding: 14px 18px;
   border-radius: 0 10px 10px 0;
   margin: 16px 0;
-  font-size: 14px;
+  font-size: 15px;
   color: #92400E;
   line-height: 1.6;
 }
