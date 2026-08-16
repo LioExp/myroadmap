@@ -37,7 +37,7 @@ export default function Home() {
   const rightCols = notesOpen ? "318px" : "64px";
 
   return (
-    <div className="h-screen w-full flex flex-col overflow-hidden max-md:h-auto max-md:min-h-screen bg-page text-main">
+    <div className="h-screen w-full flex flex-col overflow-hidden max-md:h-auto max-md:min-h-screen max-md:overflow-visible bg-page text-main">
       <Navbar />
       {/* Desktop: 3-column workspace grid. Mobile: single column driven by tabs */}
       <div className="flex-1 min-h-0 max-md:min-h-0 max-md:overflow-visible max-md:overflow-x-clip">
