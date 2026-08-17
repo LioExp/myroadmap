@@ -206,23 +206,28 @@ export default function GithubPush({ content, filePath }: { content: string; fil
             {formFields}
           </div>
 
-          {/* Mobile: full-screen sheet */}
-          <div className="fixed inset-0 z-[60] md:hidden bg-surface dark:bg-surface-2 flex flex-col">
-            <div className="h-12 flex-shrink-0 flex items-center justify-between px-4 border-b border-line dark:border-line-strong">
-              <span className="text-[11px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
-                <Github className="w-3.5 h-3.5" />
-                Ligar conta GitHub
-              </span>
-              <button
-                onClick={() => setShowSetup(false)}
-                title="Fechar"
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="flex-1 min-h-0 overflow-y-auto p-4 pb-24 flex flex-col gap-2">
-              {formFields}
+          {/* Mobile: floating modal */}
+          <div className="fixed inset-0 z-[60] md:hidden">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setShowSetup(false)} />
+            <div className="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+              <div className="w-full max-w-sm max-h-[80dvh] overflow-y-auto rounded-2xl bg-surface dark:bg-surface-2 border border-line dark:border-line-strong shadow-2xl p-4 flex flex-col gap-2 pointer-events-auto">
+                <div className="flex items-center justify-between flex-shrink-0">
+                  <span className="text-[11px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
+                    <Github className="w-3.5 h-3.5" />
+                    Ligar conta GitHub
+                  </span>
+                  <button
+                    onClick={() => setShowSetup(false)}
+                    title="Fechar"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {formFields}
+                </div>
+              </div>
             </div>
           </div>
         </>
