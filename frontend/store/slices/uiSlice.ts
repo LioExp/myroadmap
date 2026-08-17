@@ -15,5 +15,9 @@ export const createUiSlice: StateCreator<RoadmapState, [], [], UiSlice> = (
   togglePractice: () => set((s) => ({ practiceOpen: !s.practiceOpen })),
   setPracticeOpen: (v) => set({ practiceOpen: v }),
   setSubLesson: (id) => set({ subLesson: id }),
-  setMobileView: (v) => set({ mobileView: v }),
+  setMobileView: (v) =>
+    set((s) => ({
+      mobileView: v,
+      ...(v !== s.mobileView && s.practiceOpen ? { practiceOpen: false } : {}),
+    })),
 });

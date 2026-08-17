@@ -31,7 +31,7 @@ export const createSelectionSlice: StateCreator<
         selectedLessonId: nextLesson,
         subLesson: null,
         ...(shouldCollapse ? { roadmapOpen: false } : {}),
-        ...(nextLesson === null && s.practiceOpen ? { practiceOpen: false } : {}),
+        ...(nextLesson !== s.selectedLessonId && s.practiceOpen ? { practiceOpen: false } : {}),
       };
     });
   },
