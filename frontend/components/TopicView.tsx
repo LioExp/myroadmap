@@ -15,7 +15,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 function SectionTitle({ icon, label, orange = false }: { icon: React.ReactNode; label: string; orange?: boolean }) {
   return (
     <h2 className={cn(
-      "text-[10px] font-black uppercase tracking-widest mb-2.5 flex items-center gap-1.5 flex-shrink-0",
+      "text-[11px] font-black uppercase tracking-widest mb-2.5 flex items-center gap-1.5 flex-shrink-0",
       orange ? "text-faint" : "text-faint"
     )}>
       <span className={cn("w-3 h-3", orange && "text-orange-400")}>{icon}</span>
@@ -47,7 +47,7 @@ export default function TopicView() {
             { label: topic.module, active: true },
           ]}
           trailing={
-            <span className={cn("ml-1 text-[9px] font-bold px-2 py-0.5 rounded-full", statusBadge.bg, statusBadge.fg)}>
+            <span className={cn("ml-1 text-[10px] font-bold px-2 py-0.5 rounded-full", statusBadge.bg, statusBadge.fg)}>
               {STATUS_LABEL[topicStatus]}
             </span>
           }
@@ -57,22 +57,22 @@ export default function TopicView() {
           <Icon name={topic.emoji} size={22} />
           {topic.title}
         </h1>
-        <p className="text-[12px] text-muted mt-1.5 leading-relaxed max-w-xl">
+        <p className="text-[13px] text-muted mt-1.5 leading-relaxed max-w-xl">
           {topic.longDesc}
         </p>
 
         {/* Meta row */}
         <div className="flex items-center gap-3 mt-3 flex-wrap">
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-muted">
+          <div className="flex items-center gap-1.5 text-[12px] font-semibold text-muted">
             <Clock className="w-3.5 h-3.5" />
             ~{topic.estimatedHours}h estimadas
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-muted">
+          <div className="flex items-center gap-1.5 text-[12px] font-semibold text-muted">
             <BookOpen className="w-3.5 h-3.5" />
             {topic.lessons.length} aulas
           </div>
           {completedLessons > 0 && (
-            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-green-600 dark:text-green-400">
+            <div className="flex items-center gap-1.5 text-[12px] font-semibold text-green-600 dark:text-green-400">
               <CheckCircle className="w-3.5 h-3.5" />
               {completedLessons}/{topic.lessons.length} concluídas
             </div>
@@ -88,7 +88,7 @@ export default function TopicView() {
                 style={{ width: `${progressPct}%` }}
               />
             </div>
-            <span className="text-[10px] font-bold text-green-600 dark:text-green-400 flex-shrink-0">
+            <span className="text-[11px] font-bold text-green-600 dark:text-green-400 flex-shrink-0">
               {progressPct}%
             </span>
           </div>
@@ -146,7 +146,7 @@ export default function TopicView() {
                 {/* Title */}
                 <div
                   className={cn(
-                    "flex-1 min-w-0 text-[11px] font-semibold leading-snug",
+                    "flex-1 min-w-0 text-[13px] font-semibold leading-snug",
                     isCompleted
                       ? "text-muted line-through"
                       : sel
@@ -156,12 +156,12 @@ export default function TopicView() {
                 >
                   {i + 1}. {lesson.title}
                   {lesson.practice && (
-                    <Wrench className="inline w-2.5 h-2.5 ml-1 text-orange-400 dark:text-orange-300" />
+                    <Wrench className="inline w-3 h-3 ml-1 text-orange-400 dark:text-orange-300" />
                   )}
                 </div>
 
                 {/* Duration */}
-                <div className="flex items-center gap-1 text-[10px] text-faint flex-shrink-0">
+                <div className="flex items-center gap-1 text-[11px] text-faint flex-shrink-0">
                   <Clock className="w-2.5 h-2.5" />
                   {lesson.duration}
                 </div>

@@ -21,7 +21,7 @@ export default function MobileNav() {
           key={view}
           onClick={() => setMobileView(view)}
           className={cn(
-            "flex flex-col items-center gap-0.5 bg-transparent border-none cursor-pointer px-3 py-1.5 text-[9px] font-semibold tracking-wide font-sans rounded-full transition-all duration-200",
+            "flex flex-col items-center gap-0.5 bg-transparent border-none cursor-pointer px-3 py-1.5 text-[11px] font-bold tracking-wide font-sans rounded-full transition-all duration-200",
             mobileView === view
               ? "text-white bg-gradient-to-br from-purple-600 to-purple-800 shadow-[0_2px_12px_rgba(147,51,234,0.4),0_0_0_1px_rgba(147,51,234,0.2)]"
               : "text-faint hover:text-muted dark:hover:text-ghost"

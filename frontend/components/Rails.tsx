@@ -1,5 +1,5 @@
 "use client";
-import { FileText, PanelLeft, PanelRight, PencilLine } from "lucide-react";
+import { PanelRight, PencilLine } from "lucide-react";
 import { useRoadmapStore } from "@/store/useRoadmapStore";
 import { useMaterialsMap } from "@/hooks/useMaterialsMap";
 import { getTopicStatus, topicProgress } from "@/lib/status";
@@ -25,7 +25,7 @@ export default function RoadmapRail() {
       <button
         onClick={() => setRoadmapOpen(true)}
         title="Expandir roadmap"
-        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
+        className="w-9 h-9 rounded-lg flex items-center justify-center text-muted hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
       >
         <PanelRight className="w-4 h-4" />
       </button>
@@ -62,22 +62,7 @@ export function NotesRail() {
       <button
         onClick={toggleNotes}
         title="Abrir notas"
-        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
-      >
-        <PanelLeft className="w-4 h-4" />
-      </button>
-      <button
-        onClick={toggleNotes}
-        title="Notas"
-        className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
-      >
-        <FileText className="w-4 h-4" />
-      </button>
-      <div className="w-full h-px bg-line dark:bg-line-strong my-1" />
-      <button
-        onClick={toggleNotes}
-        title="Escrever nota"
-        className="w-8 h-8 rounded-full flex items-center justify-center bg-main dark:bg-white text-white dark:text-[#161b22] cursor-pointer transition-transform hover:scale-105"
+        className="w-9 h-9 rounded-full flex items-center justify-center bg-main dark:bg-white text-white dark:text-[#161b22] cursor-pointer transition-transform hover:scale-105"
       >
         <PencilLine className="w-4 h-4" />
       </button>

@@ -21,7 +21,7 @@ export default function Breadcrumb({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-widest",
+        "flex items-center gap-2 flex-wrap text-[12px] font-bold uppercase tracking-wide",
         className
       )}
     >

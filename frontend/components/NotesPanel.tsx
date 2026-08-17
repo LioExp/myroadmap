@@ -29,9 +29,9 @@ function NoteField({
         <span className="inline-flex items-center justify-center w-3 h-3 text-strong">
           {icon}
         </span>
-        <span className="text-[10px] font-black text-strong">{label}</span>
+        <span className="text-[11px] font-black text-strong">{label}</span>
       </div>
-      <p className="text-[8px] text-faint leading-relaxed max-md:hidden">{hint}</p>
+      <p className="text-[10px] text-faint leading-relaxed max-md:hidden">{hint}</p>
       <TiptapEditor value={value} onChange={onChange} placeholder={placeholder} />
     </div>
   );
@@ -60,7 +60,7 @@ export default function NotesPanel() {
     <aside className="h-full min-h-0 flex flex-col bg-surface dark:bg-surface-2 border border-line-strong dark:border-line rounded-2xl overflow-hidden shadow-sm max-md:h-auto max-md:w-full max-md:overflow-visible max-md:border-0 max-md:rounded-none max-md:shadow-none">
       {/* Header */}
       <div className="h-12 flex-shrink-0 flex items-center justify-between px-4 border-b border-line dark:border-line-strong">
-        <span className="text-[11px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
+        <span className="text-[12px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
           <FileText className="w-3.5 h-3.5" />
           Notas
         </span>
@@ -79,7 +79,7 @@ export default function NotesPanel() {
       <div className="flex-1 min-h-0 flex flex-col px-3 py-4 gap-3 overflow-y-auto max-md:overflow-visible max-md:pb-24">
         {/* Hint */}
         <div className="flex-shrink-0">
-          <p className="text-[10px] text-faint leading-relaxed">
+          <p className="text-[11px] text-faint leading-relaxed">
             Preenche depois de estudar. Salvo automaticamente por módulo.
           </p>
         </div>
@@ -141,7 +141,7 @@ export default function NotesPanel() {
           {topic && !empty && (
             <GithubPush content={buildMarkdown(topic, notes)} filePath={`notas/${topic.slug}.md`} />
           )}
-          <p className="text-[10px] text-faint text-center leading-relaxed">
+          <p className="text-[11px] text-faint text-center leading-relaxed">
             Cola no teu editor → git push
           </p>
         </div>

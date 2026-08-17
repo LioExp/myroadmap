@@ -96,7 +96,7 @@ export default function LessonView() {
           <Icon name={topic.emoji} size={22} />
           {lesson.title}
         </h1>
-        <div className="flex items-center gap-1.5 mt-2 text-[11px] font-semibold text-muted">
+        <div className="flex items-center gap-1.5 mt-2 text-[12px] font-semibold text-muted">
           <Clock className="w-3.5 h-3.5" />
           {lesson.duration}
         </div>
@@ -114,7 +114,7 @@ export default function LessonView() {
             <div className="rounded-lg border border-line bg-surface p-3">
               <ul className="flex flex-col gap-1.5">
                 {lesson.topics.map((t, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[12px] text-muted leading-relaxed">
+                  <li key={i} className="flex items-start gap-2 text-[13px] text-muted leading-relaxed">
                     <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0" />
                     {t}
                   </li>
@@ -152,7 +152,7 @@ function LessonNav({ topic, currentLessonId, onNavigate }: { topic: Topic; curre
       {prev ? (
         <button
           onClick={() => onNavigate(prev.id)}
-          className="flex items-center gap-1.5 text-[11px] font-semibold text-muted hover:text-main dark:hover:text-white transition-colors cursor-pointer bg-transparent border-none"
+          className="flex items-center gap-1.5 text-[12px] font-semibold text-muted hover:text-main dark:hover:text-white transition-colors cursor-pointer bg-transparent border-none"
         >
           <ChevronLeft className="w-4 h-4" />
           <span className="truncate max-w-[160px]">{prev.title}</span>
@@ -160,13 +160,13 @@ function LessonNav({ topic, currentLessonId, onNavigate }: { topic: Topic; curre
       ) : (
         <div />
       )}
-      <span className="text-[10px] font-semibold text-faint">
+      <span className="text-[11px] font-semibold text-faint">
         {idx + 1} / {sorted.length}
       </span>
       {next ? (
         <button
           onClick={() => onNavigate(next.id)}
-          className="flex items-center gap-1.5 text-[11px] font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors cursor-pointer bg-transparent border-none group"
+          className="flex items-center gap-1.5 text-[12px] font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors cursor-pointer bg-transparent border-none group"
         >
           <span className="truncate max-w-[140px]">{next.title}</span>
           <Image src="/lio_mascote_run_up.PNG" alt="Próxima" width={40} height={40} className="animate-shake group-hover:scale-110 transition-transform" />

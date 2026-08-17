@@ -70,12 +70,12 @@ function TopicCard({
       )}
     >
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[9px] font-black text-faint uppercase tracking-widest">
+        <span className="text-[10px] font-black text-faint uppercase tracking-widest">
           {topic.module}
         </span>
         <span
           className={cn(
-            "text-[9px] font-bold px-1.5 py-0.5 rounded-full",
+            "text-[10px] font-bold px-1.5 py-0.5 rounded-full",
             STATUS_BADGE[status].bg,
             STATUS_BADGE[status].fg
           )}
@@ -86,7 +86,7 @@ function TopicCard({
 
       <h3
         className={cn(
-          "text-[12px] font-bold leading-snug flex items-center gap-1.5",
+          "text-[13px] font-bold leading-snug flex items-center gap-1.5",
           status === "in-progress" ? "text-purple-900 dark:text-purple-200" : "text-main"
         )}
       >
@@ -96,7 +96,7 @@ function TopicCard({
 
       <p
         className={cn(
-          "text-[10px] mt-1 leading-relaxed line-clamp-2",
+          "text-[11px] mt-1 leading-relaxed line-clamp-2",
           status === "in-progress" ? "text-purple-800/60 dark:text-purple-300/60" : "text-faint"
         )}
       >
@@ -124,14 +124,14 @@ function TopicCard({
         </div>
         <span
           className={cn(
-            "text-[10px] font-semibold",
+            "text-[11px] font-semibold",
             status === "in-progress" ? "text-purple-700 dark:text-purple-400" : "text-faint"
           )}
         >
           ~{topic.estimatedHours}h
         </span>
         {selected && (
-          <span className="ml-auto text-[9px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">
+          <span className="ml-auto text-[10px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">
             ← Aberto
           </span>
         )}
