@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   parseBlocks,
   blockToHtml,
+  blockToDsl,
   renderMarkdown,
   wrapCodeCopyButtons,
 } from "../markdown";
@@ -375,6 +376,45 @@ describe("renderMarkdown", () => {
   it("tabela → wrapper", () => {
     const html = renderMarkdown("| a | b |\n|---|---|\n| 1 | 2 |");
     expect(html).toContain('<div class="md-table-wrapper"><table>');
+  });
+
+  it("renderMarkdown sem includeDsl não expõe data-dsl nem respostas", () => {
+    const html = renderMarkdown(
+      "```pergunta\npergunta: Qual é?\nresposta: segredo\n```\n\n{{divider}}"
+    );
+    expect(html).not.toContain("data-dsl");
+    expect(html).not.toContain("segredo");
+  });
+
+  it("blockToHtml com includeDsl embute o DSL original", () => {
+    const html = blockToHtml(
+      {
+        type: "pergunta",
+        pergunta: "Qual é?",
+        resposta: "segredo",
+        dica: "pista",
+        limite: 32,
+      },
+      true
+    );
+    expect(html).toContain('data-dsl="```pergunta');
+    expect(html).toContain("pergunta: Qual é?");
+    expect(html).toContain("resposta: segredo");
+    expect(html).not.toContain("<p>resposta");
+  });
+
+  it("blockToDsl reconstrói fences e tags", () => {
+    expect(
+      blockToDsl({ type: "widget", name: "linux-arch", query: "" })
+    ).toBe("{{widget: linux-arch}}");
+    expect(
+      blockToDsl({ type: "widget", name: "distro-cmd", query: "tool=git" })
+    ).toBe("{{widget: distro-cmd?tool=git}}");
+    expect(blockToDsl({ type: "divider" })).toBe("{{divider}}");
+    expect(blockToDsl({ type: "alert", text: "oi" })).toBe("{{alert: oi}}");
+    expect(
+      blockToDsl({ type: "terminal", pergunta: "Q", resposta: "R", limite: 32 })
+    ).toBe("```terminal\npergunta: Q\nresposta: R\nlimite: 32\n```");
   });
 
   it("hr de markdown ganha classe", () => {

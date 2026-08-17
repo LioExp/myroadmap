@@ -27,7 +27,7 @@ const ALLOWED_TAGS = [
 ];
 
 const ALLOWED_ATTRS: Record<string, string[]> = {
-  "*": ["class", "id", "title"],
+  "*": ["class", "id", "title", "data-dsl"],
   a: ["href", "name", "target", "rel"],
   img: ["src", "srcset", "alt", "title", "width", "height", "loading"],
   iframe: [

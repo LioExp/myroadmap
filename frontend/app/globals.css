@@ -536,7 +536,8 @@
   color: rgb(var(--c-muted));
   min-height: 60px;
 }
-.tiptap-wrapper .ProseMirror p.is-editor-empty:first-child::before {
+.tiptap-wrapper .ProseMirror p.is-editor-empty:first-child::before,
+.lesson-material .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   color: rgb(var(--c-ghost));
   pointer-events: none;

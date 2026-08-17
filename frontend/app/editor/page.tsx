@@ -1,151 +1,317 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Highlight from "@tiptap/extension-highlight";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
 import type { Material } from "@/types";
-import MarkdownRenderer from "@/components/MarkdownRenderer";
+import { renderMarkdown } from "@/lib/markdown";
+import { serializeDoc } from "@/lib/serializeDoc";
+import type { PmNode } from "@/lib/serializeDoc";
+import { fieldsToDsl, blankFields } from "@/lib/dslEditor";
+import { createDslNodes, INSERTABLE_TYPES, WIDGET_NAMES } from "@/components/editor/DslNodes";
+import type { DslEditHandler } from "@/components/editor/DslNodes";
+import BlockFormModal from "@/components/editor/BlockFormModal";
+import {
+  Bold,
+  Italic,
+  Highlighter,
+  Heading2,
+  Heading3,
+  List,
+  ListOrdered,
+  CheckSquare,
+  Code,
+  Link as LinkIcon,
+  BookMarked,
+  Image as ImageIcon,
+  Pencil,
+} from "lucide-react";
 
-const CURSOR = "\u0001";
+const DRAFT_PREFIX = "myroadmap-draft:";
 
-interface Snippet {
-  label: string;
-  template: string;
+interface Draft {
+  titulo: string;
+  conteudo: string;
+  updatedAt: number;
 }
 
-const SNIPPETS: Record<string, Snippet[]> = {
-  "Secções": [
-    { label: "Teoria", template: "**Teoria — ${CURSOR}**\n\n" },
-    { label: "Prática", template: "**Prática — ${CURSOR}**\n\n" },
-    { label: "Divisor", template: "{{divider}}\n\n" },
-  ],
-  "Blocos": [
-    {
-      label: "Pergunta",
-      template:
-        "```pergunta\npergunta: ${CURSOR}\nresposta: \ndica: \n```\n\n",
-    },
-    {
-      label: "Terminal",
-      template:
-        "```terminal\npergunta: ${CURSOR}\nresposta: \ndica: \nlimite: 32\n```\n\n",
-    },
-    {
-      label: "Exercício",
-      template:
-        "```exercicio\ntitulo: ${CURSOR}\ninstrucoes:\n1. \narquivo: script.py\ndica: \ninicio:\n\nesperado:\n```\n\n",
-    },
-    {
-      label: "Áudio",
-      template: "```audio\nurl: ${CURSOR}\ntitulo: \n```\n\n",
-    },
-    {
-      label: "Imagem",
-      template: "```imagem\nurl: ${CURSOR}\ntitulo: \nlegenda: \n```\n\n",
-    },
-    {
-      label: "Animação",
-      template: "```animacao\ntitulo: ${CURSOR}\npasso: \npasso: \n```\n\n",
-    },
-  ],
-  "Tags": [
-    { label: "Alert", template: "{{alert: ${CURSOR}}}\n\n" },
-    { label: "Imagem", template: "{{image: ${CURSOR}}}\n\n" },
-    { label: "Vídeo", template: "{{video: ${CURSOR}}}\n\n" },
-    { label: "Ícone", template: "{{icon: ${CURSOR}}}" },
-    { label: "Destaque", template: "==${CURSOR}==" },
-    { label: "Sub-aula", template: "[[${CURSOR}]]" },
-  ],
-  "Widgets": [
-    { label: "Linux Arch", template: "{{widget: linux-arch}}" },
-    { label: "Distro Selector", template: "{{widget: distro-selector}}" },
-    { label: "Distro Cmd", template: "{{widget: distro-cmd?tool=git}}" },
-    { label: "KSD Cards", template: "{{widget: ksd-cards}}" },
-    { label: "Distro Grid", template: "{{widget: distro-grid}}" },
-    { label: "Linux Where", template: "{{widget: linux-where}}" },
-  ],
+interface FormState {
+  type: string;
+  dsl: string;
+  onApply: (dsl: string) => void;
+}
+
+const draftKey = (mod: string, aula: number) => `${DRAFT_PREFIX}${mod}:${aula}`;
+
+const readDraft = (mod: string, aula: number): Draft | null => {
+  try {
+    const raw = localStorage.getItem(draftKey(mod, aula));
+    return raw ? (JSON.parse(raw) as Draft) : null;
+  } catch {
+    return null;
+  }
 };
+
+const writeDraft = (mod: string, aula: number, titulo: string, conteudo: string) => {
+  localStorage.setItem(
+    draftKey(mod, aula),
+    JSON.stringify({ titulo, conteudo, updatedAt: Date.now() } satisfies Draft)
+  );
+};
+
+const deleteDraft = (mod: string, aula: number) => {
+  localStorage.removeItem(draftKey(mod, aula));
+};
+
+const listDrafts = (): { mod: string; aula: number; draft: Draft }[] => {
+  const out: { mod: string; aula: number; draft: Draft }[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key?.startsWith(DRAFT_PREFIX)) {
+      const [mod, aulaStr] = key.slice(DRAFT_PREFIX.length).split(":");
+      const aula = Number(aulaStr);
+      const draft = readDraft(mod, aula);
+      if (Number.isInteger(aula) && draft) out.push({ mod, aula, draft });
+    }
+  }
+  return out;
+};
+
+function ToolbarBtn({
+  onClick,
+  active,
+  title,
+  children,
+}: {
+  onClick: () => void;
+  active?: boolean;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+      title={title}
+      className={`whitespace-nowrap text-[10px] font-bold px-2 py-1 rounded-md border transition-colors ${
+        active
+          ? "border-purple-500 text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20"
+          : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-purple-500 hover:text-purple-600 dark:hover:text-purple-400"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function EditorPage() {
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [drafts, setDrafts] = useState<{ mod: string; aula: number; draft: Draft }[]>([]);
   const [selected, setSelected] = useState<{ mod: string; aula: number } | null>(null);
-  const [content, setContent] = useState("");
+  const [hasDraft, setHasDraft] = useState(false);
   const [title, setTitle] = useState("");
-  const [saving, setSaving] = useState(false);
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
   const [showNew, setShowNew] = useState(false);
   const [newMod, setNewMod] = useState("");
   const [newAula, setNewAula] = useState("");
   const [newTitulo, setNewTitulo] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [form, setForm] = useState<FormState | null>(null);
+  const mdRef = useRef<string | null>(null);
+  const onEditRef = useRef<DslEditHandler | null>(null);
 
-  useEffect(() => {
-    loadMaterials();
-  }, []);
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({ codeBlock: false }),
+      Underline,
+      Highlight,
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      Link.configure({ openOnClick: false }),
+      Placeholder.configure({ placeholder: "Escreve a tua aula aqui…" }),
+      ...createDslNodes(() => onEditRef.current),
+    ],
+    content: "",
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class: "outline-none min-h-[60vh]",
+      },
+    },
+  });
+
+  onEditRef.current = (type, dsl, update) => {
+    setForm({ type, dsl, onApply: update });
+  };
 
   const loadMaterials = async () => {
     try {
       const res = await fetch("/materiais-index.json");
       setMaterials(await res.json());
     } catch {}
+    setDrafts(listDrafts());
   };
+
+  useEffect(() => {
+    loadMaterials();
+  }, []);
 
   const loadLesson = async (mod: string, aula: number) => {
     setSelected({ mod, aula });
+    const draft = readDraft(mod, aula);
+    if (draft) {
+      setTitle(draft.titulo);
+      mdRef.current = draft.conteudo;
+      editor?.commands.setContent(renderMarkdown(draft.conteudo, true), false);
+      setHasDraft(true);
+      setSavedMsg(null);
+      return;
+    }
+    setHasDraft(false);
     try {
       const res = await fetch(`/api/lesson?mod=${mod}&aula=${aula}`);
       if (res.ok) {
         const data = await res.json();
         setTitle(data.titulo || "");
-        setContent(data.conteudo || "");
+        mdRef.current = data.conteudo || "";
+        editor?.commands.setContent(renderMarkdown(data.conteudo || "", true), false);
         setSavedMsg(null);
       }
     } catch {}
   };
 
-  const handleSave = async (mod: string, aula: number, titulo: string, conteudo: string) => {
-    setSaving(true);
-    setSavedMsg(null);
-    try {
-      const res = await fetch("/api/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mod, aula, titulo, conteudo }),
-      });
-      if (res.ok) setSavedMsg("Salvo ✓");
-      else setSavedMsg("Erro ao salvar");
-    } catch {
-      setSavedMsg("Erro ao salvar");
-    }
-    setSaving(false);
-    await loadMaterials();
+  const handleSaveDraft = () => {
+    if (!selected || !editor) return;
+    const md = serializeDoc(editor.getJSON() as unknown as PmNode);
+    writeDraft(selected.mod, selected.aula, title, md);
+    mdRef.current = md;
+    setHasDraft(true);
+    setSavedMsg("Rascunho salvo ✓");
+    loadMaterials();
   };
 
-  const handleNewLesson = async () => {
+  const handleDiscardDraft = () => {
+    if (!selected) return;
+    deleteDraft(selected.mod, selected.aula);
+    loadMaterials();
+    loadLesson(selected.mod, selected.aula);
+  };
+
+  const handleNewLesson = () => {
     const aula = parseInt(newAula);
     if (!newMod.trim() || !Number.isInteger(aula) || aula <= 0 || !newTitulo.trim()) return;
-    await handleSave(newMod.trim(), aula, newTitulo.trim(), "");
+    writeDraft(newMod.trim(), aula, newTitulo.trim(), "");
     setShowNew(false);
     setNewMod("");
     setNewAula("");
     setNewTitulo("");
-    await loadLesson(newMod.trim(), aula);
+    loadMaterials();
+    loadLesson(newMod.trim(), aula);
   };
 
-  const insertSnippet = (snippet: Snippet) => {
-    const el = textareaRef.current;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const markerIdx = snippet.template.indexOf(CURSOR);
-    const template = snippet.template.replace(CURSOR, "");
-    const next = content.slice(0, start) + template + content.slice(end);
-    setContent(next);
-    const cursorAt = start + (markerIdx >= 0 ? markerIdx : template.length);
-    requestAnimationFrame(() => {
-      el.focus();
-      el.setSelectionRange(cursorAt, cursorAt);
+  const insertDsl = (type: string) => {
+    if (!editor) return;
+    const dsl = fieldsToDsl(type, blankFields(type));
+    editor
+      .chain()
+      .focus()
+      .insertContent({ type: `${type}Block`, attrs: { dsl } })
+      .run();
+    setForm({
+      type,
+      dsl,
+      onApply: (next) => {
+        editor.chain().focus().updateAttributes(`${type}Block`, { dsl: next }).run();
+      },
     });
   };
 
-  const modules = Array.from(new Set(materials.map((m) => m.modulo)));
+  const insertDivider = () => {
+    if (!editor) return;
+    editor.chain().focus().insertContent({ type: "dividerBlock", attrs: { dsl: "{{divider}}" } }).run();
+  };
+
+  const insertWidget = (name: string) => {
+    if (!editor) return;
+    editor
+      .chain()
+      .focus()
+      .insertContent({ type: "widgetBlock", attrs: { dsl: `{{widget: ${name}}}` } })
+      .run();
+  };
+
+  const insertHeading = (level: 2 | 3, text?: string) => {
+    if (!editor) return;
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: "heading",
+        attrs: { level },
+        content: text ? [{ type: "text", text }] : [],
+      })
+      .run();
+  };
+
+  const insertSubLesson = () => {
+    if (!editor) return;
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: "text",
+        text: "termo",
+        marks: [{ type: "link", attrs: { href: "#sub-termo" } }],
+      })
+      .run();
+  };
+
+  const insertIcon = () => {
+    if (!editor) return;
+    setForm({
+      type: "icon",
+      dsl: "",
+      onApply: (src) => {
+        editor
+          .chain()
+          .focus()
+          .insertContent({ type: "image", attrs: { src, alt: "" } })
+          .run();
+      },
+    });
+  };
+
+  const insertLink = () => {
+    if (!editor) return;
+    const url = window.prompt("URL do link:");
+    if (!url) return;
+    editor.chain().focus().setLink({ href: url }).run();
+  };
+
+  const draftMap = new Map<string, boolean>(drafts.map((d) => [`${d.mod}:${d.aula}`, true]));
+  const known = new Set(materials.map((m) => `${m.modulo}:${m.aula}`));
+  const items = [
+    ...materials.map((m) => ({
+      mod: m.modulo,
+      aula: m.aula,
+      titulo: m.titulo,
+      isDraft: draftMap.has(`${m.modulo}:${m.aula}`),
+    })),
+    ...drafts
+      .filter((d) => !known.has(`${d.mod}:${d.aula}`))
+      .map((d) => ({
+        mod: d.mod,
+        aula: d.aula,
+        titulo: d.draft.titulo || `Aula ${d.aula}`,
+        isDraft: true,
+      })),
+  ];
+  const modules = Array.from(new Set(items.map((m) => m.mod)));
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-page text-gray-900 dark:text-gray-100">
@@ -193,7 +359,7 @@ export default function EditorPage() {
               disabled={!newMod.trim() || !newAula || !newTitulo.trim()}
               className="w-full text-xs font-bold py-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-40"
             >
-              Criar aula
+              Criar rascunho
             </button>
           </div>
         ) : null}
@@ -203,20 +369,27 @@ export default function EditorPage() {
             <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
               {mod}
             </h2>
-            {materials
-              .filter((m) => m.modulo === mod)
+            {items
+              .filter((m) => m.mod === mod)
               .sort((a, b) => a.aula - b.aula)
               .map((m) => (
                 <button
-                  key={m.aula}
-                  onClick={() => loadLesson(mod, m.aula)}
-                  className={`block w-full text-left text-xs py-1.5 px-2 rounded ${
-                    selected?.mod === mod && selected?.aula === m.aula
+                  key={`${m.mod}:${m.aula}`}
+                  onClick={() => loadLesson(m.mod, m.aula)}
+                  className={`flex items-center justify-between w-full text-left text-xs py-1.5 px-2 rounded ${
+                    selected?.mod === m.mod && selected?.aula === m.aula
                       ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
                       : "hover:bg-gray-100 dark:hover:bg-gray-800"
                   }`}
                 >
-                  {m.aula}. {m.titulo}
+                  <span className="truncate">
+                    {m.aula}. {m.titulo}
+                  </span>
+                  {m.isDraft ? (
+                    <span className="ml-2 shrink-0 text-[9px] font-bold uppercase tracking-wide text-purple-600 dark:text-purple-400">
+                      rascunho
+                    </span>
+                  ) : null}
                 </button>
               ))}
           </div>
@@ -225,6 +398,11 @@ export default function EditorPage() {
 
       <div className="flex-1 flex flex-col min-w-0">
         <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-800">
+          {hasDraft ? (
+            <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+              rascunho
+            </span>
+          ) : null}
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -236,48 +414,128 @@ export default function EditorPage() {
               {savedMsg}
             </span>
           ) : null}
+          {hasDraft ? (
+            <button
+              onClick={handleDiscardDraft}
+              className="text-[10px] font-bold px-3 py-1.5 rounded-lg border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              Descartar
+            </button>
+          ) : null}
           <button
-            onClick={() => selected && handleSave(selected.mod, selected.aula, title, content)}
-            disabled={saving || !selected}
+            onClick={handleSaveDraft}
+            disabled={!selected}
             className="text-xs font-bold px-4 py-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-40"
           >
-            {saving ? "Salvando..." : "Salvar"}
+            Guardar rascunho
           </button>
         </div>
 
         <div className="flex items-center gap-1 px-3 py-1.5 border-b border-gray-200 dark:border-gray-800 overflow-x-auto flex-shrink-0">
-          {Object.entries(SNIPPETS).map(([group, items]) => (
-            <div key={group} className="flex items-center gap-1 mr-3">
-              <span className="text-[9px] font-black uppercase tracking-wider text-gray-400 dark:text-gray-500 mr-1 whitespace-nowrap">
-                {group}
-              </span>
-              {items.map((snippet) => (
-                <button
-                  key={snippet.label}
-                  onClick={() => insertSnippet(snippet)}
-                  title={`Inserir ${snippet.label}`}
-                  className="whitespace-nowrap text-[10px] font-bold px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-purple-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-                >
-                  {snippet.label}
-                </button>
-              ))}
-            </div>
+          <ToolbarBtn onClick={() => editor?.chain().focus().toggleBold().run()} active={editor?.isActive("bold")} title="Negrito">
+            <Bold className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => editor?.chain().focus().toggleItalic().run()} active={editor?.isActive("italic")} title="Itálico">
+            <Italic className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => editor?.chain().focus().toggleHighlight().run()} active={editor?.isActive("highlight")} title="Destacar">
+            <Highlighter className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => insertHeading(2)} active={editor?.isActive("heading", { level: 2 })} title="Título (H2)">
+            <Heading2 className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => insertHeading(3)} active={editor?.isActive("heading", { level: 3 })} title="Subtítulo (H3)">
+            <Heading3 className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => editor?.chain().focus().toggleBulletList().run()} active={editor?.isActive("bulletList")} title="Lista">
+            <List className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => editor?.chain().focus().toggleOrderedList().run()} active={editor?.isActive("orderedList")} title="Lista numerada">
+            <ListOrdered className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => editor?.chain().focus().toggleTaskList().run()} active={editor?.isActive("taskList")} title="Checklist">
+            <CheckSquare className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => editor?.chain().focus().toggleCode().run()} active={editor?.isActive("code")} title="Código inline">
+            <Code className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={insertLink} title="Link">
+            <LinkIcon className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={insertSubLesson} title="Sub-aula">
+            <BookMarked className="w-3 h-3" />
+          </ToolbarBtn>
+          <ToolbarBtn onClick={insertIcon} title="Ícone">
+            <ImageIcon className="w-3 h-3" />
+          </ToolbarBtn>
+
+          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1.5" />
+
+          <ToolbarBtn onClick={() => insertHeading(2, "Teoria — ")} title="Secção de Teoria">
+            Teoria
+          </ToolbarBtn>
+          <ToolbarBtn onClick={() => insertHeading(2, "Prática — ")} title="Secção de Prática">
+            Prática
+          </ToolbarBtn>
+
+          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1.5" />
+
+          {INSERTABLE_TYPES.map((t) => (
+            <ToolbarBtn key={t} onClick={() => insertDsl(t)} title={`Inserir ${t}`}>
+              {t}
+            </ToolbarBtn>
+          ))}
+          <ToolbarBtn onClick={insertDivider} title="Divisor">
+            Divisor
+          </ToolbarBtn>
+
+          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1.5" />
+
+          {WIDGET_NAMES.map((w) => (
+            <ToolbarBtn key={w} onClick={() => insertWidget(w)} title={`Widget ${w}`}>
+              {w}
+            </ToolbarBtn>
           ))}
         </div>
 
-        <div className="flex-1 flex min-h-0">
-          <textarea
-            ref={textareaRef}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="flex-1 p-4 text-xs font-mono bg-transparent border-r border-gray-200 dark:border-gray-800 resize-none outline-none"
-            placeholder='Conteúdo em markdown — usa os botões acima para inserir blocos. Sintaxe completa em docs/sintaxe-markdown.md'
-          />
-          <div className="flex-1 overflow-y-auto">
-            <MarkdownRenderer content={content} />
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-3xl mx-auto px-6">
+            {selected ? (
+              <div className="pt-6 pb-4 border-b border-gray-200 dark:border-gray-800 mb-6">
+                <p className="text-[11px] font-semibold text-faint uppercase tracking-wide mb-1">
+                  {selected.mod} › Aula {selected.aula}
+                </p>
+                <h1 className="text-lg font-black leading-tight text-main">
+                  {title.trim() || "Sem título"}
+                </h1>
+              </div>
+            ) : null}
+            {editor ? (
+              <div className="lesson-material pb-6">
+                <EditorContent editor={editor} />
+              </div>
+            ) : null}
+            {selected ? (
+              <p className="text-[11px] text-faint pb-10">
+                💡 No site, as perguntas, terminais e exercícios aparecem agrupados na secção
+                final de Prática — aqui ficam no sítio onde os escreves.
+              </p>
+            ) : null}
           </div>
         </div>
       </div>
+
+      {form ? (
+        <BlockFormModal
+          type={form.type}
+          dsl={form.dsl}
+          onApply={(dsl) => {
+            form.onApply(dsl);
+            setForm(null);
+          }}
+          onClose={() => setForm(null)}
+        />
+      ) : null}
     </div>
   );
 }

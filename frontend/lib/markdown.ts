@@ -279,36 +279,108 @@ function escapeAttr(s: string): string {
     .replace(/>/g, "&gt;");
 }
 
-/** Serialização HTML de blocos não-markdown (widgets ficam como placeholder). */
-export function blockToHtml(block: Block): string {
+/** Reconstrói o texto DSL original (fence ou tag) a partir de um bloco. */
+export function blockToDsl(block: Block): string {
   switch (block.type) {
     case "widget":
-      return `<div class="md-widget-placeholder">widget: ${block.name}</div>`;
+      return block.query
+        ? `{{widget: ${block.name}?${block.query}}}`
+        : `{{widget: ${block.name}}}`;
     case "image":
-      return `<div class="md-image"><img src="${escapeAttr(block.url)}" alt=""></div>`;
+      return `{{image: ${block.url}}}`;
+    case "video":
+      return `{{${block.youtube ? "youtube" : "video"}: ${block.url}}}`;
     case "alert":
-      return `<div class="md-alert">${block.text}</div>`;
+      return `{{alert: ${block.text}}}`;
     case "divider":
-      return `<hr class="md-divider">`;
+      return "{{divider}}";
+    case "audio":
+      return [
+        "```audio",
+        `url: ${block.url}`,
+        ...(block.title ? [`titulo: ${block.title}`] : []),
+        "```",
+      ].join("\n");
+    case "imagem":
+      return [
+        "```imagem",
+        `url: ${block.url}`,
+        ...(block.titulo ? [`titulo: ${block.titulo}`] : []),
+        ...(block.legenda ? [`legenda: ${block.legenda}`] : []),
+        "```",
+      ].join("\n");
+    case "animacao":
+      return [
+        "```animacao",
+        ...(block.titulo ? [`titulo: ${block.titulo}`] : []),
+        ...block.passos.map((p) => `passo: ${p}`),
+        "```",
+      ].join("\n");
+    case "pergunta":
+    case "terminal":
+      return [
+        `\`\`\`${block.type}`,
+        `pergunta: ${block.pergunta}`,
+        `resposta: ${block.resposta}`,
+        ...(block.dica ? [`dica: ${block.dica}`] : []),
+        ...(block.limite ? [`limite: ${block.limite}`] : []),
+        "```",
+      ].join("\n");
+    case "exercicio":
+      return [
+        "```exercicio",
+        `titulo: ${block.titulo}`,
+        ...(block.instrucoes.length
+          ? ["instrucoes:", ...block.instrucoes]
+          : []),
+        ...(block.arquivo ? [`arquivo: ${block.arquivo}`] : []),
+        ...(block.dica ? [`dica: ${block.dica}`] : []),
+        "inicio:",
+        block.inicio,
+        "esperado:",
+        block.esperado,
+        "```",
+      ].join("\n");
+    case "html":
+      throw new Error("blockToDsl: html blocks não têm DSL");
+  }
+}
+
+/**
+ * Serialização HTML de blocos não-markdown (widgets ficam como placeholder).
+ * Com `includeDsl` embute o texto DSL original num data-dsl (usado só pelo
+ * editor WYSIWYG — no viewer nunca é emitido, para não expor as respostas).
+ */
+export function blockToHtml(block: Block, includeDsl = false): string {
+  const dsl = includeDsl ? ` data-dsl="${escapeAttr(blockToDsl(block))}"` : "";
+  switch (block.type) {
+    case "widget":
+      return `<div class="md-widget-placeholder"${dsl}>widget: ${block.name}</div>`;
+    case "image":
+      return `<div class="md-image"${dsl}><img src="${escapeAttr(block.url)}" alt=""></div>`;
+    case "alert":
+      return `<div class="md-alert"${dsl}>${block.text}</div>`;
+    case "divider":
+      return `<hr class="md-divider"${dsl}>`;
     case "video": {
       const id = youtubeIdFromUrl(block.url);
       if (block.youtube || id) {
-        return `<div class="md-video"><iframe src="https://www.youtube.com/embed/${escapeAttr(id ?? block.url)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        return `<div class="md-video"${dsl}><iframe src="https://www.youtube.com/embed/${escapeAttr(id ?? block.url)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
       }
-      return `<div class="md-video"><video src="${escapeAttr(block.url)}" controls></video></div>`;
+      return `<div class="md-video"${dsl}><video src="${escapeAttr(block.url)}" controls></video></div>`;
     }
     case "audio":
-      return `<div class="md-audio">${block.title ? `<div class="md-media-title">${escapeAttr(block.title)}</div>` : ""}<audio controls preload="metadata" src="${escapeAttr(block.url)}"></audio></div>`;
+      return `<div class="md-audio"${dsl}>${block.title ? `<div class="md-media-title">${escapeAttr(block.title)}</div>` : ""}<audio controls preload="metadata" src="${escapeAttr(block.url)}"></audio></div>`;
     case "imagem":
-      return `<figure class="md-figure">${block.titulo ? `<figcaption class="md-figure-title">${escapeAttr(block.titulo)}</figcaption>` : ""}<img src="${escapeAttr(block.url)}" alt="${escapeAttr(block.titulo ?? "")}">${block.legenda ? `<figcaption class="md-figure-caption">${escapeAttr(block.legenda)}</figcaption>` : ""}</figure>`;
+      return `<figure class="md-figure"${dsl}>${block.titulo ? `<figcaption class="md-figure-title">${escapeAttr(block.titulo)}</figcaption>` : ""}<img src="${escapeAttr(block.url)}" alt="${escapeAttr(block.titulo ?? "")}">${block.legenda ? `<figcaption class="md-figure-caption">${escapeAttr(block.legenda)}</figcaption>` : ""}</figure>`;
     case "animacao":
-      return `<div class="md-animacao">${block.titulo ? `<div class="md-animacao-title">${escapeAttr(block.titulo)}</div>` : ""}<ol>${block.passos.map((p) => `<li>${escapeAttr(p)}</li>`).join("")}</ol></div>`;
+      return `<div class="md-animacao"${dsl}>${block.titulo ? `<div class="md-animacao-title">${escapeAttr(block.titulo)}</div>` : ""}<ol>${block.passos.map((p) => `<li>${escapeAttr(p)}</li>`).join("")}</ol></div>`;
     case "pergunta":
-      return `<div class="md-pergunta">${block.dica ? `<p class="md-pergunta-dica">💡 ${escapeAttr(block.dica)}</p>` : ""}<p class="md-pergunta-enunciado">${escapeAttr(block.pergunta)}</p></div>`;
+      return `<div class="md-pergunta"${dsl}>${block.dica ? `<p class="md-pergunta-dica">💡 ${escapeAttr(block.dica)}</p>` : ""}<p class="md-pergunta-enunciado">${escapeAttr(block.pergunta)}</p></div>`;
     case "terminal":
-      return `<div class="md-terminal">${block.dica ? `<p class="md-terminal-dica">💡 ${escapeAttr(block.dica)}</p>` : ""}<p class="md-terminal-enunciado">${escapeAttr(block.pergunta)}</p></div>`;
+      return `<div class="md-terminal"${dsl}>${block.dica ? `<p class="md-terminal-dica">💡 ${escapeAttr(block.dica)}</p>` : ""}<p class="md-terminal-enunciado">${escapeAttr(block.pergunta)}</p></div>`;
     case "exercicio":
-      return `<div class="md-exercicio"><p class="md-exercicio-titulo">${escapeAttr(block.titulo)}</p>${block.instrucoes.length ? `<ol class="md-exercicio-instrucoes">${block.instrucoes.map((s) => `<li>${escapeAttr(s)}</li>`).join("")}</ol>` : ""}<pre class="md-exercicio-codigo"><code>${escapeAttr(block.inicio)}</code></pre></div>`;
+      return `<div class="md-exercicio"${dsl}><p class="md-exercicio-titulo">${escapeAttr(block.titulo)}</p>${block.instrucoes.length ? `<ol class="md-exercicio-instrucoes">${block.instrucoes.map((s) => `<li>${escapeAttr(s)}</li>`).join("")}</ol>` : ""}<pre class="md-exercicio-codigo"><code>${escapeAttr(block.inicio)}</code></pre></div>`;
     case "html":
       throw new Error("blockToHtml: html blocks são processados via marked");
   }
@@ -370,11 +442,16 @@ function markdownToHtml(md: string): string {
   );
 }
 
-/** Renderiza markdown → HTML sanitizado. Partilhado por viewer e editor. */
-export function renderMarkdown(md: string): string {
+/**
+ * Renderiza markdown → HTML sanitizado. Partilhado por viewer e editor;
+ * `includeDsl` (só editor) embute o texto DSL original nos blocos.
+ */
+export function renderMarkdown(md: string, includeDsl = false): string {
   const { content } = parseFrontmatter(md);
   const html = parseBlocks(content)
-    .map((block) => (block.type === "html" ? markdownToHtml(block.content) : blockToHtml(block)))
+    .map((block) =>
+      block.type === "html" ? markdownToHtml(block.content) : blockToHtml(block, includeDsl)
+    )
     .join("\n");
   return sanitizeHtml(html);
 }

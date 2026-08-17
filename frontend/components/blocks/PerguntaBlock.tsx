@@ -6,7 +6,7 @@ interface Props {
   pergunta: string;
   resposta: string;
   dica?: string;
-  index: number;
+  index?: number;
   onAnswered: () => void;
 }
 
@@ -111,11 +111,11 @@ export default function PerguntaBlock({
         <div className="mt-0.5 shrink-0">
           {done ? (
             <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
-          ) : (
+          ) : index != null ? (
             <span className="w-5 h-5 rounded-full border border-line flex items-center justify-center text-[10px] font-mono text-faint">
               {index}
             </span>
-          )}
+          ) : null}
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-main mb-3 whitespace-pre-line">
