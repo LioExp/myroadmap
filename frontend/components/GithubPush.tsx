@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Github, Loader2, CheckCircle2, AlertTriangle, Eye, EyeOff, ExternalLink, Settings2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { verifyGithubRepo, pushNoteToGithub, type GithubConfig } from "@/lib/github";
@@ -23,6 +23,23 @@ export default function GithubPush({ content, filePath }: { content: string; fil
     setForm((f) => ({ ...f, [key]: value }));
     setStatus({ state: "idle" });
   }
+
+  // Bloqueia scroll e interação do fundo enquanto o modal (mobile) estiver aberto
+  useEffect(() => {
+    if (!showSetup) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (!isMobile) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowSetup(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [showSetup]);
 
   async function handleVerify() {
     if (!form.username.trim() || !form.repo.trim()) {
@@ -210,7 +227,7 @@ export default function GithubPush({ content, filePath }: { content: string; fil
           <div className="fixed inset-0 z-[60] md:hidden">
             <div className="absolute inset-0 bg-black/50" onClick={() => setShowSetup(false)} />
             <div className="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-              <div className="w-full max-w-sm max-h-[80dvh] overflow-y-auto rounded-2xl bg-surface dark:bg-surface-2 border border-line dark:border-line-strong shadow-2xl p-4 flex flex-col gap-2 pointer-events-auto">
+              <div className="w-full max-w-sm max-h-[80dvh] overflow-y-auto overscroll-contain rounded-2xl bg-surface dark:bg-surface-2 border border-line dark:border-line-strong shadow-2xl p-4 flex flex-col gap-2 pointer-events-auto">
                 <div className="flex items-center justify-between flex-shrink-0">
                   <span className="text-[11px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
                     <Github className="w-3.5 h-3.5" />
