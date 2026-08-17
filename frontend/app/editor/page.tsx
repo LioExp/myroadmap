@@ -8,6 +8,7 @@ import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import DragHandle from "@tiptap/extension-drag-handle";
 import type { Material } from "@/types";
 import { renderMarkdown } from "@/lib/markdown";
 import { serializeDoc } from "@/lib/serializeDoc";
@@ -135,6 +136,16 @@ export default function EditorPage() {
       TaskItem.configure({ nested: true }),
       Link.configure({ openOnClick: false }),
       Placeholder.configure({ placeholder: "Escreve a tua aula aqui…" }),
+      DragHandle.configure({
+        render() {
+          const el = document.createElement("div");
+          el.className = "editor-drag-handle";
+          el.title = "Arrastar para mover";
+          el.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="5" r="1.6"/><circle cx="15" cy="5" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="19" r="1.6"/><circle cx="15" cy="19" r="1.6"/></svg>';
+          return el;
+        },
+      }),
       ...createDslNodes(() => onEditRef.current),
     ],
     content: "",

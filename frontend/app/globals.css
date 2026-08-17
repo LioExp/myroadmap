@@ -553,6 +553,24 @@
 .tiptap-wrapper .ProseMirror pre { background: rgb(var(--c-surface-2)); color: rgb(var(--c-strong)); padding: 10px 12px; border-radius: 8px; font-size: 11px; overflow-x: auto; }
 .tiptap-wrapper .ProseMirror blockquote { border-left: 3px solid rgb(var(--c-line)); padding-left: 10px; color: rgb(var(--c-muted)); margin: 8px 0; }
 
+/* ── Drag handle do editor (reordenar blocos) ── */
+.editor-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgb(var(--c-surface));
+  border: 1px solid rgb(var(--c-line));
+  color: rgb(var(--c-muted));
+  cursor: grab;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+.editor-drag-handle:hover { color: rgb(var(--c-main)); border-color: rgb(var(--c-strong)); }
+.editor-drag-handle:active { cursor: grabbing; }
+.dark .editor-drag-handle:hover { color: #fff; }
+
 /* ── Timeline pulse animation ── */
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
