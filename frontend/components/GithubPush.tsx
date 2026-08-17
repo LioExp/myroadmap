@@ -36,6 +36,13 @@ export default function GithubPush({ content, filePath }: { content: string; fil
       setStatus({ state: "error", message: "Preenche o username e o nome do repo." });
       return;
     }
+    if (form.pat && !form.pat.startsWith("github_pat_")) {
+      setStatus({
+        state: "error",
+        message: "Só aceitamos PAT fine-grained (começa por github_pat_). Tokens classic (ghp_) dão acesso à conta toda — não os uses aqui.",
+      });
+      return;
+    }
     setStatus({ state: "working", label: "A verificar repo..." });
     try {
       const result = await verifyGithubRepo(form);
@@ -67,6 +74,14 @@ export default function GithubPush({ content, filePath }: { content: string; fil
     if (!config.pat) {
       setShowSetup(true);
       setStatus({ state: "error", message: "Falta o PAT — cola o token para fazer push." });
+      return;
+    }
+    if (!config.pat.startsWith("github_pat_")) {
+      setShowSetup(true);
+      setStatus({
+        state: "error",
+        message: "Só aceitamos PAT fine-grained (começa por github_pat_). Tokens classic (ghp_) dão acesso à conta toda — não os uses aqui.",
+      });
       return;
     }
     setStatus({ state: "working", label: "A fazer push..." });
