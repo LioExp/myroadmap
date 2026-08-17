@@ -12,11 +12,15 @@ export const createSelectionSlice: StateCreator<
   selectedLessonId: null,
 
   selectTopic: (id) =>
-    set((s) => ({
-      selectedTopicId: s.selectedTopicId === id ? null : id,
-      selectedLessonId: null,
-      ...(s.practiceOpen ? { practiceOpen: false } : {}),
-    })),
+    set((s) => {
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+      return {
+        selectedTopicId: s.selectedTopicId === id ? null : id,
+        selectedLessonId: null,
+        ...(s.practiceOpen ? { practiceOpen: false } : {}),
+        ...(isMobile ? { mobileView: "content" } : {}),
+      };
+    }),
 
   selectLesson: (id) => {
     const state = get();
