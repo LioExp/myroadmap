@@ -56,7 +56,10 @@ export async function verifyGithubRepo(cfg: GithubConfig): Promise<VerifyResult>
     };
   }
   if (res.status === 401) throw new Error("Token inválido ou expirado.");
-  if (res.status === 403) throw new Error("Sem permissão — o token precisa de acesso ao repo.");
+  if (res.status === 403)
+    throw new Error(
+      "Sem permissão — verifica no token: Repository access = Only select repositories → escolhe o teu repo, e Contents = Read and write."
+    );
   if (res.status === 404) {
     return {
       exists: false,
@@ -103,7 +106,10 @@ export async function pushNoteToGithub(
     return { url: data.content?.html_url ?? "", updated: !!sha };
   }
   if (put.status === 401) throw new Error("Token inválido ou expirado.");
-  if (put.status === 403) throw new Error("Sem permissão — o token precisa de Contents: Read/Write.");
+  if (put.status === 403)
+    throw new Error(
+      "O token lê mas não escreve. No token (github.com/settings/personal-access-tokens): Repository access = Only select repositories → escolhe o repo; Contents = Read and write. Se criaste o token antes do repo, edita o token e adiciona o repo."
+    );
   if (put.status === 404) throw new Error("Repo não encontrado — confirma o nome e se o token tem acesso.");
   const err = await put.json().catch(() => null);
   throw new Error(err?.message ?? `Erro no push (${put.status}).`);

@@ -175,6 +175,20 @@ export default function GithubPush({ content, filePath }: { content: string; fil
             <span className="text-[9px] text-faint leading-snug">
               Permissão <b>Contents: Read/Write</b> num único repo. Fica só no teu browser.
             </span>
+            <details className="text-[9px] text-faint leading-relaxed mt-0.5">
+              <summary className="cursor-pointer hover:text-main underline decoration-dotted underline-offset-2">
+                Como criar o PAT certo
+              </summary>
+              <ol className="list-decimal pl-4 mt-1 space-y-0.5">
+                <li>Repository access → <b>Only select repositories</b> → escolhe {form.repo || "o teu repo"}</li>
+                <li>Permissions → <b>Contents</b> → <b>Read and write</b></li>
+                <li>Expiration → 90 dias (máx. 1 ano)</li>
+                <li>Gera e cola o token (começa por <b>github_pat_</b>)</li>
+              </ol>
+              <p className="mt-1">
+                Se criaste o token antes de o repo existir, <b>edita o token</b> e adiciona o repo em Repository access.
+              </p>
+            </details>
           </label>
           <button
             onClick={handleVerify}
