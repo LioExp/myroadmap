@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Github, Loader2, CheckCircle2, AlertTriangle, Eye, EyeOff, ExternalLink, Settings2 } from "lucide-react";
+import { Github, Loader2, CheckCircle2, AlertTriangle, Eye, EyeOff, ExternalLink, Settings2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { verifyGithubRepo, pushNoteToGithub, type GithubConfig } from "@/lib/github";
 
@@ -14,7 +14,7 @@ const PAT_HELP_URL = "https://github.com/settings/personal-access-tokens/new";
 
 export default function GithubPush({ content, filePath }: { content: string; filePath: string }) {
   const [config, setConfig] = useState<GithubConfig | null>(null);
-  const [showSetup, setShowSetup] = useState(true);
+  const [showSetup, setShowSetup] = useState(false);
   const [form, setForm] = useState<GithubConfig>({ username: "", repo: "roadmap-notas", pat: "" });
   const [showPat, setShowPat] = useState(false);
   const [status, setStatus] = useState<PushStatus>({ state: "idle" });
@@ -98,6 +98,91 @@ export default function GithubPush({ content, filePath }: { content: string; fil
 
   const busy = status.state === "working";
 
+  const formFields = (
+    <>
+      <label className="flex flex-col gap-0.5">
+        <span className="text-[10px] font-black uppercase tracking-wide text-faint">Username GitHub</span>
+        <input
+          value={form.username}
+          onChange={(e) => updateField("username", e.target.value)}
+          placeholder="ex: lioexp"
+          className="rounded-lg bg-surface border border-line px-2.5 py-1.5 text-xs outline-none focus:border-purple-500 transition-colors"
+        />
+      </label>
+      <label className="flex flex-col gap-0.5">
+        <span className="text-[10px] font-black uppercase tracking-wide text-faint">Nome do repo</span>
+        <input
+          value={form.repo}
+          onChange={(e) => updateField("repo", e.target.value)}
+          placeholder="ex: roadmap-notas"
+          className="rounded-lg bg-surface border border-line px-2.5 py-1.5 text-xs outline-none focus:border-purple-500 transition-colors"
+        />
+      </label>
+      <label className="flex flex-col gap-0.5">
+        <span className="text-[10px] font-black uppercase tracking-wide text-faint">
+          PAT (fine-grained){" "}
+          <a
+            href={PAT_HELP_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="text-purple-600 dark:text-purple-400 underline decoration-dotted underline-offset-2"
+          >
+            criar
+          </a>
+        </span>
+        <div className="relative">
+          <input
+            type={showPat ? "text" : "password"}
+            value={form.pat}
+            onChange={(e) => updateField("pat", e.target.value)}
+            placeholder="github_pat_..."
+            className="w-full rounded-lg bg-surface border border-line px-2.5 py-1.5 pr-8 text-xs outline-none focus:border-purple-500 transition-colors"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPat((v) => !v)}
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-faint hover:text-main cursor-pointer"
+            title={showPat ? "Ocultar" : "Mostrar"}
+          >
+            {showPat ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+          </button>
+        </div>
+        <span className="text-[9px] text-faint leading-snug">
+          Permissão <b>Contents: Read/Write</b> num único repo. O site não guarda nada — o token fica só na memória desta sessão e desaparece ao fechar a página.
+        </span>
+        <details className="text-[9px] text-faint leading-relaxed mt-0.5">
+          <summary className="cursor-pointer hover:text-main underline decoration-dotted underline-offset-2">
+            Como criar o PAT certo
+          </summary>
+          <ol className="list-decimal pl-4 mt-1 space-y-0.5">
+            <li>Repository access → <b>Only select repositories</b> → escolhe {form.repo || "o teu repo"}</li>
+            <li>Permissions → <b>Contents</b> → <b>Read and write</b></li>
+            <li>Expiration → 90 dias (máx. 1 ano)</li>
+            <li>Gera e cola o token (começa por <b>github_pat_</b>)</li>
+          </ol>
+          <p className="mt-1">
+            Se criaste o token antes de o repo existir, <b>edita o token</b> e adiciona o repo em Repository access.
+          </p>
+        </details>
+      </label>
+      <button
+        onClick={handleVerify}
+        disabled={busy}
+        className="w-full rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2 cursor-pointer transition-colors disabled:opacity-60"
+      >
+        {busy ? "A verificar..." : "Verificar repo"}
+      </button>
+      {config && (
+        <button
+          onClick={handleReset}
+          className="text-[10px] text-faint hover:text-main underline decoration-dotted underline-offset-2 cursor-pointer bg-transparent border-none"
+        >
+          Trocar de conta / repo
+        </button>
+      )}
+    </>
+  );
+
   return (
     <div className="flex-shrink-0 flex flex-col gap-1.5">
       <button
@@ -115,88 +200,32 @@ export default function GithubPush({ content, filePath }: { content: string; fil
       </button>
 
       {showSetup && (
-        <div className="rounded-xl border border-line bg-surface-2/60 p-3 flex flex-col gap-2">
-          <label className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-black uppercase tracking-wide text-faint">Username GitHub</span>
-            <input
-              value={form.username}
-              onChange={(e) => updateField("username", e.target.value)}
-              placeholder="ex: lioexp"
-              className="rounded-lg bg-surface border border-line px-2.5 py-1.5 text-xs outline-none focus:border-purple-500 transition-colors"
-            />
-          </label>
-          <label className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-black uppercase tracking-wide text-faint">Nome do repo</span>
-            <input
-              value={form.repo}
-              onChange={(e) => updateField("repo", e.target.value)}
-              placeholder="ex: roadmap-notas"
-              className="rounded-lg bg-surface border border-line px-2.5 py-1.5 text-xs outline-none focus:border-purple-500 transition-colors"
-            />
-          </label>
-          <label className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-black uppercase tracking-wide text-faint">
-              PAT (fine-grained){" "}
-              <a
-                href={PAT_HELP_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="text-purple-600 dark:text-purple-400 underline decoration-dotted underline-offset-2"
-              >
-                criar
-              </a>
-            </span>
-            <div className="relative">
-              <input
-                type={showPat ? "text" : "password"}
-                value={form.pat}
-                onChange={(e) => updateField("pat", e.target.value)}
-                placeholder="github_pat_..."
-                className="w-full rounded-lg bg-surface border border-line px-2.5 py-1.5 pr-8 text-xs outline-none focus:border-purple-500 transition-colors"
-              />
+        <>
+          {/* Desktop: inline card */}
+          <div className="hidden md:flex rounded-xl border border-line bg-surface-2/60 p-3 flex-col gap-2">
+            {formFields}
+          </div>
+
+          {/* Mobile: full-screen sheet */}
+          <div className="fixed inset-0 z-[60] md:hidden bg-surface dark:bg-surface-2 flex flex-col">
+            <div className="h-12 flex-shrink-0 flex items-center justify-between px-4 border-b border-line dark:border-line-strong">
+              <span className="text-[11px] font-black uppercase tracking-widest text-faint flex items-center gap-1.5">
+                <Github className="w-3.5 h-3.5" />
+                Ligar conta GitHub
+              </span>
               <button
-                type="button"
-                onClick={() => setShowPat((v) => !v)}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 text-faint hover:text-main cursor-pointer"
-                title={showPat ? "Ocultar" : "Mostrar"}
+                onClick={() => setShowSetup(false)}
+                title="Fechar"
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-faint hover:text-main dark:hover:text-white hover:bg-surface-2 cursor-pointer transition-colors"
               >
-                {showPat ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                <X className="w-4 h-4" />
               </button>
             </div>
-            <span className="text-[9px] text-faint leading-snug">
-              Permissão <b>Contents: Read/Write</b> num único repo. O site não guarda nada — o token fica só na memória desta sessão e desaparece ao fechar a página.
-            </span>
-            <details className="text-[9px] text-faint leading-relaxed mt-0.5">
-              <summary className="cursor-pointer hover:text-main underline decoration-dotted underline-offset-2">
-                Como criar o PAT certo
-              </summary>
-              <ol className="list-decimal pl-4 mt-1 space-y-0.5">
-                <li>Repository access → <b>Only select repositories</b> → escolhe {form.repo || "o teu repo"}</li>
-                <li>Permissions → <b>Contents</b> → <b>Read and write</b></li>
-                <li>Expiration → 90 dias (máx. 1 ano)</li>
-                <li>Gera e cola o token (começa por <b>github_pat_</b>)</li>
-              </ol>
-              <p className="mt-1">
-                Se criaste o token antes de o repo existir, <b>edita o token</b> e adiciona o repo em Repository access.
-              </p>
-            </details>
-          </label>
-          <button
-            onClick={handleVerify}
-            disabled={busy}
-            className="w-full rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2 cursor-pointer transition-colors disabled:opacity-60"
-          >
-            {busy ? "A verificar..." : "Verificar repo"}
-          </button>
-          {config && (
-            <button
-              onClick={handleReset}
-              className="text-[10px] text-faint hover:text-main underline decoration-dotted underline-offset-2 cursor-pointer bg-transparent border-none"
-            >
-              Trocar de conta / repo
-            </button>
-          )}
-        </div>
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 pb-24 flex flex-col gap-2">
+              {formFields}
+            </div>
+          </div>
+        </>
       )}
 
       {config && !showSetup && (
