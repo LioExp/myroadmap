@@ -2,14 +2,7 @@
 import { useState } from "react";
 import { Github, Loader2, CheckCircle2, AlertTriangle, Eye, EyeOff, ExternalLink, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  loadGithubConfig,
-  saveGithubConfig,
-  clearGithubConfig,
-  verifyGithubRepo,
-  pushNoteToGithub,
-  type GithubConfig,
-} from "@/lib/github";
+import { verifyGithubRepo, pushNoteToGithub, type GithubConfig } from "@/lib/github";
 
 type PushStatus =
   | { state: "idle" }
@@ -20,9 +13,9 @@ type PushStatus =
 const PAT_HELP_URL = "https://github.com/settings/personal-access-tokens/new";
 
 export default function GithubPush({ content, filePath }: { content: string; filePath: string }) {
-  const [config, setConfig] = useState<GithubConfig | null>(() => loadGithubConfig());
-  const [showSetup, setShowSetup] = useState(!config);
-  const [form, setForm] = useState<GithubConfig>(() => config ?? { username: "", repo: "roadmap-notas", pat: "" });
+  const [config, setConfig] = useState<GithubConfig | null>(null);
+  const [showSetup, setShowSetup] = useState(true);
+  const [form, setForm] = useState<GithubConfig>({ username: "", repo: "roadmap-notas", pat: "" });
   const [showPat, setShowPat] = useState(false);
   const [status, setStatus] = useState<PushStatus>({ state: "idle" });
 
@@ -47,7 +40,6 @@ export default function GithubPush({ content, filePath }: { content: string; fil
     try {
       const result = await verifyGithubRepo(form);
       if (result.exists) {
-        saveGithubConfig(form);
         setConfig(form);
         setShowSetup(false);
         setStatus({
@@ -98,7 +90,6 @@ export default function GithubPush({ content, filePath }: { content: string; fil
   }
 
   function handleReset() {
-    clearGithubConfig();
     setConfig(null);
     setForm({ username: "", repo: "roadmap-notas", pat: "" });
     setShowSetup(true);
@@ -173,7 +164,7 @@ export default function GithubPush({ content, filePath }: { content: string; fil
               </button>
             </div>
             <span className="text-[9px] text-faint leading-snug">
-              Permissão <b>Contents: Read/Write</b> num único repo. Fica só no teu browser.
+              Permissão <b>Contents: Read/Write</b> num único repo. O site não guarda nada — o token fica só na memória desta sessão e desaparece ao fechar a página.
             </span>
             <details className="text-[9px] text-faint leading-relaxed mt-0.5">
               <summary className="cursor-pointer hover:text-main underline decoration-dotted underline-offset-2">
