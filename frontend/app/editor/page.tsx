@@ -29,7 +29,7 @@ import {
   Link as LinkIcon,
   BookMarked,
   Image as ImageIcon,
-  Pencil,
+  Menu,
 } from "lucide-react";
 
 const DRAFT_PREFIX = "myroadmap-draft:";
@@ -122,6 +122,7 @@ export default function EditorPage() {
   const [newAula, setNewAula] = useState("");
   const [newTitulo, setNewTitulo] = useState("");
   const [form, setForm] = useState<FormState | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const mdRef = useRef<string | null>(null);
   const onEditRef = useRef<DslEditHandler | null>(null);
 
@@ -163,6 +164,7 @@ export default function EditorPage() {
 
   const loadLesson = async (mod: string, aula: number) => {
     setSelected({ mod, aula });
+    setSidebarOpen(false);
     const draft = readDraft(mod, aula);
     if (draft) {
       setTitle(draft.titulo);
@@ -315,7 +317,11 @@ export default function EditorPage() {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-page text-gray-900 dark:text-gray-100">
-      <aside className="w-64 border-r border-gray-200 dark:border-gray-800 p-4 overflow-y-auto flex-shrink-0">
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-64 max-w-[80vw] border-r border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-page p-4 overflow-y-auto flex-shrink-0 transition-transform duration-200 md:static md:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-lg font-extrabold">Editor</h1>
           <button
@@ -396,8 +402,23 @@ export default function EditorPage() {
         ))}
       </aside>
 
+      {sidebarOpen ? (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      ) : null}
+
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex flex-wrap items-center gap-2 p-2.5 md:p-3 border-b border-gray-200 dark:border-gray-800">
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            title="Aulas"
+            className="md:hidden w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+          >
+            <Menu className="w-4 h-4" />
+          </button>
           {hasDraft ? (
             <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
               rascunho
@@ -406,7 +427,7 @@ export default function EditorPage() {
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="flex-1 text-sm font-bold bg-transparent border-none outline-none"
+            className="flex-1 min-w-[120px] text-sm font-bold bg-transparent border-none outline-none"
             placeholder="Título da aula"
           />
           {savedMsg ? (
@@ -499,9 +520,9 @@ export default function EditorPage() {
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-3xl mx-auto px-6">
+          <div className="max-w-3xl mx-auto px-4 md:px-6">
             {selected ? (
-              <div className="pt-6 pb-4 border-b border-gray-200 dark:border-gray-800 mb-6">
+              <div className="pt-5 md:pt-6 pb-4 border-b border-gray-200 dark:border-gray-800 mb-5 md:mb-6">
                 <p className="text-[11px] font-semibold text-faint uppercase tracking-wide mb-1">
                   {selected.mod} › Aula {selected.aula}
                 </p>
