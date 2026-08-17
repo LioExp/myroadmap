@@ -14,6 +14,14 @@ import { sanitizeHtml } from "./sanitize";
  * - {{alert: texto}}
  * - {{divider}}
  *
+ * Code-fences especiais (conteúdo `chave: valor`, uma por linha):
+ * - ```pergunta  → pergunta interativa (resposta em tiles, dica, limite)
+ * - ```terminal  → pergunta estilo terminal (resposta curta digitada)
+ * - ```exercicio → exercício de código (editor com inicio/esperado)
+ * - ```audio     → player de áudio (url, titulo)
+ * - ```imagem    → figura com titulo/legenda (url, titulo, legenda)
+ * - ```animacao  → passos que se revelam em sequência (titulo, passo*)
+ *
  * Inline (convertidos antes do marked):
  * - {{icon: nome}}           → <img class="inline-icon">
  * - `**Teoria — X**` / `**Prática — X**` → <h2>
@@ -30,22 +38,207 @@ export type Block =
   | { type: "image"; url: string }
   | { type: "video"; url: string; youtube: boolean }
   | { type: "alert"; text: string }
-  | { type: "divider" };
+  | { type: "divider" }
+  | { type: "audio"; url: string; title?: string }
+  | { type: "imagem"; url: string; titulo?: string; legenda?: string }
+  | { type: "animacao"; titulo?: string; passos: string[] }
+  | {
+      type: "pergunta";
+      pergunta: string;
+      resposta: string;
+      dica?: string;
+      limite?: number;
+    }
+  | {
+      type: "terminal";
+      pergunta: string;
+      resposta: string;
+      dica?: string;
+      limite?: number;
+    }
+  | {
+      type: "exercicio";
+      titulo: string;
+      instrucoes: string[];
+      arquivo?: string;
+      dica?: string;
+      inicio: string;
+      esperado: string;
+    };
 
 const BLOCK_TAG_RE =
   /\{\{(widget|image|video|youtube|alert|divider)(?::\s*([^}]+))?\}\}/g;
 
+/** Code-fences com linguagem especial (sintaxe da referência Duolingo). */
+const FENCE_RE = /```(pergunta|terminal|exercicio|audio|imagem|animacao)\s*\n([\s\S]*?)```/g;
+
+const FIRST_VALUE_RE = /^([a-zA-Z\u00e0-\u00ff]+):\s*(.*)$/;
+
+/** Parseia o corpo `chave: valor` de um code-fence especial; null se inválido. */
+export function parseFenceBlock(lang: string, body: string): Block | null {
+  const fields = new Map<string, string[]>();
+  for (const line of body.split("\n")) {
+    const m = line.match(FIRST_VALUE_RE);
+    if (!m) continue;
+    const list = fields.get(m[1]) ?? [];
+    list.push(m[2]);
+    fields.set(m[1], list);
+  }
+  const first = (key: string) => fields.get(key)?.[0]?.trim() ?? "";
+  const optional = (key: string) => {
+    const v = first(key);
+    return v ? v : undefined;
+  };
+  switch (lang) {
+    case "audio": {
+      const url = first("url");
+      if (!url) return null;
+      return { type: "audio", url, ...(optional("titulo") ? { title: optional("titulo") } : {}) };
+    }
+    case "imagem": {
+      const url = first("url");
+      if (!url) return null;
+      return {
+        type: "imagem",
+        url,
+        ...(optional("titulo") ? { titulo: optional("titulo") } : {}),
+        ...(optional("legenda") ? { legenda: optional("legenda") } : {}),
+      };
+    }
+    case "animacao": {
+      const passos = (fields.get("passo") ?? [])
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (passos.length === 0) return null;
+      return {
+        type: "animacao",
+        ...(optional("titulo") ? { titulo: optional("titulo") } : {}),
+        passos,
+      };
+    }
+    case "pergunta": {
+      const pergunta = first("pergunta");
+      const resposta = first("resposta");
+      if (!pergunta || !resposta) return null;
+      const limiteRaw = first("limite");
+      const limite = limiteRaw ? Number(limiteRaw) : undefined;
+      return {
+        type: "pergunta",
+        pergunta,
+        resposta,
+        ...(optional("dica") ? { dica: optional("dica") } : {}),
+        ...(limite && Number.isFinite(limite) ? { limite } : {}),
+      };
+    }
+    case "terminal": {
+      const pergunta = first("pergunta");
+      const resposta = first("resposta");
+      if (!pergunta || !resposta) return null;
+      const limiteRaw = first("limite");
+      const limite = limiteRaw ? Number(limiteRaw) : undefined;
+      return {
+        type: "terminal",
+        pergunta,
+        resposta,
+        ...(optional("dica") ? { dica: optional("dica") } : {}),
+        ...(limite && Number.isFinite(limite) ? { limite } : {}),
+      };
+    }
+    case "exercicio": {
+      const instrucoes: string[] = [];
+      let titulo = "";
+      let arquivo: string | undefined;
+      let dica: string | undefined;
+      let mode: "keys" | "instrucoes" | "inicio" | "esperado" = "keys";
+      const inicioLines: string[] = [];
+      const esperadoLines: string[] = [];
+      for (const line of body.split("\n")) {
+        if (mode === "inicio") {
+          if (/^esperado:\s*$/.test(line)) {
+            mode = "esperado";
+            continue;
+          }
+          inicioLines.push(line);
+          continue;
+        }
+        if (mode === "esperado") {
+          esperadoLines.push(line);
+          continue;
+        }
+        const m = line.match(FIRST_VALUE_RE);
+        if (mode === "instrucoes") {
+          if (m) {
+            mode = "keys";
+          } else {
+            const step = line.trim();
+            if (step) instrucoes.push(step);
+            continue;
+          }
+        }
+        if (m) {
+          const key = m[1];
+          const value = m[2].trim();
+          if (key === "titulo") titulo = value;
+          else if (key === "arquivo") arquivo = value;
+          else if (key === "dica") dica = value;
+          else if (key === "instrucoes") mode = "instrucoes";
+          else if (key === "inicio") mode = "inicio";
+          else if (key === "esperado") mode = "esperado";
+        }
+      }
+      const inicio = inicioLines.join("\n").trim();
+      const esperado = esperadoLines.join("\n").trim();
+      if (!titulo || !inicio || !esperado) return null;
+      return {
+        type: "exercicio",
+        titulo,
+        instrucoes,
+        ...(arquivo ? { arquivo } : {}),
+        ...(dica ? { dica } : {}),
+        inicio,
+        esperado,
+      };
+    }
+    default:
+      return null;
+  }
+}
+
 /** Tokeniza o markdown em blocos; tags inline (ex: {{icon:}})) ficam no texto. */
 export function parseBlocks(content: string): Block[] {
+  const fenceBlocks: Block[] = [];
+  const masked = content.replace(FENCE_RE, (full, lang: string, body: string) => {
+    const block = parseFenceBlock(lang, body);
+    if (!block) return full;
+    fenceBlocks.push(block);
+    return `\u0000F${fenceBlocks.length - 1}\u0000`;
+  });
+
   const blocks: Block[] = [];
+  const pushHtmlText = (text: string) => {
+    let pos = 0;
+    const phRe = /\u0000F(\d+)\u0000/g;
+    let ph: RegExpExecArray | null;
+    while ((ph = phRe.exec(text)) !== null) {
+      if (ph.index > pos) {
+        blocks.push({ type: "html", content: text.slice(pos, ph.index) });
+      }
+      blocks.push(fenceBlocks[Number(ph[1])]);
+      pos = ph.index + ph[0].length;
+    }
+    if (pos < text.length) {
+      blocks.push({ type: "html", content: text.slice(pos) });
+    }
+  };
+
   let last = 0;
   const re = new RegExp(BLOCK_TAG_RE.source, "g");
   let match: RegExpExecArray | null;
 
-  while ((match = re.exec(content)) !== null) {
+  while ((match = re.exec(masked)) !== null) {
     const index = match.index;
     if (index > last) {
-      blocks.push({ type: "html", content: content.slice(last, index) });
+      pushHtmlText(masked.slice(last, index));
     }
     const tag = match[1];
     const raw = (match[2] ?? "").trim();
@@ -68,8 +261,8 @@ export function parseBlocks(content: string): Block[] {
     last = index + match[0].length;
   }
 
-  if (last < content.length) {
-    blocks.push({ type: "html", content: content.slice(last) });
+  if (last < masked.length) {
+    pushHtmlText(masked.slice(last));
   }
   return blocks.filter((b) => b.type !== "html" || b.content.trim().length > 0);
 }
@@ -104,6 +297,18 @@ export function blockToHtml(block: Block): string {
       }
       return `<div class="md-video"><video src="${escapeAttr(block.url)}" controls></video></div>`;
     }
+    case "audio":
+      return `<div class="md-audio">${block.title ? `<div class="md-media-title">${escapeAttr(block.title)}</div>` : ""}<audio controls preload="metadata" src="${escapeAttr(block.url)}"></audio></div>`;
+    case "imagem":
+      return `<figure class="md-figure">${block.titulo ? `<figcaption class="md-figure-title">${escapeAttr(block.titulo)}</figcaption>` : ""}<img src="${escapeAttr(block.url)}" alt="${escapeAttr(block.titulo ?? "")}">${block.legenda ? `<figcaption class="md-figure-caption">${escapeAttr(block.legenda)}</figcaption>` : ""}</figure>`;
+    case "animacao":
+      return `<div class="md-animacao">${block.titulo ? `<div class="md-animacao-title">${escapeAttr(block.titulo)}</div>` : ""}<ol>${block.passos.map((p) => `<li>${escapeAttr(p)}</li>`).join("")}</ol></div>`;
+    case "pergunta":
+      return `<div class="md-pergunta">${block.dica ? `<p class="md-pergunta-dica">💡 ${escapeAttr(block.dica)}</p>` : ""}<p class="md-pergunta-enunciado">${escapeAttr(block.pergunta)}</p></div>`;
+    case "terminal":
+      return `<div class="md-terminal">${block.dica ? `<p class="md-terminal-dica">💡 ${escapeAttr(block.dica)}</p>` : ""}<p class="md-terminal-enunciado">${escapeAttr(block.pergunta)}</p></div>`;
+    case "exercicio":
+      return `<div class="md-exercicio"><p class="md-exercicio-titulo">${escapeAttr(block.titulo)}</p>${block.instrucoes.length ? `<ol class="md-exercicio-instrucoes">${block.instrucoes.map((s) => `<li>${escapeAttr(s)}</li>`).join("")}</ol>` : ""}<pre class="md-exercicio-codigo"><code>${escapeAttr(block.inicio)}</code></pre></div>`;
     case "html":
       throw new Error("blockToHtml: html blocks são processados via marked");
   }

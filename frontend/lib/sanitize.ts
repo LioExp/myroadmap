@@ -23,7 +23,7 @@ const ALLOWED_TAGS = [
   "table", "thead", "tbody", "tfoot", "tr", "th", "td", "caption",
   "col", "colgroup",
   // Media
-  "img", "iframe", "video", "source",
+  "img", "iframe", "video", "audio", "source",
 ];
 
 const ALLOWED_ATTRS: Record<string, string[]> = {
@@ -41,6 +41,7 @@ const ALLOWED_ATTRS: Record<string, string[]> = {
     "loading",
   ],
   video: ["src", "controls", "poster", "width", "height"],
+  audio: ["src", "controls", "preload", "loop"],
   source: ["src", "type"],
   th: ["colspan", "rowspan", "scope"],
   td: ["colspan", "rowspan"],

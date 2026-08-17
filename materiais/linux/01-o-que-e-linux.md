@@ -4,6 +4,7 @@ aula: 1
 titulo: O que é Linux — Distribuições, kernel e shell
 ---
 
+
 ### Bloco 1
 
 ## Teoria — O que é um Sistema Operacional e onde o Linux se encaixa
@@ -126,3 +127,49 @@ Fora dos data centers, o Linux também está no dia a dia através da IoT — Ra
 **Prática — Obter os arquivos do curso**
 
 Fechando o ciclo — agora com VirtualBox, Git, Ansible e Vagrant instalados, o ambiente está pronto para usar tudo isso nos próximos tópicos do roadmap.
+
+
+
+```pergunta
+pergunta: Tecnicamente, o que é o Linux?
+resposta: kernel
+dica: É o núcleo que fala diretamente com o hardware.
+limite: 32
+```
+
+```pergunta
+pergunta: Quem criou o kernel Linux em 1991?
+resposta: linus torvalds
+dica: É um estudante finlandês.
+limite: 32
+```
+
+```pergunta
+pergunta: Qual componente interpreta os comandos que digitas no terminal?
+resposta: shell
+dica: É a "casca" que fala com o kernel.
+limite: 32
+```
+
+```pergunta
+pergunta: Qual distro é uma "caixa de ferramentas" de segurança baseada no Debian?
+resposta: kali linux
+dica: Não é para uso diário — é para profissionais de segurança.
+limite: 32
+```
+
+```pergunta
+pergunta: Na filosofia Unix, em que pasta os dispositivos são representados como arquivos?
+resposta: /dev /home/user
+dica: Fica na raiz do sistema.
+limite: 16
+```
+
+```pergunta
+pergunta: Cerca de que percentagem da internet roda sobre Linux?
+resposta: 90% 10% 40% 35% 15%
+dica: Quase tudo — de Google a AWS.
+limite: 8
+```
+
+

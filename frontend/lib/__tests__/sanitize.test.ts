@@ -60,4 +60,20 @@ describe("sanitizeHtml", () => {
     expect(html).toContain("<table>");
     expect(html).toContain("<th>A</th>");
   });
+
+  it("mantém <audio> com atributos de player", () => {
+    const html = sanitizeHtml(
+      '<audio controls preload="metadata" src="https://ex.org/a.mp3"></audio>'
+    );
+    expect(html).toContain("<audio");
+    expect(html).toContain('controls preload="metadata" src="https://ex.org/a.mp3"');
+  });
+
+  it("remove on* e script dentro de <audio>", () => {
+    const html = sanitizeHtml(
+      '<audio controls src="https://ex.org/a.mp3" onclick="x()"><script>x</script></audio>'
+    );
+    expect(html).not.toContain("onclick");
+    expect(html).not.toContain("<script");
+  });
 });

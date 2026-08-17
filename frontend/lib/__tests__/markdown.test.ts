@@ -100,6 +100,192 @@ describe("blockToHtml", () => {
   });
 });
 
+describe("parseBlocks — code-fences especiais", () => {
+  it("```pergunta completo → bloco pergunta", () => {
+    expect(
+      parseBlocks(
+        "```pergunta\npergunta: Qual é o kernel?\nresposta: linux\ndica: é o kernel\nlimite: 32\n```"
+      )
+    ).toEqual([
+      {
+        type: "pergunta",
+        pergunta: "Qual é o kernel?",
+        resposta: "linux",
+        dica: "é o kernel",
+        limite: 32,
+      },
+    ]);
+  });
+
+  it("```pergunta sem resposta → fica como texto", () => {
+    expect(parseBlocks("```pergunta\npergunta: X\n```")).toEqual([
+      { type: "html", content: "```pergunta\npergunta: X\n```" },
+    ]);
+  });
+
+  it("```animacao com passos repetidos", () => {
+    expect(
+      parseBlocks("```animacao\ntitulo: Como criar\npasso: Um\npasso: Dois\n```")
+    ).toEqual([
+      { type: "animacao", titulo: "Como criar", passos: ["Um", "Dois"] },
+    ]);
+  });
+
+  it("```animacao sem passos → fica como texto", () => {
+    expect(parseBlocks("```animacao\ntitulo: X\n```")).toEqual([
+      { type: "html", content: "```animacao\ntitulo: X\n```" },
+    ]);
+  });
+
+  it("```audio e ```imagem", () => {
+    expect(parseBlocks("```audio\nurl: https://ex.org/a.mp3\ntitulo: Narração\n```")).toEqual([
+      { type: "audio", url: "https://ex.org/a.mp3", title: "Narração" },
+    ]);
+    expect(
+      parseBlocks("```imagem\nurl: https://ex.org/i.png\ntitulo: Diagrama\nlegenda: Fonte: ex\n```")
+    ).toEqual([
+      {
+        type: "imagem",
+        url: "https://ex.org/i.png",
+        titulo: "Diagrama",
+        legenda: "Fonte: ex",
+      },
+    ]);
+  });
+
+  it("fence misturado com tags {{}} mantém ordem", () => {
+    const blocks = parseBlocks(
+      "texto\n\n```audio\nurl: https://ex.org/a.mp3\n```\n\n{{divider}}"
+    );
+    expect(blocks).toEqual([
+      { type: "html", content: "texto\n\n" },
+      { type: "audio", url: "https://ex.org/a.mp3" },
+      { type: "divider" },
+    ]);
+  });
+
+  it("fence sem fechar → fica como texto", () => {
+    expect(parseBlocks("```pergunta\npergunta: X\nresposta: Y")).toEqual([
+      { type: "html", content: "```pergunta\npergunta: X\nresposta: Y" },
+    ]);
+  });
+
+  it("```terminal → bloco terminal", () => {
+    expect(
+      parseBlocks("```terminal\npergunta: Qual comando mostra o kernel?\nresposta: uname -r\n```")
+    ).toEqual([
+      { type: "terminal", pergunta: "Qual comando mostra o kernel?", resposta: "uname -r" },
+    ]);
+  });
+
+  it("```terminal sem resposta → fica como texto", () => {
+    expect(parseBlocks("```terminal\npergunta: X\n```")).toEqual([
+      { type: "html", content: "```terminal\npergunta: X\n```" },
+    ]);
+  });
+
+  it("```exercicio completo → bloco exercicio", () => {
+    const blocks = parseBlocks(
+      "```exercicio\ntitulo: Imprime três vezes\ninstrucoes:\n1. Cria um while.\n2. Incrementa.\narquivo: script.py\ndica: Usa while\ninicio:\nn = 0\n\n\nesperado:\nn = 0\nwhile n < 3:\n    print('x')\n    n += 1\n```"
+    );
+    expect(blocks).toEqual([
+      {
+        type: "exercicio",
+        titulo: "Imprime três vezes",
+        instrucoes: ["1. Cria um while.", "2. Incrementa."],
+        arquivo: "script.py",
+        dica: "Usa while",
+        inicio: "n = 0",
+        esperado: "n = 0\nwhile n < 3:\n    print('x')\n    n += 1",
+      },
+    ]);
+  });
+
+  it("```exercicio sem esperado → fica como texto", () => {
+    expect(
+      parseBlocks("```exercicio\ntitulo: X\ninicio:\nn = 0\n```")
+    ).toEqual([
+      { type: "html", content: "```exercicio\ntitulo: X\ninicio:\nn = 0\n```" },
+    ]);
+  });
+});
+
+describe("blockToHtml — novos blocos", () => {
+  it("audio → player com título", () => {
+    const html = blockToHtml({
+      type: "audio",
+      url: "https://ex.org/a.mp3",
+      title: "Narração",
+    });
+    expect(html).toContain('<div class="md-audio">');
+    expect(html).toContain('src="https://ex.org/a.mp3"');
+    expect(html).toContain("controls");
+    expect(html).toContain("Narração");
+  });
+
+  it("imagem → figure com título e legenda", () => {
+    const html = blockToHtml({
+      type: "imagem",
+      url: "https://ex.org/i.png",
+      titulo: "Diagrama",
+      legenda: "Fonte: ex",
+    });
+    expect(html).toContain('<figure class="md-figure">');
+    expect(html).toContain('<figcaption class="md-figure-title">Diagrama</figcaption>');
+    expect(html).toContain('<figcaption class="md-figure-caption">Fonte: ex</figcaption>');
+  });
+
+  it("pergunta → estático sem expor a resposta", () => {
+    const html = blockToHtml({
+      type: "pergunta",
+      pergunta: "Qual é o kernel?",
+      resposta: "linux",
+      dica: "dica x",
+      limite: 32,
+    });
+    expect(html).toContain("Qual é o kernel?");
+    expect(html).toContain("dica x");
+    expect(html).not.toContain("linux");
+  });
+
+  it("animacao → lista de passos", () => {
+    const html = blockToHtml({
+      type: "animacao",
+      titulo: "T",
+      passos: ["Um", "Dois"],
+    });
+    expect(html).toContain('<ol>');
+    expect(html).toContain("<li>Um</li>");
+    expect(html).toContain("<li>Dois</li>");
+  });
+
+  it("terminal → estático sem expor a resposta", () => {
+    const html = blockToHtml({
+      type: "terminal",
+      pergunta: "Qual comando mostra o kernel?",
+      resposta: "uname -r",
+      dica: "dica x",
+    });
+    expect(html).toContain("Qual comando mostra o kernel?");
+    expect(html).toContain("dica x");
+    expect(html).not.toContain("uname -r");
+  });
+
+  it("exercicio → estático com inicio mas sem a solução", () => {
+    const html = blockToHtml({
+      type: "exercicio",
+      titulo: "Imprime",
+      instrucoes: ["1. Usa while"],
+      arquivo: "script.py",
+      inicio: "n = 0",
+      esperado: "n = 0\nprint(1)",
+    });
+    expect(html).toContain("Imprime");
+    expect(html).toContain("n = 0");
+    expect(html).not.toContain("print(1)");
+  });
+});
+
 describe("renderMarkdown", () => {
   it("remove o frontmatter", () => {
     const html = renderMarkdown("---\ntitulo: A\n---\n\n# Ola");
@@ -149,6 +335,41 @@ describe("renderMarkdown", () => {
 
   it("{{divider}} → hr com classe", () => {
     expect(renderMarkdown("{{divider}}")).toContain('<hr class="md-divider"');
+  });
+
+  it("```audio → player sanitizado", () => {
+    const html = renderMarkdown("```audio\nurl: https://ex.org/a.mp3\n```");
+    expect(html).toContain('<audio controls preload="metadata" src="https://ex.org/a.mp3"');
+  });
+
+  it("```pergunta → renderização estática sem resposta", () => {
+    const html = renderMarkdown(
+      "```pergunta\npergunta: O que é o kernel?\nresposta: linux\n```"
+    );
+    expect(html).toContain("O que é o kernel?");
+    expect(html).not.toContain("resposta");
+  });
+
+  it("```imagem → figure", () => {
+    const html = renderMarkdown("```imagem\nurl: https://ex.org/i.png\nlegenda: Fig\n```");
+    expect(html).toContain('<figure class="md-figure">');
+    expect(html).toContain("Fig");
+  });
+
+  it("```terminal → estático sem resposta", () => {
+    const html = renderMarkdown(
+      "```terminal\npergunta: Qual comando?\nresposta: uname -r\n```"
+    );
+    expect(html).toContain("Qual comando?");
+    expect(html).not.toContain("uname");
+  });
+
+  it("```exercicio → estático sem solução", () => {
+    const html = renderMarkdown(
+      "```exercicio\ntitulo: T\ninicio:\nn = 0\n\nesperado:\nprint('x')\n```"
+    );
+    expect(html).toContain("n = 0");
+    expect(html).not.toContain("print");
   });
 
   it("tabela → wrapper", () => {
