@@ -77,7 +77,7 @@ export function NotesRail() {
       <button
         onClick={toggleNotes}
         title="Escrever nota"
-        className="w-8 h-8 rounded-full flex items-center justify-center bg-main dark:bg-white text-white dark:text-main cursor-pointer transition-transform hover:scale-105"
+        className="w-8 h-8 rounded-full flex items-center justify-center bg-main dark:bg-white text-white dark:text-[#161b22] cursor-pointer transition-transform hover:scale-105"
       >
         <PencilLine className="w-4 h-4" />
       </button>

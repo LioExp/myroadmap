@@ -107,7 +107,7 @@ export default function GithubPush({ content, filePath }: { content: string; fil
           "w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border-none cursor-pointer transition-all duration-150 font-sans",
           busy
             ? "bg-surface-2 dark:bg-line-strong text-faint dark:text-ghost cursor-wait"
-            : "bg-[#24292f] text-white hover:bg-[#161b22] active:scale-[0.98] shadow-sm dark:bg-white dark:text-main dark:hover:bg-[#e6e6e6]"
+            : "bg-[#24292f] text-white hover:bg-[#161b22] active:scale-[0.98] shadow-sm dark:bg-white dark:text-[#161b22] dark:hover:bg-[#e6e6e6]"
         )}
       >
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Github className="w-4 h-4" />}

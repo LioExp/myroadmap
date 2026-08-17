@@ -66,7 +66,7 @@ export default function LessonView() {
             "fixed bottom-6 right-6 z-30 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200",
             practiceOpen
               ? "bg-purple-600 text-white shadow-purple-500/30"
-              : "bg-main dark:bg-white text-white dark:text-main hover:scale-105"
+              : "bg-main dark:bg-white text-white dark:text-[#161b22] hover:scale-105"
           )}
           title={practiceOpen ? "Fechar terminal" : "Abrir terminal de prática"}
         >
