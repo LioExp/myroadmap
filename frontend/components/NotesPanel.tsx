@@ -4,6 +4,7 @@ import { FileText, PanelLeft, CheckSquare, AlertTriangle, ArrowRight, Copy, Chec
 import { useRoadmapStore, selectSelectedTopic, DEFAULT_NOTES } from "@/store/useRoadmapStore";
 import { buildMarkdown, isNotesEmpty, cn } from "@/lib/utils";
 import TiptapEditor from "@/components/TiptapEditor";
+import GithubPush from "@/components/GithubPush";
 import type { NoteFields } from "@/types";
 import { useState } from "react";
 
@@ -137,6 +138,9 @@ export default function NotesPanel() {
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             {copied ? "Copiado!" : "Copiar Markdown"}
           </button>
+          {topic && !empty && (
+            <GithubPush content={buildMarkdown(topic, notes)} filePath={`notas/${topic.slug}.md`} />
+          )}
           <p className="text-[10px] text-faint text-center leading-relaxed">
             Cola no teu editor → git push
           </p>
