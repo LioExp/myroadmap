@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Github, Loader2, CheckCircle2, AlertTriangle, Eye, EyeOff, ExternalLink, Settings2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { verifyGithubRepo, pushNoteToGithub, type GithubConfig } from "@/lib/github";
+import { verifyGithubRepo, githubFileExists, pushNoteToGithub, type GithubConfig } from "@/lib/github";
 
 type PushStatus =
   | { state: "idle" }
@@ -18,10 +18,21 @@ export default function GithubPush({ content, filePath }: { content: string; fil
   const [form, setForm] = useState<GithubConfig>({ username: "", repo: "roadmap-notas", pat: "" });
   const [showPat, setShowPat] = useState(false);
   const [status, setStatus] = useState<PushStatus>({ state: "idle" });
+  const [message, setMessage] = useState("");
 
   function updateField<K extends keyof GithubConfig>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
     setStatus({ state: "idle" });
+  }
+
+  // Sugere a mensagem do commit com base em adicionar/atualizar o ficheiro.
+  async function suggestMessage(cfg: GithubConfig) {
+    try {
+      const exists = await githubFileExists(cfg, filePath);
+      setMessage(`docs: ${exists ? "atualizar" : "adicionar"} ${filePath}`);
+    } catch {
+      setMessage(`docs: ${filePath}`);
+    }
   }
 
   // Bloqueia scroll e interação do fundo enquanto o modal (mobile) estiver aberto
@@ -59,6 +70,7 @@ export default function GithubPush({ content, filePath }: { content: string; fil
       if (result.exists) {
         setConfig(form);
         setShowSetup(false);
+        suggestMessage(form);
         setStatus({
           state: "ok",
           message: form.pat ? "Repo verificado e ligado." : "Repo existe. Cola o PAT para poderes fazer push.",
@@ -95,7 +107,7 @@ export default function GithubPush({ content, filePath }: { content: string; fil
     }
     setStatus({ state: "working", label: "A fazer push..." });
     try {
-      const result = await pushNoteToGithub(config, content, filePath);
+      const result = await pushNoteToGithub(config, content, filePath, message);
       setStatus({
         state: "ok",
         message: result.updated ? "Nota atualizada no GitHub." : "Nota enviada para o GitHub.",
@@ -109,6 +121,7 @@ export default function GithubPush({ content, filePath }: { content: string; fil
   function handleReset() {
     setConfig(null);
     setForm({ username: "", repo: "roadmap-notas", pat: "" });
+    setMessage("");
     setShowSetup(true);
     setStatus({ state: "idle" });
   }
@@ -202,6 +215,17 @@ export default function GithubPush({ content, filePath }: { content: string; fil
 
   return (
     <div className="flex-shrink-0 flex flex-col gap-1.5">
+      {config && !showSetup && (
+        <label className="flex flex-col gap-0.5">
+          <span className="text-[10px] font-black uppercase tracking-wide text-faint">Mensagem do commit</span>
+          <input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder={`ex: docs: atualizar ${filePath}`}
+            className="rounded-lg bg-surface border border-line px-2.5 py-1.5 text-xs outline-none focus:border-purple-500 transition-colors"
+          />
+        </label>
+      )}
       <button
         onClick={config && !showSetup ? handlePush : () => setShowSetup(true)}
         disabled={busy}

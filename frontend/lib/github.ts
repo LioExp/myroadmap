@@ -73,11 +73,21 @@ export async function verifyGithubRepo(cfg: GithubConfig): Promise<VerifyResult>
 
 const b64 = (s: string) => btoa(unescape(encodeURIComponent(s)));
 
+/** Verifica se um ficheiro já existe no repo (para sugerir o tipo de commit). */
+export async function githubFileExists(cfg: GithubConfig, path: string): Promise<boolean> {
+  const base = `https://api.github.com/repos/${encodeURIComponent(cfg.username)}/${encodeURIComponent(cfg.repo)}`;
+  const res = await fetch(`${base}/contents/${encodeURIComponent(path)}`, { headers: apiHeaders(cfg.pat) });
+  if (res.status === 200) return true;
+  if (res.status === 404) return false;
+  throw new Error(`Erro ao consultar o ficheiro (${res.status}).`);
+}
+
 /** Faz push (cria ou atualiza) de um ficheiro no repo via API do GitHub. */
 export async function pushNoteToGithub(
   cfg: GithubConfig,
   content: string,
-  path: string
+  path: string,
+  message?: string
 ): Promise<{ url: string; updated: boolean }> {
   const base = `https://api.github.com/repos/${encodeURIComponent(cfg.username)}/${encodeURIComponent(cfg.repo)}`;
   const headers = apiHeaders(cfg.pat);
@@ -95,7 +105,8 @@ export async function pushNoteToGithub(
     method: "PUT",
     headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify({
-      message: sha ? `Atualizar ${path}` : `Adicionar ${path}`,
+      message:
+        message?.trim() || (sha ? `Atualizar ${path}` : `Adicionar ${path}`),
       content: b64(content),
       ...(sha ? { sha } : {}),
     }),
