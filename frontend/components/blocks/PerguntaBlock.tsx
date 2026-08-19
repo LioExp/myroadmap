@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Check, CheckCircle2, Lightbulb } from "lucide-react";
 
 interface Props {
@@ -59,6 +59,7 @@ export default function PerguntaBlock({
   const [status, setStatus] = useState<"idle" | "correct" | "wrong">("idle");
   const [showDica, setShowDica] = useState(false);
   const [shaking, setShaking] = useState(false);
+  const wrongTimerRef = useRef<number | null>(null);
 
   const isWrong = status === "wrong";
   const done = status === "correct";
@@ -67,20 +68,30 @@ export default function PerguntaBlock({
     (t) => selected.filter((s) => s === t).length < bank.filter((b) => b === t).length
   );
 
+  function cancelWrongTimer() {
+    if (wrongTimerRef.current !== null) {
+      window.clearTimeout(wrongTimerRef.current);
+      wrongTimerRef.current = null;
+    }
+  }
+
   function pick(tile: string) {
     if (done || remaining.filter((r) => r === tile).length === 0) return;
+    cancelWrongTimer();
     setSelected((prev) => [...prev, tile]);
     setStatus("idle");
   }
 
   function unpick(i: number) {
     if (done) return;
+    cancelWrongTimer();
     setSelected((prev) => prev.filter((_, idx) => idx !== i));
     setStatus("idle");
   }
 
   function clear() {
     if (done) return;
+    cancelWrongTimer();
     setSelected([]);
     setStatus("idle");
   }
@@ -89,11 +100,21 @@ export default function PerguntaBlock({
     if (selected.length === 0 || done) return;
     const ok = normalize(selected.join(" ")) === normalize(resposta);
     if (ok) {
+      cancelWrongTimer();
       setStatus("correct");
       onAnswered();
     } else {
+      // Erro: shake curto e, se o utilizador não fizer nada, limpa a seleção
+      // automaticamente para tentar de novo do zero (estilo Duolingo).
+      cancelWrongTimer();
       setStatus("wrong");
       setShaking(true);
+      wrongTimerRef.current = window.setTimeout(() => {
+        wrongTimerRef.current = null;
+        setShaking(false);
+        setStatus((prev) => (prev === "wrong" ? "idle" : prev));
+        setSelected((prev) => (prev.length ? [] : prev));
+      }, 700);
     }
   }
 
