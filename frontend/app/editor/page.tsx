@@ -217,14 +217,15 @@ export default function EditorPage() {
 
   const handleNewLesson = () => {
     const aula = parseInt(newAula);
-    if (!newMod.trim() || !Number.isInteger(aula) || aula <= 0 || !newTitulo.trim()) return;
-    writeDraft(newMod.trim(), aula, newTitulo.trim(), "");
+    const mod = newMod.trim();
+    if (!/^\d+$/.test(mod) || !Number.isInteger(aula) || aula <= 0 || !newTitulo.trim()) return;
+    writeDraft(mod, aula, newTitulo.trim(), "");
     setShowNew(false);
     setNewMod("");
     setNewAula("");
     setNewTitulo("");
     loadMaterials();
-    loadLesson(newMod.trim(), aula);
+    loadLesson(mod, aula);
   };
 
   const insertDsl = (type: string) => {
@@ -349,7 +350,7 @@ export default function EditorPage() {
               value={newMod}
               onChange={(e) => setNewMod(e.target.value)}
               list="modulos"
-              placeholder="módulo (ex: linux)"
+              placeholder="módulo (ex: 1)"
               className="w-full text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none"
             />
             <datalist id="modulos">
@@ -384,7 +385,7 @@ export default function EditorPage() {
         {modules.map((mod) => (
           <div key={mod} className="mb-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
-              {mod}
+              Módulo {mod}
             </h2>
             {items
               .filter((m) => m.mod === mod)

@@ -51,8 +51,8 @@ export default function LessonView() {
   if (!topic) return null;
   if (!lesson) return null;
 
-  const hasContent = hasMaterial(materialsMap, topic.slug, lesson.id);
-  const material = getMaterial(materialsMap, topic.slug, lesson.id);
+  const hasContent = hasMaterial(materialsMap, String(topic.id), lesson.id);
+  const material = getMaterial(materialsMap, String(topic.id), lesson.id);
   const activeSub = subLesson ? lesson.subLessons?.[subLesson] : undefined;
   const subLessonTitle = activeSub?.title;
 

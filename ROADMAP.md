@@ -86,7 +86,7 @@
 | **Copy material markdown** (botão na aula com material) | 1h | Hoje só copia notas |
 
 #### 1.3 Conteúdo — Módulo 1 (Linux) "Done" de verdade
-> Critério: **Todas as 8 aulas com material publicado** no `/materiais/linux/`, index gerado, visível no site.
+> Critério: **Todas as 8 aulas com material publicado** no `/materiais/1/`, index gerado, visível no site.
 
 | Aula | Título | Status material | Ação |
 |------|--------|-----------------|------|

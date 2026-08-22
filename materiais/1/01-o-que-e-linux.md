@@ -1,5 +1,5 @@
 ---
-modulo: linux
+modulo: 1
 aula: 1
 titulo: O que é Linux — Distribuições, kernel e shell
 ---

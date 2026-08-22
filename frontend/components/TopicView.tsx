@@ -111,7 +111,7 @@ export default function TopicView() {
         <div className="flex flex-col gap-1.5">
           {topic.lessons.map((lesson, i) => {
             const sel = selectedLessonId === lesson.id;
-            const isCompleted = hasMaterial(materialsMap, topic.slug, lesson.id);
+            const isCompleted = hasMaterial(materialsMap, String(topic.id), lesson.id);
             return (
               <div
                 key={lesson.id}

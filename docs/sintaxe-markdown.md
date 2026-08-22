@@ -7,9 +7,12 @@ conteúdo hardcoded nos componentes).
 
 ## 1. Estrutura do ficheiro
 
+O `modulo` é sempre o **número** do módulo no roadmap (`1`, `2`, `3`, …), nunca
+o nome — o nome vem do roadmap. O mesmo para a pasta: `materiais/1/…`.
+
 ```markdown
 ---
-modulo: linux
+modulo: 1
 aula: 1
 titulo: O que é Linux — Distribuições, kernel e shell
 ---
@@ -228,7 +231,7 @@ ferramentas suportadas: `git`, `ansible`, `vagrant`.
 
 ````markdown
 ---
-modulo: linux
+modulo: 1
 aula: 1
 titulo: O que é Linux — Distribuições, kernel e shell
 ---

@@ -23,7 +23,7 @@ export function topicProgress(
   materialsMap: Map<string, Material>
 ): { completed: number; total: number; pct: number } {
   const completed = topic.lessons.filter((l) =>
-    hasMaterial(materialsMap, topic.slug, l.id)
+    hasMaterial(materialsMap, String(topic.id), l.id)
   ).length;
   return {
     completed,

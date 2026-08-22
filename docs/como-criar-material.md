@@ -19,21 +19,21 @@ Um material é um ficheiro **Markdown** com o conteúdo de uma aula. Quando exis
 materiais/<modulo>/<NN>-<titulo>.md
 ```
 
-Exemplo real: `materiais/linux/01-o-que-e-linux.md`
+Exemplo real: `materiais/1/01-o-que-e-linux.md`
 
 | Parte | Regra | Exemplo |
 | --- | --- | --- |
-| `<modulo>` | = o `slug` do tópico no roadmap | `linux` |
+| `<modulo>` | = o **número** do tópico no roadmap (`id` em `roadmap-data.json`) — nunca o nome | `1` |
 | `<NN>` | número da aula com 2 dígitos — tem de bater com o `id` da aula em `roadmap-data.json` | `01` |
 | `<titulo>` | curto, com hífens em vez de espaços | `o-que-e-linux` |
 
-> O site faz o match por `modulo:aula` (ex: `linux:1`). Se o número do ficheiro não bater com o `id` da aula, a aula não mostra o material.
+> O site faz o match por `modulo:aula` (ex: `1:1`). Se o número não bater com os `id`s do roadmap, a aula não mostra o material.
 
 ## 3. Frontmatter (obrigatório)
 
 ```markdown
 ---
-modulo: linux
+modulo: 1
 aula: 1
 titulo: O que é Linux — Distribuições, kernel e shell
 ---
@@ -43,7 +43,7 @@ aqui começa o conteúdo...
 
 | Campo | Obrigatório | Descrição |
 | --- | --- | --- |
-| `modulo` | sim | o slug do tópico (igual ao nome da pasta) |
+| `modulo` | sim | número do tópico no roadmap (igual ao nome da pasta) |
 | `aula` | sim | o número da aula (igual ao `id` no roadmap) |
 | `titulo` | sim | título da aula (usado no índice e no site) |
 
@@ -68,7 +68,7 @@ Segue o padrão do exemplo: **blocos** numerados separados por `---`, cada um co
 
 ````markdown
 ---
-modulo: linux
+modulo: 1
 aula: 1
 titulo: O que é Linux — Distribuições, kernel e shell
 ---

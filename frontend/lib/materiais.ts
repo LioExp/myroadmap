@@ -5,7 +5,7 @@ import { parseFrontmatter, buildFrontmatter } from "./frontmatter";
 const MATERIAIS_DIR = path.resolve(process.cwd(), "..", "materiais");
 const INDEX_PATH = path.resolve(process.cwd(), "public", "materiais-index.json");
 
-export const MOD_SAFE = /^[a-z0-9-]+$/;
+export const MOD_SAFE = /^\d+$/;
 const FILE_SAFE = /^[\w-]+\.md$/;
 export const AULA_SAFE = /^\d+$/;
 

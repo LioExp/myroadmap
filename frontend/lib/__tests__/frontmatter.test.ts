@@ -4,9 +4,9 @@ import { parseFrontmatter, buildFrontmatter } from "../frontmatter";
 describe("parseFrontmatter", () => {
   it("parseia campos simples", () => {
     const { frontmatter, content } = parseFrontmatter(
-      "---\nmodulo: linux\naula: 1\ntitulo: O que é Linux\n---\n\nConteúdo aqui"
+      "---\nmodulo: 1\naula: 1\ntitulo: O que é Linux\n---\n\nConteúdo aqui"
     );
-    expect(frontmatter).toEqual({ modulo: "linux", aula: "1", titulo: "O que é Linux" });
+    expect(frontmatter).toEqual({ modulo: "1", aula: "1", titulo: "O que é Linux" });
     expect(content).toBe("\nConteúdo aqui");
   });
 
@@ -29,8 +29,8 @@ describe("parseFrontmatter", () => {
 
 describe("buildFrontmatter", () => {
   it("serializa chave: valor", () => {
-    expect(buildFrontmatter({ modulo: "linux", aula: 2, titulo: "A" })).toBe(
-      "modulo: linux\naula: 2\ntitulo: A"
+    expect(buildFrontmatter({ modulo: "1", aula: 2, titulo: "A" })).toBe(
+      "modulo: 1\naula: 2\ntitulo: A"
     );
   });
 });
