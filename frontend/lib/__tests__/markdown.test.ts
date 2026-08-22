@@ -513,3 +513,26 @@ describe("wrapCodeCopyButtons", () => {
     expect(html).toContain("<pre><code>apt install foo");
   });
 });
+
+describe("renderMarkdown — syntax highlight", () => {
+  it("highlight de fence com linguagem conhecida (spans hljs)", () => {
+    const html = renderMarkdown("```python\n# comentario\nnome = \"joao\"\n```");
+    expect(html).toContain('class="hljs language-python"');
+    expect(html).toContain('hljs-comment');
+    expect(html).toContain('hljs-string');
+  });
+
+  it("linguagem desconhecida fica sem highlight e escapada", () => {
+    const html = renderMarkdown("```naoexiste\n<b>raw</b>\n```");
+    expect(html).not.toContain("hljs-");
+    expect(html).not.toContain("<b>raw</b>");
+    expect(html).toContain('language-naoexiste');
+  });
+
+  it("fence DSL pergunta não passa pelo highlight", () => {
+    const html = parseBlocks(
+      "```pergunta\npergunta: Q?\nresposta: r\n```"
+    );
+    expect(html[0].type).toBe("pergunta");
+  });
+});

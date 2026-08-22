@@ -1,4 +1,5 @@
 import { marked } from "marked";
+import hljs from "highlight.js/lib/common";
 import { parseFrontmatter } from "./frontmatter";
 import { sanitizeHtml } from "./sanitize";
 
@@ -427,6 +428,25 @@ function linkifyBareUrls(html: string): string {
 }
 
 // ── Render ──────────────────────────────────────────────────────────────────
+
+/**
+ * Highlight de code-fences normais (```python, ```bash, …) com highlight.js.
+ * Os fences especiais (pergunta, terminal, …) são mascarados antes do marked
+ * e renderizados como blocos interativos — nunca chegam aqui.
+ */
+marked.use({
+  renderer: {
+    code({ text, lang }: { text: string; lang?: string }) {
+      const language = (lang ?? "").trim().split(/\s+/)[0].toLowerCase();
+      if (language && hljs.getLanguage(language)) {
+        const value = hljs.highlight(text, { language, ignoreIllegals: true }).value;
+        return `<pre><code class="hljs language-${language}">${value}</code></pre>\n`;
+      }
+      const cls = language ? ` class="language-${language}"` : "";
+      return `<pre><code${cls}>${escapeAttr(text)}</code></pre>\n`;
+    },
+  },
+});
 
 function markdownToHtml(md: string): string {
   const html = marked.parse(applyInlineExtensions(md), { async: false }) as string;
