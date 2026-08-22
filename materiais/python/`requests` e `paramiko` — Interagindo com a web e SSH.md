@@ -1,7 +1,7 @@
 ---
-tags: [linux-roadmap, python, security, http, ssh, requests, paramiko]
-tipo: aula
-status: consolidado
+modulo: python
+aula: 7
+titulo: `requests` e `paramiko` — Interagindo com a web e SSH
 ---
 
 # `requests` e `paramiko` — Interagindo com a Web e SSH
