@@ -4,8 +4,6 @@ aula: 7
 titulo: `requests` e `paramiko` — Interagindo com a web e SSH
 ---
 
-# `requests` e `paramiko` — Interagindo com a Web e SSH
-
 ## 1. Requisições HTTP com `requests`
 
 Uma requisição HTTP é composta por: **verbo/método** (GET, POST, PUT, DELETE, e também HEAD e OPTIONS, menos comuns mas relevantes em reconhecimento), **URL**, **headers**, **body** (opcional) e **versão do protocolo**.
