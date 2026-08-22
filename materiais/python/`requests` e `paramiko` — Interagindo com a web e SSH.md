@@ -1,5 +1,5 @@
 ---
-modulo: python
+modulo: Python
 aula: 7
 titulo: `requests` e `paramiko` — Interagindo com a web e SSH
 ---
